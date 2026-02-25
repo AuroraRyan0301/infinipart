@@ -1,223 +1,213 @@
+# InfiniPart
 
-<div align="center">
-<img src="docs/images/infinigen.png" width="300"></img>
-</div>
+Multi-view articulated object rendering and simulation pipeline built on [Infinigen](https://github.com/princeton-vl/infinigen) (v1.19+, Infinigen-Sim) and [Infinite-Mobility](https://github.com/OpenRobotLab/Infinite-Mobility). Generates procedural articulated 3D objects with **built-in joint definitions**, exports to URDF/MJCF/USD, and renders multi-view motion videos.
 
-# [Infinigen: Infinite Photorealistic Worlds Using Procedural Generation](https://infinigen.org)
+## What's New (vs Infinite-Mobility)
 
-[**Getting Started**](#getting-started)
-| [**Website**](https://infinigen.org/)
-| [**Intro Video**](https://www.youtube.com/watch?v=6tgspeI-GHY)
-| [**Papers**](#papers)
-| [**Documentation**](#documentation)
-| [**Contributing**](#contributing)
+This repo upgrades from Infinite-Mobility (Blender 3.6, static meshes + external URDF) to **Infinigen-Sim** (Blender 4.2, native articulation):
 
-<div align="center">
-<a href="https://youtu.be/6tgspeI-GHY"> <img src="docs/images/video_thumbnail.png" width="500"></a>
-</div>
+- **17 new sim-ready articulated factories** with joints embedded in Blender Geometry Nodes
+- **Kinematic compiler** that auto-extracts joint trees from geometry node graphs
+- **3 simulation export formats**: URDF (PyBullet/Isaac Gym), MJCF (MuJoCo), USD (Isaac Sim)
+- **Physics material system** with density, friction, and joint dynamics
+- **Blender 4.2** with `bpy==4.2.0` Python bindings
 
-## Getting Started
+Plus the proven InfiniPart rendering pipeline from Infinite-Mobility.
 
-First, follow our [Installation Instructions](docs/Installation.md).
+## Sim-Ready Object Factories (17 categories)
 
-### Hello Room: Getting Started with Infinigen Indoors
+Located in `infinigen/assets/sim_objects/`:
 
-<p align="center">
-  <img src="docs/images/hello_room/dining_blender.png" width="300" />
-  <img src="docs/images/hello_room/dining.png" width="300" />
-  <img src="docs/images/hello_room/dining_depth.png" width="300" />
-  <img src="docs/images/hello_room/dining_obj.png" width="300" />
-</p>
+| Factory | Joint Types | Description |
+|---------|------------|-------------|
+| BoxFactory | Hinge | Articulated box with hinged lid |
+| CabinetFactory | Hinge | Cabinet with hinged doors |
+| DishwasherFactory | Hinge + Sliding | Door hinge + rack slider |
+| SimDoorFactory | Hinge | Door with handle articulation |
+| DoorHandleFactory | Hinge + Sliding | Lever/bar handle |
+| DrawerFactory | Sliding | Pullout drawer |
+| FaucetFactory | Hinge | Tap handle rotation |
+| LampFactory | Hinge + Sliding | Articulated arm joints |
+| MicrowaveFactory | Hinge + Sliding | Door hinge + turntable |
+| OvenFactory | Hinge + Sliding | Door hinge + rack slider |
+| PepperGrinderFactory | Hinge | Twist grinding mechanism |
+| PlierFactory | Hinge | Pivot joint for handles |
+| RefrigeratorFactory | Hinge + Sliding | Door(s) + drawer shelves |
+| SoapDispenserFactory | Hinge + Sliding | Pump mechanism |
+| StovetopFactory | Hinge | Knob rotation + grate lift |
+| ToasterFactory | Hinge + Sliding | Lever + lid |
+| TrashFactory | Hinge + Sliding | Lid hinge + pedal |
+| WindowFactory | Hinge + Sliding | Sash sliding + casement hinge |
 
-See instructions for Infinigen-Indoors in [HelloRoom.md](docs/HelloRoom.md)
+## Rendering Pipeline (from Infinite-Mobility)
 
-### Hello World: Getting Started with Infinigen Nature
+Also includes the InfiniPart multi-view rendering pipeline with **16 original object categories**:
 
-<p align="center">
-  <img src="docs/images/hello_world/Image0048_00_00.png" width="300" />
-  <img src="docs/images/hello_world/Depth0048_00_00.png" width="300" />
-  <img src="docs/images/hello_world/SurfaceNormal_0001_00_00.png" width="300" />
-  <img src="docs/images/hello_world/InstanceSegmentation_0001_00_00.png" width="300" />
-</p>
+- BeverageFridge, Microwave, Oven, Toilet, KitchenCabinet, Window, LiteDoor, OfficeChair, Tap, Lamp, Pot, Bottle, Dishwasher, BarChair, Pan, TV
+- **Per-category animation modes (animodes)**: Independently control joint subsets
+- **32 camera views per animation**: 16 fixed hemisphere views + 8 back-to-front orbits + 8 front-hemisphere sweeps
+- **Moving camera support**: Animated cameras that orbit or sweep during rendering
+- **Batch pipeline**: Multi-seed x multi-animode x multi-view x multi-GPU parallel rendering
 
-See instructions for Infinigen-Nature in [HelloWorld.md](docs/HelloWorld.md)
+## Prerequisites
 
-### Generate Articulated Sim Assets: Getting Started with Infinigen Articulated
+- **Python 3.11** (for Infinigen-Sim conda env)
+- **Blender 3.6** (headless, for InfiniPart rendering scripts)
+- **NVIDIA GPU** with CUDA support (tested on L20X 143GB)
+- **ffmpeg** for video encoding
 
-<p align="center">
-  <img src="docs/images/infinigen_articulated.gif" width="500" />
-</p>
+## Setup
 
-See instructions for Infinigen-Articulated in [Exporting to Simulators](docs/simulation/ExportingToSimulators.md)
+### Infinigen-Sim (sim-ready articulated assets)
 
-## Papers
+```bash
+# 1. Clone
+git clone https://github.com/AuroraRyan0301/infinipart.git
+cd infinipart
 
-If you use Infinigen in your work, please cite our academic papers:
+# 2. Create conda env
+conda create -n infinigen-sim python=3.11 -y
+conda activate infinigen-sim
 
-<h3 align="center"><a href="https://arxiv.org/pdf/2306.09310">Infinite Photorealistic Worlds using Procedural Generation</a></h3>
-<p align="center">
-<a href="http://araistrick.com/">Alexander Raistrick</a>*, 
-<a href="https://www.lahavlipson.com/">Lahav Lipson</a>*, 
-<a href="https://mazeyu.github.io/">Zeyu Ma</a>* (*equal contribution, alphabetical order) <br>
-<a href="https://www.cs.princeton.edu/~lm5483/">Lingjie Mei</a>, 
-<a href="https://www.cs.princeton.edu/~mingzhew">Mingzhe Wang</a>, 
-<a href="https://zuoym15.github.io/">Yiming Zuo</a>, 
-<a href="https://kkayan.com/">Karhan Kayan</a>, 
-<a href="https://hermera.github.io/">Hongyu Wen</a>, 
-<a href="https://pvl.cs.princeton.edu/people.html">Beining Han</a>, <br>
-<a href="https://pvl.cs.princeton.edu/people.html">Yihan Wang</a>, 
-<a href="http://www-personal.umich.edu/~alnewell/index.html">Alejandro Newell</a>, 
-<a href="https://heilaw.github.io/">Hei Law</a>, 
-<a href="https://imankgoyal.github.io/">Ankit Goyal</a>, 
-<a href="https://yangky11.github.io/">Kaiyu Yang</a>, 
-<a href="http://www.cs.princeton.edu/~jiadeng">Jia Deng</a><br>
-Conference on Computer Vision and Pattern Recognition (CVPR) 2023
-</p>
+# 3. Install with sim extras
+INFINIGEN_MINIMAL_INSTALL=True pip install -e ".[sim]"
 
-</p>
-
-```
-@inproceedings{infinigen2023infinite,
-  title={Infinite Photorealistic Worlds Using Procedural Generation},
-  author={Raistrick, Alexander and Lipson, Lahav and Ma, Zeyu and Mei, Lingjie and Wang, Mingzhe and Zuo, Yiming and Kayan, Karhan and Wen, Hongyu and Han, Beining and Wang, Yihan and Newell, Alejandro and Law, Hei and Goyal, Ankit and Yang, Kaiyu and Deng, Jia},
-  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
-  pages={12630--12641},
-  year={2023}
-}
+# 4. (Optional) Install additional deps for rendering scripts
+pip install urdfpy open3d
 ```
 
-<h3 align="center">
-  <a href="https://arxiv.org/abs/2406.11824">Infinigen Indoors: Photorealistic Indoor Scenes using Procedural Generation</a>
-</h3>
-<p align="center">
-  <a href="http://araistrick.com/">Alexander Raistrick</a>*, 
-  <a href="https://www.cs.princeton.edu/~lm5483/">Lingjie Mei</a>*, 
-  <a href="https://kkayan.com/">Karhan Kayan</a>*, (*equal contribution, random order) <br>
-  <a href="https://david-yan1.github.io/">David Yan</a>, 
-  <a href="https://zuoym15.github.io/">Yiming Zuo</a>, 
-  <a href="https://pvl.cs.princeton.edu/people.html">Beining Han</a>, 
-  <a href="https://hermera.github.io/">Hongyu Wen</a>, 
-  <a href="https://scholar.google.com/citations?user=q38OfTQAAAAJ&hl=en">Meenal Parakh</a>, <br>
-  <a href="https://stamatisalex.github.io/">Stamatis Alexandropoulos</a>, 
-  <a href="https://www.lahavlipson.com/">Lahav Lipson</a>, 
-  <a href="https://mazeyu.github.io/">Zeyu Ma</a>,
-  <a href="http://www.cs.princeton.edu/~jiadeng">Jia Deng</a><br>
-  Conference on Computer Vision and Pattern Recognition (CVPR) 2024
-</p>
+### InfiniPart Rendering (Blender-based)
 
-```
-@inproceedings{infinigen2024indoors,
-    author    = {Raistrick, Alexander and Mei, Lingjie and Kayan, Karhan and Yan, David and Zuo, Yiming and Han, Beining and Wen, Hongyu and Parakh, Meenal and Alexandropoulos, Stamatis and Lipson, Lahav and Ma, Zeyu and Deng, Jia},
-    title     = {Infinigen Indoors: Photorealistic Indoor Scenes using Procedural Generation},
-    booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-    month     = {June},
-    year      = {2024},
-    pages     = {21783-21794}
-}
+```bash
+# 1. Download Blender 3.6
+wget https://download.blender.org/release/Blender3.6/blender-3.6.0-linux-x64.tar.xz
+tar xf blender-3.6.0-linux-x64.tar.xz
+
+# 2. Update paths in scripts:
+#    - BLENDER path in batch_generate_all.py and render_articulation.py
+#    - BASE_DIR to your repo root
+#    - Envmap HDR path (--envmap flag)
 ```
 
-<h3 align="center">
-  <a href="https://arxiv.org/abs/2505.10755">Infinigen-Articulated: Procedural Generation of Articulated Simulation Assets</a>
-</h3>
-<p align="center">
-  <a href="https://abhihjoshi.github.io/"> Abhishek Joshi</a>,
-  <a href="https://beininghan.github.io/">Beining Han</a>,
-  <a href="https://pvl.cs.princeton.edu/people.html">Jack Nugent</a>,
-  <a href="https://pvl.cs.princeton.edu/people.html">Max Gonzalez Saez-Diez</a>,
-  <br>
-  <a href="https://zuoym15.github.io">Yiming Zuo</a>,
-  <a href="https://pvl.cs.princeton.edu/people.html">Jonathan Liu</a>,
-  <a href="https://hermera.github.io">Hongyu Wen</a>,
-  <a href=https://stamatisalex.github.io/>Stamatis Alexandropoulos</a>,
-  <a href="https://kkayan.com/">Karhan Kayan</a>,
-  <a href="https://pvl.cs.princeton.edu/people.html">Anna Calveri</a>,
-  <br>
-  <a href="https://pvl.cs.princeton.edu/people.html">Tao Sun</a>,
-  <a href="https://pvl.cs.princeton.edu/people.html">Gaowen Liu</a>,
-  <a href="https://www.mcgill.ca/civil/yi-shao">Yi Shao</a>,
-  <a href="http://araistrick.com">Alexander Raistrick</a>,
-  <a href="http://www.cs.princeton.edu/~jiadeng">Jia Deng</a>
-  <br>
-</p>
+## Quick Start
 
-```
-@misc{joshi2025articulated,
-      title={Procedural Generation of Articulated Simulation-Ready Assets}, 
-      author={Abhishek Joshi and Beining Han and Jack Nugent and Max Gonzalez Saez-Diez and Yiming Zuo and Jonathan Liu and Hongyu Wen and Stamatis Alexandropoulos and Karhan Kayan and Anna Calveri and Tao Sun and Gaowen Liu and Yi Shao and Alexander Raistrick and Jia Deng},
-      year={2025},
-      eprint={2505.10755},
-      archivePrefix={arXiv},
-      primaryClass={cs.RO},
-      url={https://arxiv.org/abs/2505.10755}, 
-}
+### Generate sim-ready assets (Infinigen-Sim)
+
+```bash
+conda activate infinigen-sim
+
+# Generate a single sim-ready refrigerator and export to URDF
+python -m infinigen.core.sim.sim_factory \
+  --factory RefrigeratorFactory --seed 0 \
+  --output_dir outputs/sim/RefrigeratorFactory/0 \
+  --export_format urdf
 ```
 
-## Documentation
+### Generate assets for rendering (Blender)
 
-- [Installation Guide](docs/Installation.md)
-- ["Hello World": Generate your first Infinigen-Nature scene](docs/HelloWorld.md)
-- ["Hello Room": Generate your first Infinigen-Indoors scene](docs/HelloRoom.md)
-- [Configuring Infinigen](docs/ConfiguringInfinigen.md)
-- [Configuring Cameras](docs/ConfiguringCameras.md)
-- [Downloading pre-generated data](docs/PreGeneratedData.md)
-- [Generating individual assets](docs/GeneratingIndividualAssets.md)
-- [Exporting to external fileformats (OBJ, OpenUSD, etc)](docs/ExportingToExternalFileFormats.md)
-- [Add external assets to indoor scenes](docs/StaticAssets.md)
-- [Extended ground-truth](docs/GroundTruthAnnotations.md)
-- [Implementing new materials & assets](docs/ImplementingAssets.md)
-- [Generating fluid simulations](docs/GeneratingFluidSimulations.md)
-- [Exporting to physics simulation](docs/ExportingToSimulators.md)
+```bash
+CUDA_VISIBLE_DEVICES=0 blender --background --python-use-system-env \
+  --python infinigen_examples/generate_individual_assets.py -- \
+  --output_folder outputs/OvenFactory -f OvenFactory -n 1 --seed 0
+```
 
-Please see our [project roadmap](https://infinigen.org/roadmap) and follow us at [https://twitter.com/PrincetonVL](https://twitter.com/PrincetonVL) for updates. 
+### Render single factory/seed/animode
 
-## Contributing
+```bash
+CUDA_VISIBLE_DEVICES=0 blender --background --python-use-system-env \
+  --python render_articulation.py -- \
+  --factory OvenFactory --seed 0 --device 0 \
+  --output_dir outputs/motion_videos/OvenFactory/0 \
+  --resolution 512 --samples 32 --duration 4.0 --fps 30 \
+  --animode 0 --skip_bg \
+  --views hemi_00 hemi_01 hemi_02 hemi_03 \
+  --moving_views orbit_00 sweep_00
+```
 
-We welcome contributions! You can contribute in many ways:
-- **Contribute code to this repository** - We welcome code contributions. More guidelines coming soon.
-- **Contribute procedural generators** - `infinigen/nodes/node_transpiler/dev_script.py` provides tools to convert artist-friendly [Blender Nodes](https://docs.blender.org/manual/en/2.79/render/blender_render/materials/nodes/introduction.html) into python code. Tutorials and guidelines coming soon.
-- **Contribute pre-generated data** - Anyone can contribute their computing power to create data and share it with the community. Please stay tuned for a repository of pre-generated data.
+### Batch pipeline (generate + render all)
 
-### Getting Help
+```bash
+# Generate 10 seeds + render all animodes x 32 views on 4 GPUs
+python batch_generate_all.py --n_seeds 10 --n_gpus 4 --no_split
 
-Please post this repository's Github Issues page for help. Please run your command with `--debug`, and let us know:
-- What is your computing setup, including OS version, CPU, RAM, GPU(s) and any drivers?
-- What version of the code are you using (link a commit hash), and what if any modifications have you made (new configs, code edits)
-- What exact command did you run?
-- What were the output logs of the command you ran? 
-    - If using `manage_jobs`, look in `outputs/MYJOB/MYSEED/logs/` to find the right one.
-    - What was the exact python error and stacktrace, if applicable?
+# Render only (assets already generated)
+python batch_generate_all.py --n_seeds 10 --n_gpus 4 --render_only --no_split
 
-### Acknowledgements
+# Single factory
+python batch_generate_all.py --n_seeds 10 --n_gpus 4 --factory OvenFactory --render_only --no_split
+```
 
-Infinigen wouldn't be possible without the fantastic work of the [Blender Foundation](https://www.blender.org/) and it's open-source contributors. Infinigen uses many open source projects, with special thanks to [Land-Lab](https://github.com/landlab/landlab), [BlenderProc](https://github.com/DLR-RM/BlenderProc) [Blender-FLIP-Fluids](https://github.com/rlguy/Blender-FLIP-Fluids) and [Blender-Differential-Growth](https://github.com/inca/blender-differential-growth).
+## Architecture
 
-We thank [Thomas Kole](https://blenderartists.org/u/ThomasKole) for providing procedural clouds.
+### Infinigen-Sim Joint System
 
-We learned tremendously from online tutorials of 
-[Andrew Price](https://www.youtube.com/channel/UCOKHwx1VCdgnxwbjyb9Iu1g),
-[Artisans of Vaul](https://www.youtube.com/@ArtisansofVaul),
-[Bad Normals](https://www.youtube.com/@BadNormals),
-[Blender Tutorial Channel](https://www.youtube.com/@BlenderTutorialChannel),
-[blenderbitesize](https://www.youtube.com/@blenderbitesize),
-[Blendini](http://www.youtube.com/watch?v=sHr8LjfX09c),
-[Bradley Animation](https://www.youtube.com/@bradleyanimation120),
-[CGCookie](https://www.youtube.com/watch?v=lPAYX8z9i8M),
-[CGRogue](https://www.youtube.com/@PixelicaCG),
-[Creative Shrimp](https://www.youtube.com/@CreativeShrimp),
-[CrowdRender](https://www.youtube.com/@Crowdrender),
-[Dr. Blender](https://www.youtube.com/@DrBlender),
-[HEY Pictures](https://www.youtube.com/channel/UCo5rv1z-PPrCh-C7OvO2VAA),
-[Ian Hubert](https://www.youtube.com/@IanHubert2),
-[Kev Binge](https://www.youtube.com/@KevBinge),
-[Lance Phan](https://www.youtube.com/@LancePhan),
-[MaxEdge](https://www.youtube.com/@MaxEdge420),
-[Mr. Cheebs](https://www.youtube.com/@MrCheebs),
-[PixelicaCG](https://www.youtube.com/@PixelicaCG),
-[Polyfjord](https://www.youtube.com/@Polyfjord),
-[Robbie Tilton](https://www.youtube.com/@RobbieTilton),
-[Ryan King Art](https://www.youtube.com/@RyanKingArt),
-[Sam Bowman](https://www.youtube.com/@snow_mamba) and
-[yogigraphics](https://www.youtube.com/@yojigraphics).
-These tutorials provided procedural generators for our early experimentation and served as inspiration for our own implementations in the official release of Infinigen. They are acknowledged in file header comments where applicable. 
+Joints are defined **inside Blender Geometry Nodes** using custom node groups:
 
-Infinigen has evolved significantly since the version described in our CVPR paper. It now features some procedural code obtained from the internet under CC-0 licenses, which are marked with code comments where applicable - no such code was present in the system for the CVPR version.
+- `nodegroup_hinge_joint` -- Revolute joints (doors, lids, knobs)
+- `nodegroup_sliding_joint` -- Prismatic joints (drawers, sliders)
+- `kinematic_compiler.py` -- Auto-extracts kinematic DAG from node trees
+- Exporters convert to URDF/MJCF/USD with mass, inertia, collision geometry
+
+### Animation Modes (animodes)
+
+Each factory defines animation modes that select specific joint subsets:
+
+| Factory | Animode 0 | Animode 1 | Animode 2 | Animode 3 | Animode 4 |
+|---------|-----------|-----------|-----------|-----------|-----------|
+| Oven | door (revolute) | racks (prismatic) | all | - | - |
+| Toilet | cover (revolute) | seat ring (revolute) | flush (prismatic) | all | - |
+| Window | pane 1 (revolute) | pane 2 (revolute) | sliding (prismatic) | all revolute | all |
+| Pot | lid lift (prismatic) | lid rotate (continuous) | URDF all | flip in-place | flip+place beside |
+| Lamp | arm height (prismatic) | bulb slide (prismatic) | arm rotate (revolute) | all | - |
+| BarChair | height (prismatic) | spin (continuous) | all | - | - |
+| TV | tilt (revolute) | height (prismatic) | all | - | - |
+| Pan | lid lift (prismatic) | - | - | - | - |
+
+Joint selectors support multiple formats:
+- `("type",)` -- all significant joints of that type
+- `("type", ordinal)` -- nth joint by kinematic depth (0=shallowest, -1=deepest)
+- `("type", "axis", "x"|"y"|"z")` -- joints with given primary axis
+- `("type", "sign", "+"|"-")` -- joints filtered by limit sign
+
+### Camera Views (32 total)
+
+**16 fixed hemisphere views** (`hemi_00` to `hemi_15`):
+- 4x4 grid on front hemisphere (azimuth +/-67.5 deg, elevation 5/25/45/65 deg)
+
+**8 orbit views** (`orbit_00` to `orbit_07`):
+- Camera travels ~180 deg from back to front of object
+
+**8 sweep views** (`sweep_00` to `sweep_07`):
+- Camera moves within front hemisphere (horizontal pans, vertical tilts, diagonal paths)
+
+### Output Structure
+
+```
+outputs/motion_videos/{Factory}/{seed}/
+  hemi_00_nobg.mp4          # animode 0, fixed view 0
+  hemi_00_anim1_nobg.mp4    # animode 1, fixed view 0
+  orbit_00_nobg.mp4         # animode 0, orbit view 0
+  sweep_03_anim2_nobg.mp4   # animode 2, sweep view 3
+  ...
+```
+
+Each video: 512x512, 30fps, 4 seconds (120 frames), transparent background (nobg).
+
+## Key Scripts
+
+| Script | Description |
+|--------|-------------|
+| `render_articulation.py` | Core Blender rendering: URDF parsing, joint animation, multi-view camera, compositor |
+| `render_articulation_video.py` | Video-specific rendering pipeline |
+| `batch_generate_all.py` | Batch pipeline: generate assets + render across multiple GPUs |
+| `batch_render_pipeline.py` | Lower-level batch render orchestration |
+| `split_and_visualize.py` | 2-part decomposition for part-aware training data |
+| `convert_partnet.py` | Convert PartNet-Mobility dataset to Infinite-Mobility format |
+| `partnet_factory_rules.py` | Factory rules for 40 categories (14 Sapien + 26 PartNet) |
+| `show.py` | Interactive visualization tool |
+| `paralled_generate.py` | Parallel generation entry point |
+
+## Credits
+
+- [Infinigen](https://github.com/princeton-vl/infinigen) by Princeton Vision & Learning Lab (Infinigen-Sim articulation system)
+- [Infinite-Mobility](https://github.com/OpenRobotLab/Infinite-Mobility) by OpenRobotLab (procedural articulated object generation)
