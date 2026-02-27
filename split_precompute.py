@@ -595,11 +595,15 @@ def export_split(meshes_by_gidx, body_gidxs, moving_gidxs, out_dir,
     body_meshes = [meshes_by_gidx[g] for g in sorted(body_gidxs) if g in meshes_by_gidx]
     moving_meshes = [meshes_by_gidx[g] for g in sorted(moving_gidxs) if g in meshes_by_gidx]
 
-    if not body_meshes or not moving_meshes:
-        print(f"  WARNING: Empty split - body={len(body_meshes)}, moving={len(moving_meshes)}")
+    if not moving_meshes:
+        print(f"  WARNING: Empty split - body={len(body_meshes)}, moving=0")
         return False
 
-    part0 = trimesh.util.concatenate(body_meshes) if len(body_meshes) > 1 else body_meshes[0].copy()
+    if body_meshes:
+        part0 = trimesh.util.concatenate(body_meshes) if len(body_meshes) > 1 else body_meshes[0].copy()
+    else:
+        # All parts are moving (e.g. LiteDoorFactory) — create empty placeholder
+        part0 = trimesh.Trimesh()
     part1 = trimesh.util.concatenate(moving_meshes) if len(moving_meshes) > 1 else moving_meshes[0].copy()
 
     # Strip visual data for clean export

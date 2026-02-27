@@ -431,15 +431,85 @@ def _enumerate_seeds(source, precompute_dir=None):
     return seeds
 
 
+def _valid_animodes_from_metadata(meta_path, factory):
+    """Read precompute metadata and return list of valid render animodes.
+
+    Uses joint types from metadata to skip animodes that have no matching joints.
+    Standard mapping: animode 0=revolute, 1=prismatic, 2=continuous, 3+=all/custom.
+    For non-standard factories, falls back to including all animodes.
+    """
+    try:
+        with open(meta_path) as f:
+            meta = json.load(f)
+    except (json.JSONDecodeError, IOError):
+        return None
+
+    joints = meta.get("joints", [])
+    if not joints:
+        return []  # No movable joints
+
+    joint_types = {j["type"] for j in joints}
+    max_anim = FACTORY_ANIMODES.get(factory, 0)
+
+    has_type = {
+        "revolute": "revolute" in joint_types,
+        "prismatic": "prismatic" in joint_types,
+        "continuous": "continuous" in joint_types,
+    }
+
+    valid = []
+    STANDARD_TYPE = {0: "revolute", 1: "prismatic", 2: "continuous"}
+    for animode in range(max_anim + 1):
+        if animode in STANDARD_TYPE:
+            # Type-specific animode: valid if that joint type exists
+            if has_type.get(STANDARD_TYPE[animode], False):
+                valid.append(animode)
+        else:
+            # "All joints" or custom animode (flip, etc.): always valid
+            valid.append(animode)
+
+    # If no type-specific animodes matched but joints exist,
+    # include at least animode 0 (factories may use non-standard type mapping)
+    if not valid and joint_types:
+        valid = list(range(max_anim + 1))
+
+    return valid if valid else None
+
+
 def build_render_jobs(source, precompute_dir=None):
-    """Build positive render job list: one job per (factory, seed, animode)."""
+    """Build positive render job list: one job per (factory, seed, animode).
+
+    When precompute_dir is available, reads metadata.json to determine which
+    animodes are valid (based on available joint types). Objects with no
+    movable joints are skipped entirely.
+    """
     jobs = []
+    n_skipped = 0
     for factory, seed, base in _enumerate_seeds(source, precompute_dir):
-        max_anim = FACTORY_ANIMODES.get(factory, 0)
         out_dir = os.path.join(BASE_DIR, "render_output", "positive",
                                factory, str(seed))
-        for animode in range(max_anim + 1):
+
+        # Try to read precompute metadata for smart filtering
+        animodes = None
+        if precompute_dir:
+            meta_path = os.path.join(precompute_dir, factory, str(seed),
+                                     "metadata.json")
+            if os.path.isfile(meta_path):
+                animodes = _valid_animodes_from_metadata(meta_path, factory)
+                if animodes is None or len(animodes) == 0:
+                    n_skipped += 1
+                    continue  # No movable joints or invalid metadata
+
+        if animodes is None:
+            # Fallback: no precompute, use hardcoded animode count
+            max_anim = FACTORY_ANIMODES.get(factory, 0)
+            animodes = list(range(max_anim + 1))
+
+        for animode in animodes:
             jobs.append((factory, seed, animode, out_dir, base))
+
+    if n_skipped:
+        print(f"  Skipped {n_skipped} objects with no movable joints")
     return jobs
 
 
@@ -460,6 +530,9 @@ def build_negative_jobs(source, precompute_dir=None):
 def stage_render_positive(args):
     """Stage 2: Render positive (correct) articulation samples."""
     precompute = os.path.join(BASE_DIR, "precompute")
+    if not os.path.isdir(precompute):
+        print("WARNING: precompute/ not found. Run stage 'generate' first for "
+              "metadata-driven job filtering. Falling back to FACTORY_ANIMODES.")
     jobs = build_render_jobs(args.source, precompute if os.path.isdir(precompute) else None)
 
     if args.shard:

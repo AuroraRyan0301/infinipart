@@ -1,11 +1,14 @@
 #!/bin/bash
-# Test PhysXNet + PhysX_mobility rendering: prepare scene + render all animodes
+# Test PhysXNet + PhysX_mobility rendering: precompute → render valid animodes
+#
+# Flow: prepare scene → precompute splits → read metadata → render only valid animodes
 set -e
 
 WORK_DIR="/mnt/data/yurh/Infinigen-Sim"
 BLENDER="/mnt/data/yurh/blender-3.6.0-linux-x64/blender"
 PYTHON="/mnt/data/yurh/miniconda3/envs/partpacker_wan/bin/python"
 OUT_DIR="$WORK_DIR/test_output"
+PRECOMPUTE_DIR="$WORK_DIR/precompute"
 N_GPUS=4
 DURATION=2.0
 SAMPLES=16
@@ -13,7 +16,7 @@ RES=256
 
 cd "$WORK_DIR"
 
-# Test cases: factory seed max_animode
+# Test cases: factory:seed:max_animode
 declare -a TESTS=(
   "FurniturePhysXNetFactory:0:4"
   "ElectronicsPhysXNetFactory:0:3"
@@ -36,7 +39,7 @@ RESULT_DIR="$OUT_DIR/_results_physx"
 mkdir -p "$RESULT_DIR"
 > "$RESULT_DIR/summary.txt"
 
-# Step 1: Prepare all scenes (non-Blender, fast)
+# ── Stage 1: Prepare all scenes (non-Blender, fast) ──
 echo ""
 echo "=== Stage 1: Preparing scenes ==="
 for test in "${TESTS[@]}"; do
@@ -58,14 +61,65 @@ except Exception as e:
   fi
 done
 
-# Step 2: Build job list and render in parallel
+# ── Stage 2: Precompute splits ──
 echo ""
-echo "=== Stage 2: Rendering ==="
+echo "=== Stage 2: Precompute splits ==="
+n_precompute=0
+n_skip=0
+for test in "${TESTS[@]}"; do
+  IFS=':' read -r factory seed max_anim <<< "$test"
+  meta="$PRECOMPUTE_DIR/$factory/$seed/metadata.json"
+  if [ -f "$meta" ]; then
+    echo "  $factory/$seed: cached"
+    continue
+  fi
+  echo "  $factory/$seed: computing..."
+  $PYTHON split_precompute.py --factory "$factory" --seed "$seed" \
+    --output_dir "$PRECOMPUTE_DIR" 2>&1 | sed 's/^/    /'
+  if [ -f "$meta" ]; then
+    n_precompute=$((n_precompute + 1))
+  else
+    echo "    SKIP: no movable joints"
+    n_skip=$((n_skip + 1))
+  fi
+done
+echo "  Precomputed: $n_precompute, Skipped (no joints): $n_skip"
+
+# ── Stage 3: Build job list from metadata and render ──
+echo ""
+echo "=== Stage 3: Rendering ==="
 
 JOBS=()
 for test in "${TESTS[@]}"; do
   IFS=':' read -r factory seed max_anim <<< "$test"
-  for ((a=0; a<=max_anim; a++)); do
+  meta="$PRECOMPUTE_DIR/$factory/$seed/metadata.json"
+  if [ ! -f "$meta" ]; then
+    echo "  SKIP $factory/$seed: no precompute metadata (no movable joints)"
+    continue
+  fi
+  # Get valid animodes from metadata
+  valid_anims=$($PYTHON -c "
+import json, sys
+meta = json.load(open('$meta'))
+joints = meta.get('joints', [])
+if not joints:
+    sys.exit(0)
+joint_types = {j['type'] for j in joints}
+max_anim = $max_anim
+STYPE = {0: 'revolute', 1: 'prismatic', 2: 'continuous'}
+valid = []
+for a in range(max_anim + 1):
+    if a in STYPE:
+        if STYPE[a] in joint_types:
+            valid.append(a)
+    else:
+        valid.append(a)
+if not valid and joint_types:
+    valid = list(range(max_anim + 1))
+for a in valid:
+    print(a)
+")
+  for a in $valid_anims; do
     JOBS+=("$factory:$seed:$a")
   done
 done

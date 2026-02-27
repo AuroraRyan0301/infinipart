@@ -1,12 +1,16 @@
 #!/bin/bash
 # Test ALL IM factories, ALL animodes, positive samples only.
 # Runs 4 GPU workers in parallel. Auto-finds valid seed per factory.
+#
+# Flow: precompute splits → read metadata → render only valid animodes
 set -e
 
 WORK_DIR="/mnt/data/yurh/Infinigen-Sim"
 BLENDER="/mnt/data/yurh/blender-3.6.0-linux-x64/blender"
+PYTHON="/mnt/data/yurh/miniconda3/envs/partpacker_wan/bin/python"
 BASE="/mnt/data/yurh/Infinite-Mobility"
 OUT_DIR="$WORK_DIR/test_output"
+PRECOMPUTE_DIR="$WORK_DIR/precompute"
 N_GPUS=4
 DURATION=2.0
 SAMPLES=16
@@ -14,30 +18,17 @@ RES=256
 
 cd "$WORK_DIR"
 
-# Factory -> max animode mapping
-declare -A ANIMODES
-ANIMODES=(
-  [DishwasherFactory]=2
-  [BeverageFridgeFactory]=2
-  [MicrowaveFactory]=2
-  [OvenFactory]=2
-  [KitchenCabinetFactory]=2
-  [ToiletFactory]=3
-  [WindowFactory]=4
-  [LiteDoorFactory]=0
-  [OfficeChairFactory]=2
-  [TapFactory]=2
-  [LampFactory]=3
-  [PotFactory]=4
-  [BottleFactory]=3
-  [BarChairFactory]=2
-  [PanFactory]=0
-  [TVFactory]=2
+# Factory list (all IM)
+FACTORIES=(
+  DishwasherFactory BeverageFridgeFactory MicrowaveFactory OvenFactory
+  KitchenCabinetFactory ToiletFactory WindowFactory LiteDoorFactory
+  OfficeChairFactory TapFactory LampFactory PotFactory
+  BottleFactory BarChairFactory PanFactory TVFactory
 )
 
 # Find a valid seed for each factory (one with scene.urdf)
 declare -A VALID_SEED
-for factory in "${!ANIMODES[@]}"; do
+for factory in "${FACTORIES[@]}"; do
   found=""
   for s in $(ls "$BASE/outputs/$factory/" 2>/dev/null | grep -E '^[0-9]+$' | sort -n | head -10); do
     if [ -f "$BASE/outputs/$factory/$s/scene.urdf" ]; then
@@ -52,21 +43,88 @@ for factory in "${!ANIMODES[@]}"; do
   fi
 done
 
-# Build job list: (factory, seed, animode)
+# ── Stage 1: Precompute splits ──
+echo "============================================================"
+echo "  Stage 1: Precompute splits"
+echo "============================================================"
+n_precompute=0
+n_skip=0
+for factory in "${!VALID_SEED[@]}"; do
+  seed=${VALID_SEED[$factory]}
+  meta="$PRECOMPUTE_DIR/$factory/$seed/metadata.json"
+  if [ -f "$meta" ]; then
+    echo "  $factory/$seed: cached"
+    continue
+  fi
+  echo "  $factory/$seed: computing..."
+  $PYTHON split_precompute.py --factory "$factory" --seed "$seed" \
+    --base "$BASE" --output_dir "$PRECOMPUTE_DIR" 2>&1 | sed 's/^/    /'
+  if [ -f "$meta" ]; then
+    n_precompute=$((n_precompute + 1))
+  else
+    echo "    SKIP: no movable joints"
+    n_skip=$((n_skip + 1))
+  fi
+done
+echo "  Precomputed: $n_precompute, Skipped (no joints): $n_skip"
+echo ""
+
+# ── Stage 2: Build job list from metadata ──
+# Factory -> max animode (fallback when metadata doesn't exist)
+declare -A ANIMODES
+ANIMODES=(
+  [DishwasherFactory]=2 [BeverageFridgeFactory]=2
+  [MicrowaveFactory]=2 [OvenFactory]=2
+  [KitchenCabinetFactory]=2 [ToiletFactory]=3
+  [WindowFactory]=4 [LiteDoorFactory]=0
+  [OfficeChairFactory]=2 [TapFactory]=2
+  [LampFactory]=3 [PotFactory]=4
+  [BottleFactory]=3 [BarChairFactory]=2
+  [PanFactory]=0 [TVFactory]=2
+)
+
+# Read metadata to get valid animodes per (factory, seed)
 JOBS=()
 for factory in "${!VALID_SEED[@]}"; do
   seed=${VALID_SEED[$factory]}
-  max_anim=${ANIMODES[$factory]}
-  for ((a=0; a<=max_anim; a++)); do
+  meta="$PRECOMPUTE_DIR/$factory/$seed/metadata.json"
+  if [ ! -f "$meta" ]; then
+    echo "  SKIP $factory/$seed: no precompute metadata (no movable joints)"
+    continue
+  fi
+  # Get valid animodes from metadata using Python
+  valid_anims=$($PYTHON -c "
+import json, sys
+meta = json.load(open('$meta'))
+joints = meta.get('joints', [])
+if not joints:
+    sys.exit(0)
+joint_types = {j['type'] for j in joints}
+max_anim = ${ANIMODES[$factory]}
+STYPE = {0: 'revolute', 1: 'prismatic', 2: 'continuous'}
+valid = []
+for a in range(max_anim + 1):
+    if a in STYPE:
+        if STYPE[a] in joint_types:
+            valid.append(a)
+    else:
+        valid.append(a)
+# Fallback: non-standard factory mapping, include all animodes
+if not valid and joint_types:
+    valid = list(range(max_anim + 1))
+for a in valid:
+    print(a)
+")
+  for a in $valid_anims; do
     JOBS+=("$factory:$seed:$a")
   done
 done
 
 echo "============================================================"
-echo "  Positive Sample Test: ${#JOBS[@]} jobs across $N_GPUS GPUs"
+echo "  Stage 2: Positive Sample Test: ${#JOBS[@]} jobs across $N_GPUS GPUs"
 echo "============================================================"
 for factory in $(echo "${!VALID_SEED[@]}" | tr ' ' '\n' | sort); do
-  echo "  $factory seed=${VALID_SEED[$factory]} animodes=0..${ANIMODES[$factory]}"
+  echo "  $factory seed=${VALID_SEED[$factory]}"
 done
 echo ""
 echo "  Duration: ${DURATION}s, Res: ${RES}, Samples: $SAMPLES"
