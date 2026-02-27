@@ -28,10 +28,11 @@ from concurrent.futures import ProcessPoolExecutor, as_completed
 from pathlib import Path
 
 BLENDER = "/mnt/data/yurh/blender-3.6.0-linux-x64/blender"
-BASE_DIR = "/mnt/data/yurh/Infinite-Mobility"
+BASE_DIR = "/mnt/data/yurh/Infinigen-Sim"
 PYTHONPATH = f"{BASE_DIR}:/mnt/data/yurh/infinigen"
 
 FACTORIES = [
+    # ── Original Infinite-Mobility factories ──
     "BeverageFridgeFactory",
     "MicrowaveFactory",
     "OvenFactory",
@@ -48,11 +49,26 @@ FACTORIES = [
     "BarChairFactory",
     "PanFactory",
     "TVFactory",
+    # ── Infinigen-Sim sim_objects (17 new factories) ──
+    "SimDoorFactory",
+    "DoorHandleFactory",
+    "DrawerFactory",
+    "BoxFactory",
+    "CabinetFactory",
+    "RefrigeratorFactory",
+    "FaucetFactory",
+    "StovetopFactory",
+    "ToasterFactory",
+    "PepperGrinderFactory",
+    "PlierFactory",
+    "SoapDispenserFactory",
+    "TrashFactory",
 ]
 
 # Max animode (inclusive) per factory. Animodes 0..N are rendered.
 # Must match FACTORY_RULES["animode_joints"] in render_articulation.py.
 FACTORY_ANIMODES = {
+    # ── Original IM factories ──
     "DishwasherFactory": 2,
     "BeverageFridgeFactory": 2,
     "MicrowaveFactory": 2,
@@ -65,10 +81,24 @@ FACTORY_ANIMODES = {
     "TapFactory": 2,
     "LampFactory": 3,
     "PotFactory": 4,
-    "BottleFactory": 2,
+    "BottleFactory": 3,
     "BarChairFactory": 2,
     "PanFactory": 0,
     "TVFactory": 2,
+    # ── Infinigen-Sim sim_objects ──
+    "SimDoorFactory": 0,
+    "DoorHandleFactory": 2,
+    "DrawerFactory": 0,
+    "BoxFactory": 2,
+    "CabinetFactory": 2,
+    "RefrigeratorFactory": 4,
+    "FaucetFactory": 2,
+    "StovetopFactory": 0,
+    "ToasterFactory": 2,
+    "PepperGrinderFactory": 0,
+    "PlierFactory": 0,
+    "SoapDispenserFactory": 2,
+    "TrashFactory": 4,
 }
 
 # Add PartNet-Mobility factories
@@ -79,6 +109,14 @@ try:
     from partnet_factory_rules import PARTNET_FACTORY_LIST, PARTNET_ANIMODES
     FACTORIES.extend([f for f in PARTNET_FACTORY_LIST if f not in FACTORIES])
     FACTORY_ANIMODES.update(PARTNET_ANIMODES)
+except ImportError:
+    pass
+
+# Add PhysXNet + PhysX_mobility factories
+try:
+    from physxnet_factory_rules import ALL_FACTORY_LIST as PHYSXNET_ALL_LIST, ALL_ANIMODES as PHYSXNET_ALL_ANIMODES
+    FACTORIES.extend([f for f in PHYSXNET_ALL_LIST if f not in FACTORIES])
+    FACTORY_ANIMODES.update(PHYSXNET_ALL_ANIMODES)
 except ImportError:
     pass
 
@@ -233,9 +271,16 @@ def run_generate(jobs, output_root, n_workers):
 # Stage 2: Render (GPU) — multi-view x multi-animode
 # ═══════════════════════════════════════════════════════════════
 
+def get_base_dir(factory):
+    """Determine asset base directory for a factory."""
+    if "PhysX" in factory:
+        return "/mnt/data/yurh/Infinigen-Sim"
+    return "/mnt/data/yurh/Infinite-Mobility"
+
+
 def render_one(args):
     """Render one (factory, seed, animode) with all 32 views."""
-    factory, seed, animode, out_dir = args
+    factory, seed, animode, out_dir, base_dir = args
     gpu_id = _worker_gpu
 
     # Check if already rendered
@@ -248,6 +293,7 @@ def render_one(args):
         "--python", "render_articulation.py", "--",
         "--factory", factory, "--seed", str(seed), "--device", "0",
         "--output_dir", out_dir,
+        "--base", base_dir,
         "--resolution", "512", "--samples", "32",
         "--duration", "4.0", "--fps", "30",
         "--animode", str(animode),
@@ -286,7 +332,7 @@ def run_render_batch(render_jobs, n_gpus):
     to_render = []
     already = 0
     for job in render_jobs:
-        factory, seed, animode, out_dir = job
+        factory, seed, animode, out_dir = job[0], job[1], job[2], job[3]
         if count_videos(out_dir, animode) >= N_EXPECTED:
             already += 1
         else:
@@ -387,6 +433,8 @@ def main():
                         help="Skip splitting")
     parser.add_argument("--split_only", action="store_true",
                         help="Only run splitting")
+    parser.add_argument("--from_precompute", default=None,
+                        help="Build render jobs from precompute dir (e.g. ./precompute)")
     args = parser.parse_args()
 
     output_root = os.path.join(BASE_DIR, "outputs")
@@ -417,31 +465,57 @@ def main():
 
     # ── Stage 2: Render ──
     if not args.no_render:
-        # Build render jobs: (factory, seed, animode, out_dir)
+        # Build render jobs: (factory, seed, animode, out_dir, base_dir)
         render_jobs = []
-        for factory in factories:
-            max_animode = FACTORY_ANIMODES.get(factory, 0)
-            for seed in seeds:
-                origins = os.path.join(output_root, factory, str(seed), "origins.json")
-                if not os.path.exists(origins):
+
+        if args.from_precompute:
+            # Precompute-driven: enumerate from precompute metadata
+            precompute_dir = args.from_precompute
+            for factory in sorted(os.listdir(precompute_dir)):
+                fdir = os.path.join(precompute_dir, factory)
+                if not os.path.isdir(fdir):
                     continue
-                out_dir = os.path.join(output_root, "motion_videos", factory, str(seed))
-                os.makedirs(out_dir, exist_ok=True)
-                for animode in range(max_animode + 1):
-                    render_jobs.append((factory, seed, animode, out_dir))
+                if args.factory and factory != args.factory:
+                    continue
+                max_animode = FACTORY_ANIMODES.get(factory, 0)
+                base_dir = get_base_dir(factory)
+                for identifier in sorted(os.listdir(fdir)):
+                    meta_path = os.path.join(fdir, identifier, "metadata.json")
+                    if not os.path.isfile(meta_path):
+                        continue
+                    seed = int(identifier) if identifier.isdigit() else identifier
+                    scene_dir = os.path.join(base_dir, "outputs", factory, str(seed))
+                    if not os.path.exists(os.path.join(scene_dir, "origins.json")):
+                        continue
+                    out_dir = os.path.join(output_root, "motion_videos", factory, str(seed))
+                    os.makedirs(out_dir, exist_ok=True)
+                    for animode in range(max_animode + 1):
+                        render_jobs.append((factory, seed, animode, out_dir, base_dir))
+        else:
+            # Legacy mode: enumerate from seeds
+            for factory in factories:
+                max_animode = FACTORY_ANIMODES.get(factory, 0)
+                base_dir = get_base_dir(factory)
+                for seed in seeds:
+                    origins = os.path.join(base_dir, "outputs", factory, str(seed), "origins.json")
+                    if not os.path.exists(origins):
+                        continue
+                    out_dir = os.path.join(output_root, "motion_videos", factory, str(seed))
+                    os.makedirs(out_dir, exist_ok=True)
+                    for animode in range(max_animode + 1):
+                        render_jobs.append((factory, seed, animode, out_dir, base_dir))
 
         # Print plan
         print(f"\n=== Render Plan ===")
-        total_animodes = 0
-        for factory in factories:
-            max_a = FACTORY_ANIMODES.get(factory, 0)
-            n_exist = sum(1 for s in seeds
-                          if os.path.exists(os.path.join(output_root, factory, str(s), "origins.json")))
-            n_jobs = n_exist * (max_a + 1)
-            total_animodes += n_jobs
-            print(f"  {factory}: {n_exist} seeds x {max_a+1} animodes = {n_jobs} jobs")
+        factory_counts = {}
+        for job in render_jobs:
+            f = job[0]
+            factory_counts[f] = factory_counts.get(f, 0) + 1
+        for f in sorted(factory_counts):
+            print(f"  {f}: {factory_counts[f]} jobs")
         print(f"Total render jobs: {len(render_jobs)}")
-        print(f"Est. time per job: ~6min (32 views, persistent_data)")
+        print(f"Views per job: {N_EXPECTED} (16 hemi + 8 orbit + 8 sweep)")
+        print(f"Est. time per job: ~6min (32 views)")
         est_hours = len(render_jobs) * 6 / 60 / args.n_gpus
         print(f"Est. total: ~{est_hours:.0f}h on {args.n_gpus} GPUs")
 

@@ -35,12 +35,13 @@ from multiprocessing import Queue, Process
 
 
 # ── Defaults (override with --base, --blender, etc.) ──
-DEFAULT_BASE = "/mnt/data/yurh/Infinite-Mobility"
+DEFAULT_BASE = "/mnt/data/yurh/Infinigen-Sim"
 DEFAULT_BLENDER = "/mnt/data/yurh/blender-3.6.0-linux-x64/blender"
 DEFAULT_ENVMAP_DIR = "/mnt/data/yurh/dataset3D/envmap/indoor"
 DEFAULT_ENVMAP = "brown_photostudio_06_2k.exr"
 
 FACTORIES = [
+    # ── Original Infinite-Mobility factories ──
     "BeverageFridgeFactory",
     "BottleFactory",
     "DishwasherFactory",
@@ -54,6 +55,20 @@ FACTORIES = [
     "TapFactory",
     "ToiletFactory",
     "WindowFactory",
+    # ── Infinigen-Sim sim_objects ──
+    "SimDoorFactory",
+    "DoorHandleFactory",
+    "DrawerFactory",
+    "BoxFactory",
+    "CabinetFactory",
+    "RefrigeratorFactory",
+    "FaucetFactory",
+    "StovetopFactory",
+    "ToasterFactory",
+    "PepperGrinderFactory",
+    "PlierFactory",
+    "SoapDispenserFactory",
+    "TrashFactory",
 ]
 
 

@@ -30,9 +30,17 @@ import os
 import json
 import math
 import subprocess
+import shutil
 import xml.etree.ElementTree as ET
 from mathutils import Vector, Matrix, Euler, Quaternion
 from collections import defaultdict, deque
+
+# ── Blender version detection for API compatibility ──
+BLENDER_VERSION = bpy.app.version  # e.g. (3, 6, 0) or (4, 2, 0)
+BLENDER_MAJOR = BLENDER_VERSION[0]
+BLENDER_MINOR = BLENDER_VERSION[1]
+IS_BLENDER_4X = BLENDER_MAJOR >= 4
+print(f"Blender version: {BLENDER_VERSION[0]}.{BLENDER_VERSION[1]}.{BLENDER_VERSION[2]}")
 
 # ── Parse args after "--" ──
 argv = sys.argv
@@ -45,7 +53,7 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--factory", required=True, help="Factory name, e.g. OfficeChairFactory")
 parser.add_argument("--seed", type=int, default=0)
-parser.add_argument("--base", default="/mnt/data/yurh/Infinite-Mobility")
+parser.add_argument("--base", default="/mnt/data/yurh/Infinigen-Sim")
 parser.add_argument("--envmap", default="/mnt/data/yurh/dataset3D/envmap/indoor/brown_photostudio_06_2k.exr")
 parser.add_argument("--resolution", type=int, default=512)
 parser.add_argument("--fps", type=int, default=30)
@@ -63,6 +71,10 @@ parser.add_argument("--skip_bg", action="store_true", help="Skip opaque backgrou
 parser.add_argument("--joint_filter", default=None, help="Only animate joints matching this substring")
 parser.add_argument("--moving_views", nargs="+", default=[],
                     help="Moving camera views to render (orbit_XX, sweep_XX)")
+parser.add_argument("--max_bounces", type=int, default=None,
+                    help="Override Cycles max bounces (default: Blender default 12)")
+parser.add_argument("--engine", choices=["cycles", "eevee"], default="cycles",
+                    help="Render engine: cycles (default) or eevee")
 args = parser.parse_args(argv)
 
 # ── Paths ──
@@ -351,6 +363,7 @@ FACTORY_RULES = {
             0: [("prismatic",)],                       # base: cap lift
             1: [("continuous",)],                      # base: cap rotation
             2: [("prismatic",), ("continuous",)],      # senior: all
+            3: "cap_detach",                           # senior: cap unscrews + flies off
         },
     },
     # ── Bar Chair: height + seat spin (like OfficeChair) ──
@@ -382,6 +395,129 @@ FACTORY_RULES = {
             2: [("revolute",), ("prismatic",)],        # senior: all
         },
     },
+
+    # ═══════════════════════════════════════════════════════════════
+    # Infinigen-Sim sim_objects (17 new factories)
+    # These use nodegroup_hinge_joint (=revolute) and
+    # nodegroup_sliding_joint (=prismatic) in their geometry nodes.
+    # Part labels come from nodegroup_add_jointed_geometry_metadata.
+    # ═══════════════════════════════════════════════════════════════
+
+    # ── SimDoorFactory: door swings open (hinge) ──
+    "SimDoorFactory": {
+        "moving_parts": set(),  # all parts animated via URDF
+        "animode_joints": {
+            0: [("revolute",)],                        # base: door swings
+        },
+    },
+    # ── DoorHandleFactory: handle turns (hinge) + lock slides ──
+    "DoorHandleFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute",)],                        # base: lever turn
+            1: [("prismatic",)],                       # base: lock slide
+            2: [("revolute",), ("prismatic",)],        # senior: all
+        },
+    },
+    # ── DrawerFactory: drawer slides out (prismatic) ──
+    "DrawerFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("prismatic",)],                       # base: drawer slide
+        },
+    },
+    # ── BoxFactory: lids/flaps hinge open ──
+    "BoxFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute", 0)],                      # base: first lid/flap
+            1: [("revolute", -1)],                     # base: last lid/flap
+            2: [("revolute",)],                        # senior: all flaps
+        },
+    },
+    # ── CabinetFactory: doors (hinge) + drawers (slide) ──
+    "CabinetFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute",)],                        # base: doors
+            1: [("prismatic",)],                       # base: drawers
+            2: [("revolute",), ("prismatic",)],        # senior: all
+        },
+    },
+    # ── RefrigeratorFactory: doors (hinge) + drawers (slide) ──
+    "RefrigeratorFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute", 0)],                      # base: main door
+            1: [("revolute", -1)],                     # base: freezer door
+            2: [("prismatic",)],                       # base: drawers slide
+            3: [("revolute",)],                        # senior: all doors
+            4: [("revolute",), ("prismatic",)],        # senior: all joints
+        },
+    },
+    # ── FaucetFactory: handles turn (hinge), spout rotates ──
+    "FaucetFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute", 0)],                      # base: first handle
+            1: [("revolute", -1)],                     # base: spout or last handle
+            2: [("revolute",)],                        # senior: all hinges
+        },
+    },
+    # ── StovetopFactory: knobs turn (hinge) ──
+    "StovetopFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute",)],                        # base: knobs turn
+        },
+    },
+    # ── ToasterFactory: slider (prismatic), knobs (hinge), button (prismatic) ──
+    "ToasterFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("prismatic",)],                       # base: slider/button push
+            1: [("revolute",)],                        # base: knobs turn
+            2: [("revolute",), ("prismatic",)],        # senior: all
+        },
+    },
+    # ── PepperGrinderFactory: lid rotates (hinge) ──
+    "PepperGrinderFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute",)],                        # base: lid twist
+        },
+    },
+    # ── PlierFactory: arms rotate around pivot (hinge) ──
+    "PlierFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute",)],                        # base: arms open/close
+        },
+    },
+    # ── SoapDispenserFactory: nozzle push (slide) + cap rotate (hinge) ──
+    "SoapDispenserFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("prismatic",)],                       # base: pump press
+            1: [("revolute",)],                        # base: cap rotate
+            2: [("revolute",), ("prismatic",)],        # senior: all
+        },
+    },
+    # ── TrashFactory: lid (hinge), pedal (hinge), flaps (hinge), drawer (slide) ──
+    "TrashFactory": {
+        "moving_parts": set(),
+        "animode_joints": {
+            0: [("revolute", 0)],                      # base: lid/flap open
+            1: [("revolute", -1)],                     # base: pedal press
+            2: [("prismatic",)],                       # base: drawer slide
+            3: [("revolute",)],                        # senior: all hinges
+            4: [("revolute",), ("prismatic",)],        # senior: all joints
+        },
+    },
+    # Note: LampFactory, DishwasherFactory, OvenFactory, MicrowaveFactory, WindowFactory
+    # already have entries above (from IM). Those rules work for Infinigen-Sim too since
+    # they select joints by TYPE (revolute/prismatic), not by part name.
+    # The joint types are the same: hinge_joint->revolute, sliding_joint->prismatic.
 }
 
 # Merge PartNet-Mobility factory rules
@@ -394,6 +530,53 @@ try:
     FACTORY_RULES = merge_render_rules(FACTORY_RULES)
 except ImportError:
     pass
+
+# Merge PhysXNet + PhysX_mobility factory rules
+try:
+    from physxnet_factory_rules import (
+        merge_render_rules as physxnet_merge_render_rules,
+        ALL_ANIMODES as PHYSXNET_ALL_ANIMODES,
+        ALL_MATERIAL_DEFAULTS as PHYSXNET_ALL_MATERIAL_DEFAULTS,
+    )
+    FACTORY_RULES = physxnet_merge_render_rules(FACTORY_RULES)
+except ImportError:
+    PHYSXNET_ALL_ANIMODES = {}
+    PHYSXNET_ALL_MATERIAL_DEFAULTS = {}
+
+# ── PhysXNet / PhysX_mobility generic fallback rules ──
+_PHYSXNET_GENERIC_RULE = {
+    "moving_parts": set(),  # no name filtering - animate all
+    "animode_joints": {
+        0: [("revolute",)],
+        1: [("prismatic",)],
+        2: [("continuous",)],
+        3: [("revolute",), ("prismatic",), ("continuous",)],
+    },
+}
+# Auto-register any *PhysXNetFactory or *PhysXMobilityFactory not already in rules
+import re as _re
+class _PhysXNetRuleProxy(dict):
+    """Fallback: if factory name matches PhysXNet/PhysXMobility pattern, use generic rule."""
+    def __init__(self, base):
+        super().__init__(base)
+    def __contains__(self, key):
+        if super().__contains__(key):
+            return True
+        return bool(_re.search(r'Phys[XxNn].*Factory$', str(key)))
+    def get(self, key, default=None):
+        if super().__contains__(key):
+            return super().get(key, default)
+        if _re.search(r'Phys[XxNn].*Factory$', str(key)):
+            return _PHYSXNET_GENERIC_RULE
+        return default
+    def __getitem__(self, key):
+        if super().__contains__(key):
+            return super().__getitem__(key)
+        if _re.search(r'Phys[XxNn].*Factory$', str(key)):
+            return _PHYSXNET_GENERIC_RULE
+        raise KeyError(key)
+
+FACTORY_RULES = _PhysXNetRuleProxy(FACTORY_RULES)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -632,7 +815,10 @@ def enhance_partnet_materials(factory_name, seed, part_objects, base_dir):
 
             # Slight specular adjustment for metallic surfaces
             if metallic > 0.5:
-                bsdf.inputs['Specular'].default_value = 0.5 + metallic * 0.3
+                # Blender 4.0+ renamed "Specular" to "Specular IOR Level"
+                spec_name = 'Specular IOR Level' if IS_BLENDER_4X else 'Specular'
+                if spec_name in bsdf.inputs:
+                    bsdf.inputs[spec_name].default_value = 0.5 + metallic * 0.3
 
             enhanced_count += 1
 
@@ -648,6 +834,137 @@ def enhance_partnet_materials(factory_name, seed, part_objects, base_dir):
     if enhanced_count > 0:
         print(f"  Materials enhanced: {enhanced_count} slots "
               f"(metallic/roughness), {texture_count} texture replacements")
+
+
+def _enhance_physxnet_materials(factory_name, seed, part_objects):
+    """Enhance materials for PhysXNet/PhysX_mobility factories.
+
+    Uses PBR texture library with box projection mapping, with PartNet
+    color extraction for 1,081 overlapping objects. Falls back to flat
+    PBR values when textures are unavailable.
+
+    Material sources (priority):
+      1. ShapeNet textures (future — placeholder)
+      2. PartNet colors + PBR overlay (for overlap objects)
+      3. ambientCG PBR textures with box projection (default)
+
+    IMPORTANT: part_objects keys are GROUP indices (from URDF link l_N),
+    NOT raw part labels. We must map group_idx -> part_labels via group_info.
+    """
+    try:
+        from physxnet_loader import (
+            is_physxnet_factory, load_physxnet_json, load_physxmob_json,
+            seed_to_object_id,
+        )
+        from physxnet_factory_rules import factory_dataset
+    except ImportError:
+        return
+
+    if not is_physxnet_factory(factory_name):
+        return
+
+    ds = factory_dataset(factory_name)
+
+    # Load JSON data for this object
+    json_data = None
+    obj_id = str(seed)
+    if ds == "physxmob":
+        json_data = load_physxmob_json(obj_id)
+    else:
+        json_data = load_physxnet_json(obj_id)
+
+    if json_data is None:
+        mapped_id, _ = seed_to_object_id(factory_name, seed, dataset=ds)
+        if mapped_id is None:
+            return
+        obj_id = str(mapped_id)
+        if ds == "physxmob":
+            json_data = load_physxmob_json(obj_id)
+        else:
+            json_data = load_physxnet_json(obj_id)
+
+    if json_data is None:
+        return
+
+    # Use new PBR material system
+    try:
+        from pbr_material_system import apply_pbr_materials
+        apply_pbr_materials(factory_name, seed, part_objects, json_data)
+    except ImportError:
+        # Fallback to flat PBR if pbr_material_system not available
+        _enhance_physxnet_materials_flat(factory_name, seed, part_objects, json_data)
+
+
+def _enhance_physxnet_materials_flat(factory_name, seed, part_objects, json_data):
+    """Flat PBR fallback (no textures) — used when pbr_material_system unavailable."""
+    import random as _rng
+
+    from physxnet_loader import get_pbr_for_material
+
+    parts = json_data.get("parts", [])
+    label_to_info = {}
+    for p in parts:
+        label = p.get("label")
+        if label is not None:
+            label_to_info[label] = p
+
+    group_info = json_data.get("group_info", {})
+    group_to_labels = {}
+    for gid_str, val in group_info.items():
+        gid = int(gid_str)
+        if isinstance(val, list) and len(val) >= 4 and isinstance(val[-1], str) and val[-1] in ('A', 'B', 'C', 'D', 'CB'):
+            labels = val[0] if isinstance(val[0], list) else [val[0]]
+            group_to_labels[gid] = labels
+        elif isinstance(val, list):
+            group_to_labels[gid] = [x for x in val if isinstance(x, int)]
+
+    mat_rng = _rng.Random(hash((factory_name, seed)))
+    enhanced_count = 0
+
+    for part_idx, obj in part_objects.items():
+        part_labels = group_to_labels.get(part_idx, [part_idx])
+        info = {}
+        for lbl in part_labels:
+            info = label_to_info.get(lbl, {})
+            if info:
+                break
+        material_name = info.get("material", "Unknown")
+        metallic, roughness, color = get_pbr_for_material(material_name)
+        metallic = max(0, min(1, metallic + mat_rng.uniform(-0.05, 0.05)))
+        roughness = max(0, min(1, roughness + mat_rng.uniform(-0.08, 0.08)))
+
+        for mat_slot in obj.material_slots:
+            mat = mat_slot.material
+            bsdf = _find_principled_bsdf(mat)
+            if bsdf is None:
+                continue
+            bc_input = bsdf.inputs['Base Color']
+            if bc_input.is_linked:
+                for link in list(mat.node_tree.links):
+                    if link.to_socket == bc_input:
+                        mat.node_tree.links.remove(link)
+            bsdf.inputs['Metallic'].default_value = metallic
+            bsdf.inputs['Roughness'].default_value = roughness
+            bsdf.inputs['Base Color'].default_value = (*color, 1.0)
+            if metallic > 0.5:
+                bsdf.inputs['Specular'].default_value = 0.5 + metallic * 0.3
+            enhanced_count += 1
+
+        if not obj.material_slots:
+            mat = bpy.data.materials.new(name=f"physxnet_mat_{part_idx}")
+            mat.use_nodes = True
+            bsdf = mat.node_tree.nodes.get("Principled BSDF")
+            if bsdf:
+                bsdf.inputs['Metallic'].default_value = metallic
+                bsdf.inputs['Roughness'].default_value = roughness
+                bsdf.inputs['Base Color'].default_value = (*color, 1.0)
+                if metallic > 0.5:
+                    bsdf.inputs['Specular'].default_value = 0.5 + metallic * 0.3
+            obj.data.materials.append(mat)
+            enhanced_count += 1
+
+    if enhanced_count > 0:
+        print(f"  PhysXNet materials (flat fallback): {enhanced_count} parts")
 
 
 def get_moving_part_indices(factory_name, scene_dir):
@@ -718,8 +1035,18 @@ def clear_scene():
             bpy.data.images.remove(block)
 
 
-def setup_cycles_gpu():
+def setup_render_engine(engine="cycles"):
+    """Set up render engine: cycles (with GPU) or eevee."""
     scene = bpy.context.scene
+    if engine == "eevee":
+        scene.render.engine = 'BLENDER_EEVEE'
+        scene.eevee.taa_render_samples = 64
+        scene.eevee.use_gtao = True       # ambient occlusion
+        scene.eevee.use_ssr = True         # screen-space reflections
+        scene.eevee.use_soft_shadows = True
+        print(f"  Engine: EEVEE (64 TAA samples, AO+SSR+soft shadows)")
+        return
+
     scene.render.engine = 'CYCLES'
     prefs = bpy.context.preferences.addons['cycles'].preferences
     # OptiX uses RT cores for hardware-accelerated ray tracing (2-3x faster)
@@ -740,27 +1067,56 @@ def setup_cycles_gpu():
     scene.cycles.device = 'GPU'
 
 
-def setup_render_settings(resolution, fps, num_frames, samples, transparent=False):
+def setup_render_settings(resolution, fps, num_frames, samples, transparent=False,
+                          max_bounces=None, engine="cycles"):
     scene = bpy.context.scene
     scene.render.resolution_x = resolution
     scene.render.resolution_y = resolution
     scene.render.fps = fps
     scene.frame_start = 1
     scene.frame_end = num_frames
-    scene.cycles.samples = samples
-    scene.cycles.use_denoising = True
-    scene.cycles.denoiser = 'OPENIMAGEDENOISE'
-    scene.cycles.denoising_input_passes = 'RGB_ALBEDO_NORMAL'
-    scene.cycles.use_adaptive_sampling = True
-    scene.cycles.adaptive_threshold = 0.01
+
+    if engine == "eevee":
+        # EEVEE settings already configured in setup_render_engine
+        pass
+    else:
+        # Cycles settings
+        scene.cycles.samples = samples
+        scene.cycles.use_denoising = True
+        scene.cycles.denoiser = 'OPENIMAGEDENOISE'
+        try:
+            scene.cycles.denoising_input_passes = 'RGB_ALBEDO_NORMAL'
+        except TypeError:
+            pass
+        scene.cycles.use_adaptive_sampling = True
+        scene.cycles.adaptive_threshold = 0.01
+
+        # Bounce limits
+        if max_bounces is not None:
+            scene.cycles.max_bounces = max_bounces
+            scene.cycles.diffuse_bounces = min(max_bounces, 2)
+            scene.cycles.glossy_bounces = min(max_bounces, 2)
+            scene.cycles.transmission_bounces = min(max_bounces, 2)
+            scene.cycles.transparent_max_bounces = min(max_bounces, 4)
+            scene.cycles.volume_bounces = 0
+            print(f"  Bounces: max={max_bounces}, diffuse={scene.cycles.diffuse_bounces}, "
+                  f"glossy={scene.cycles.glossy_bounces}, transmission={scene.cycles.transmission_bounces}")
+
     # Keep textures, shaders, BVH, and light data in memory between frames
     scene.render.use_persistent_data = True
     scene.render.film_transparent = transparent
     scene.render.image_settings.file_format = 'PNG'
     scene.render.image_settings.color_mode = 'RGBA'
     # Color management: Filmic for realistic HDR tonemapping
-    scene.view_settings.view_transform = 'Filmic'
-    scene.view_settings.look = 'Medium Contrast'
+    # Blender 4.x: "Filmic" is now under "AgX" by default, but "Filmic" still exists
+    try:
+        scene.view_settings.view_transform = 'Filmic'
+    except TypeError:
+        scene.view_settings.view_transform = 'AgX'  # Blender 4.x default
+    try:
+        scene.view_settings.look = 'Medium Contrast'
+    except TypeError:
+        scene.view_settings.look = 'None'
     scene.view_settings.exposure = 0.0
     scene.view_settings.gamma = 1.0
 
@@ -797,19 +1153,37 @@ def import_obj_with_textures(filepath):
     (rotation_euler), not to vertex data. Even with axis_forward='-Y', axis_up='Z',
     it adds a spurious Rz(180°). We must reset rotation_euler=(0,0,0) after import
     so that transform_apply only bakes the location (origin offset) into vertices.
+
+    Blender 4.x replaced import_scene.obj with wm.obj_import (C++ importer).
+    We detect the version and use the appropriate API.
     """
     existing = set(bpy.data.objects.keys())
-    bpy.ops.import_scene.obj(
-        filepath=filepath, use_edges=False, use_smooth_groups=True,
-        axis_forward='-Y', axis_up='Z',
-    )
+
+    if IS_BLENDER_4X:
+        # Blender 4.x: new C++ OBJ importer
+        bpy.ops.wm.obj_import(
+            filepath=filepath,
+            forward_axis='NEGATIVE_Y',
+            up_axis='Z',
+        )
+    else:
+        # Blender 3.x: legacy Python OBJ importer
+        bpy.ops.import_scene.obj(
+            filepath=filepath, use_edges=False, use_smooth_groups=True,
+            axis_forward='-Y', axis_up='Z',
+        )
+
     new_objs = [bpy.data.objects[n] for n in bpy.data.objects.keys() if n not in existing]
     for obj in new_objs:
         if obj.type == 'MESH':
             # Reset the spurious rotation from the importer
             obj.rotation_euler = (0, 0, 0)
-            for poly in obj.data.polygons:
-                poly.use_smooth = True
+            if IS_BLENDER_4X:
+                # Blender 4.x: use shade_smooth attribute instead of per-polygon flag
+                obj.data.shade_smooth()
+            else:
+                for poly in obj.data.polygons:
+                    poly.use_smooth = True
     return new_objs
 
 
@@ -1120,9 +1494,14 @@ def animate_parts(part_objects, links, joints, parent_map, children_map, origins
             link_part_map[link_name] = info["part_idx"]
 
     # Determine which links are animated
+    # When animode is active, ALL parts may be animated (animode picks the joints,
+    # and the affected parts follow). So treat all parts as potentially animated.
+    animode_joints_cfg_pre = FACTORY_RULES.get(FACTORY, {}).get("animode_joints", {})
+    animode_active_pre = (_CURRENT_ANIMODE >= 10 or _CURRENT_ANIMODE in animode_joints_cfg_pre)
+
     animated_links = {}
     for link_name, part_idx in link_part_map.items():
-        if moving_indices is None or part_idx in moving_indices:
+        if moving_indices is None or animode_active_pre or part_idx in moving_indices:
             animated_links[link_name] = part_idx
 
     body_links = {ln: pi for ln, pi in link_part_map.items() if ln not in animated_links}
@@ -1130,27 +1509,45 @@ def animate_parts(part_objects, links, joints, parent_map, children_map, origins
     print(f"  Animated parts: {sorted(animated_links.values())}")
     print(f"  Static parts: {sorted(body_links.values())}")
 
-    # Determine which joints should be animated (those on paths to moving parts)
-    animated_joint_names = set()
-    if moving_indices is not None:
+    # Determine which joints should be animated
+    # When animode filtering is active (type-based or per-joint), we need ALL
+    # non-fixed joints as candidates so the filter can select from the full set.
+    # Otherwise, restrict to joints on paths to moving parts.
+    animode_joints_cfg = FACTORY_RULES.get(FACTORY, {}).get("animode_joints", {})
+    animode_active = (_CURRENT_ANIMODE >= 10 or _CURRENT_ANIMODE in animode_joints_cfg)
+
+    all_nonfixed = {j.name for j in joints if j.jtype != "fixed"}
+
+    if animode_active or moving_indices is None:
+        # Use all non-fixed joints as candidates for animode filtering
+        animated_joint_names = all_nonfixed
+    else:
         # BFS backwards from each moving link to root, collecting joints on the path
+        animated_joint_names = set()
         for link_name, part_idx in animated_links.items():
             curr = link_name
             while curr in parent_map:
                 parent_link, joint = parent_map[curr]
                 animated_joint_names.add(joint.name)
                 curr = parent_link
-        print(f"  Animated joints: {sorted(animated_joint_names)}")
-    else:
-        # Animate all non-fixed joints
-        animated_joint_names = {j.name for j in joints if j.jtype != "fixed"}
 
-    # Per-animode joint selection from FACTORY_RULES
-    # Format: {animode_idx: [(type,), (type, ordinal), ...]}
-    #   (type,)          = all significant joints of that type
-    #   (type, ordinal)  = specific joint by type + depth ordinal (0=shallowest, -1=deepest)
-    animode_joints_cfg = FACTORY_RULES.get(FACTORY, {}).get("animode_joints", {})
-    if _CURRENT_ANIMODE in animode_joints_cfg:
+    print(f"  Animated joints: {sorted(animated_joint_names)}")
+
+    if _CURRENT_ANIMODE >= 10:
+        # Per-joint mode: animate only the Nth movable joint (0-indexed)
+        joint_index = _CURRENT_ANIMODE - 10
+        joint_by_name = {j.name: j for j in joints}
+        movable_joints = sorted([
+            jname for jname in animated_joint_names
+            if joint_by_name.get(jname) and joint_by_name[jname].jtype != "fixed"
+        ])
+        if joint_index < len(movable_joints):
+            animated_joint_names = {movable_joints[joint_index]}
+            print(f"  Animode {_CURRENT_ANIMODE}: per-joint mode, joint[{joint_index}] = {movable_joints[joint_index]}")
+        else:
+            print(f"  Animode {_CURRENT_ANIMODE}: per-joint mode, joint[{joint_index}] out of range ({len(movable_joints)} movable joints), skipping")
+            return False
+    elif _CURRENT_ANIMODE in animode_joints_cfg:
         selectors = animode_joints_cfg[_CURRENT_ANIMODE]
         joint_by_name = {j.name: j for j in joints}
 
@@ -1222,8 +1619,8 @@ def animate_parts(part_objects, links, joints, parent_map, children_map, origins
             animated_joint_names = selected
             print(f"  Animode {_CURRENT_ANIMODE}: {sorted(selected)}")
         else:
-            animated_joint_names = set()  # no joints → static video
-            print(f"  Animode {_CURRENT_ANIMODE}: no matching joints, will be static")
+            print(f"  Animode {_CURRENT_ANIMODE}: no matching joints, skipping render")
+            return False
 
     # Compute rest transforms (all joints at q=0)
     rest_transforms = forward_kinematics_at_q(links, joints, parent_map, children_map, q_values=None)
@@ -1272,6 +1669,667 @@ def animate_parts(part_objects, links, joints, parent_map, children_map, origins
                     kp.interpolation = 'LINEAR'
 
     print(f"  Animation set for {len(animated_links)} moving parts")
+    return animated_joint_names
+
+
+# ═══════════════════════════════════════════════════════════════
+# Bullet Rigid Body Physics for Collision Response
+# ═══════════════════════════════════════════════════════════════
+
+def setup_rigid_body_physics(part_objects, links, joints, parent_map, children_map,
+                              animated_joint_names, num_frames):
+    """Setup Bullet rigid body physics so animated parts push non-animated parts.
+
+    When >=2 movable joints and some are not animated (e.g. door in prismatic
+    mode), Bullet simulates collision response: drawers push the door open
+    via its hinge constraint.
+
+    Key principle (Bullet docs): object origins must be at joint pivot points
+    for correct constraint behavior. After load_scene_parts() all origins are
+    at (0,0,0) with vertices in world space. We relocate ACTIVE objects'
+    origins to their joint pivot before adding rigid bodies and constraints.
+    """
+    import math as _math
+
+    # --- helpers ---
+    link_part_map = {}
+    for ln, info in links.items():
+        if info["part_idx"] is not None:
+            link_part_map[ln] = info["part_idx"]
+
+    def _descendant_parts(joint):
+        """All part indices reachable from joint's child via fixed joints."""
+        parts = []
+        q = deque([joint.child_link])
+        vis = set()
+        while q:
+            ln = q.popleft()
+            if ln in vis:
+                continue
+            vis.add(ln)
+            if ln in link_part_map:
+                parts.append(link_part_map[ln])
+            for cln, cj in children_map.get(ln, []):
+                if cj.jtype == "fixed":
+                    q.append(cln)
+        return parts
+
+    # --- classify joints & parts ---
+    passive_joints = [j for j in joints if j.jtype != "fixed" and j.name not in animated_joint_names]
+    animated_joints = [j for j in joints if j.jtype != "fixed" and j.name in animated_joint_names]
+
+    if not passive_joints:
+        print("  No passive joints for Bullet physics")
+        return
+
+    passive_joint_parts = {j.name: _descendant_parts(j) for j in passive_joints}
+
+    animated_part_set = set()
+    for j in animated_joints:
+        animated_part_set.update(_descendant_parts(j))
+
+    all_movable = set()
+    for j in joints:
+        if j.jtype != "fixed":
+            all_movable.update(_descendant_parts(j))
+    static_parts = set(part_objects.keys()) - all_movable
+
+    # FK at rest (all q=0) — needed for pivot positions
+    rest_fk = forward_kinematics_at_q(links, joints, parent_map, children_map)
+
+    print(f"\n  Bullet rigid body physics:")
+    print(f"    Passive joints: {[j.name for j in passive_joints]}")
+    print(f"    Animated parts: {sorted(animated_part_set)}")
+    print(f"    Static parts:   {sorted(static_parts)}")
+
+    # --- ensure rigid body world exists ---
+    scene = bpy.context.scene
+    if scene.rigidbody_world is None:
+        bpy.ops.rigidbody.world_add()
+
+    def _add_rb(obj):
+        """Select + activate obj, then add rigid body."""
+        bpy.ops.object.select_all(action='DESELECT')
+        obj.select_set(True)
+        bpy.context.view_layer.objects.active = obj
+        bpy.ops.rigidbody.object_add()
+        obj.select_set(False)
+
+    # --- Step 1: PASSIVE KINEMATIC for animated (keyframed) parts ---
+    for pi in sorted(animated_part_set):
+        if pi not in part_objects:
+            continue
+        obj = part_objects[pi]
+        _add_rb(obj)
+        rb = obj.rigid_body
+        rb.type = 'PASSIVE'
+        rb.kinematic = True
+        rb.collision_shape = 'MESH'
+        rb.mesh_source = 'DEFORM'
+        rb.friction = 0.5
+        rb.restitution = 0.0
+        rb.collision_margin = 0.001
+        print(f"    Part {pi}: PASSIVE KINEMATIC (animated)")
+
+    # --- Step 2: PASSIVE for static parts ---
+    for pi in sorted(static_parts):
+        if pi not in part_objects:
+            continue
+        obj = part_objects[pi]
+        _add_rb(obj)
+        rb = obj.rigid_body
+        rb.type = 'PASSIVE'
+        rb.kinematic = False
+        rb.collision_shape = 'MESH'
+        rb.mesh_source = 'DEFORM'
+        rb.friction = 0.5
+        rb.restitution = 0.0
+        rb.collision_margin = 0.001
+        print(f"    Part {pi}: PASSIVE (static)")
+
+    # Pick anchor for constraints (first static part, fallback to animated)
+    anchor_obj = None
+    for pi in sorted(static_parts):
+        if pi in part_objects and part_objects[pi].rigid_body:
+            anchor_obj = part_objects[pi]
+            break
+    if anchor_obj is None:
+        for pi in sorted(animated_part_set):
+            if pi in part_objects and part_objects[pi].rigid_body:
+                anchor_obj = part_objects[pi]
+                break
+    if anchor_obj is None:
+        # Create tiny invisible anchor
+        bpy.ops.mesh.primitive_cube_add(size=0.001, location=(0, 0, 0))
+        anchor_obj = bpy.context.active_object
+        anchor_obj.name = "physics_anchor"
+        anchor_obj.hide_render = True
+        _add_rb(anchor_obj)
+        anchor_obj.rigid_body.type = 'PASSIVE'
+        anchor_obj.rigid_body.collision_shape = 'BOX'
+
+    print(f"    Anchor: {anchor_obj.name}")
+
+    # --- Step 3: ACTIVE for each passive joint's parts + constraint ---
+    for j in passive_joints:
+        child_parts = passive_joint_parts[j.name]
+        if not child_parts:
+            continue
+
+        # World-space pivot = parent_transform @ joint_origin
+        parent_T = rest_fk.get(j.parent_link, Matrix.Identity(4))
+        pivot_world = parent_T @ Vector(j.origin_xyz)
+
+        # Joint axis in world space
+        axis_world = (parent_T.to_3x3() @ Vector(j.axis).normalized()).normalized()
+
+        print(f"    Joint {j.name} ({j.jtype}):")
+        print(f"      Pivot:  [{pivot_world.x:.4f}, {pivot_world.y:.4f}, {pivot_world.z:.4f}]")
+        print(f"      Axis:   [{axis_world.x:.4f}, {axis_world.y:.4f}, {axis_world.z:.4f}]")
+        print(f"      Limits: [{j.lower:.4f}, {j.upper:.4f}]")
+
+        # Relocate each descendant part's origin to pivot
+        for cpi in child_parts:
+            if cpi not in part_objects:
+                continue
+            obj = part_objects[cpi]
+            # Clear keyframes set by animate_parts() — ACTIVE rigid body is
+            # driven by physics, not animation.  Old keyframes would pull the
+            # object back to location=(0,0,0) and fight the physics sim.
+            obj.animation_data_clear()
+            mesh = obj.data
+            # Shift all vertices so they're relative to pivot
+            for v in mesh.vertices:
+                v.co -= pivot_world
+            mesh.update()
+            # Set Blender object location to pivot (origin = pivot)
+            obj.location = pivot_world
+
+        # If multiple parts under this joint, join into one rigid body
+        objs_to_join = [part_objects[cpi] for cpi in child_parts if cpi in part_objects]
+        if len(objs_to_join) > 1:
+            bpy.ops.object.select_all(action='DESELECT')
+            for o in objs_to_join:
+                o.select_set(True)
+            bpy.context.view_layer.objects.active = objs_to_join[0]
+            bpy.ops.object.join()
+            physics_obj = objs_to_join[0]
+            # Update part_objects mapping
+            for cpi in child_parts:
+                if cpi in part_objects:
+                    part_objects[cpi] = physics_obj
+            print(f"      Joined {len(objs_to_join)} parts into {physics_obj.name}")
+        else:
+            physics_obj = objs_to_join[0] if objs_to_join else None
+
+        if physics_obj is None:
+            continue
+
+        # Add ACTIVE rigid body
+        _add_rb(physics_obj)
+        rb = physics_obj.rigid_body
+        rb.type = 'ACTIVE'
+        rb.mass = 1.0
+        rb.collision_shape = 'CONVEX_HULL'  # more stable than MESH for dynamic objects
+        rb.friction = 0.0       # zero friction: only normal push, no tangential drag-back
+        rb.restitution = 0.0
+        rb.linear_damping = 0.8
+        rb.angular_damping = 0.8   # moderate: door slows after push but stays open
+        rb.collision_margin = 0.001
+        rb.use_deactivation = False
+        print(f"      Parts {child_parts}: ACTIVE, origin at pivot")
+
+        # Determine constraint type
+        if j.jtype in ("revolute", "continuous"):
+            constraint_type = 'HINGE'
+        elif j.jtype == "prismatic":
+            constraint_type = 'SLIDER'
+        else:
+            continue
+
+        # Create constraint Empty at pivot
+        empty = bpy.data.objects.new(f"rbc_{j.name}", None)
+        bpy.context.collection.objects.link(empty)
+        empty.location = pivot_world
+        empty.empty_display_size = 0.05
+
+        # Orient Empty: HINGE uses Z-axis, SLIDER uses X-axis
+        if constraint_type == 'HINGE':
+            default_dir = Vector((0, 0, 1))
+        else:
+            default_dir = Vector((1, 0, 0))
+
+        cross = default_dir.cross(axis_world)
+        if cross.length > 1e-6:
+            rot_quat = default_dir.rotation_difference(axis_world)
+            empty.rotation_euler = rot_quat.to_euler()
+        elif default_dir.dot(axis_world) < 0:
+            # Anti-parallel: 180-degree flip
+            if constraint_type == 'HINGE':
+                empty.rotation_euler = (_math.pi, 0, 0)
+            else:
+                empty.rotation_euler = (0, 0, _math.pi)
+
+        # Add rigid body constraint
+        bpy.ops.object.select_all(action='DESELECT')
+        empty.select_set(True)
+        bpy.context.view_layer.objects.active = empty
+        bpy.ops.rigidbody.constraint_add()
+        empty.select_set(False)
+
+        rbc = empty.rigid_body_constraint
+        rbc.type = constraint_type
+        rbc.object1 = anchor_obj
+        rbc.object2 = physics_obj
+        rbc.use_breaking = False
+        rbc.disable_collisions = False
+
+        # Set limits
+        if constraint_type == 'HINGE':
+            rbc.use_limit_ang_z = True
+            rbc.limit_ang_z_lower = j.lower
+            rbc.limit_ang_z_upper = j.upper
+        elif constraint_type == 'SLIDER':
+            rbc.use_limit_lin_x = True
+            rbc.limit_lin_x_lower = j.lower
+            rbc.limit_lin_x_upper = j.upper
+
+        print(f"      Constraint: {constraint_type}, limits=[{j.lower:.4f}, {j.upper:.4f}]")
+
+    # --- Step 4: Simulation parameters ---
+    # High precision: more substeps = smaller timestep = less constraint drift
+    scene.gravity = (0, 0, 0)  # no gravity — only collision response
+    rw = scene.rigidbody_world
+    rw.substeps_per_frame = 120   # 120 substeps @ 30fps = 3600 steps/sec
+    rw.solver_iterations = 200    # more iterations per substep for tighter constraints
+    rw.point_cache.frame_start = 1
+    rw.point_cache.frame_end = num_frames
+
+    # Bake physics
+    print(f"    Baking physics ({num_frames} frames)...")
+    bpy.ops.ptcache.bake({"point_cache": rw.point_cache}, bake=True)
+    print(f"    Physics bake done")
+
+    # --- Step 5: Post-process — enforce monotonic opening ---
+    # PASSIVE KINEMATIC drawers ignore collision (follow keyframes exactly).
+    # When retracting, they sweep through the open door from behind and push
+    # it closed.  Fix: read baked rotation per frame, clamp to running max,
+    # then re-keyframe the object without rigid body.
+    for j in passive_joints:
+        child_parts = passive_joint_parts[j.name]
+        objs = [part_objects[cpi] for cpi in child_parts if cpi in part_objects]
+        if not objs:
+            continue
+        physics_obj = objs[0]
+
+        # Read baked transforms
+        baked_matrices = []
+        for frame in range(1, num_frames + 1):
+            bpy.context.scene.frame_set(frame)
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+            eval_obj = physics_obj.evaluated_get(depsgraph)
+            baked_matrices.append(eval_obj.matrix_world.copy())
+
+        # Compute monotonic-max rotation angle around hinge axis
+        # For revolute joints the rotation is around the joint axis.
+        # We decompose matrix → (location, euler) relative to pivot.
+        pivot = physics_obj.location.copy()  # origin was set to pivot
+        max_angles = {}   # axis_index -> running max
+        clamped_eulers = []
+
+        for mat in baked_matrices:
+            euler = mat.to_euler()
+            clamped = list(euler)
+            for ax_i in range(3):
+                prev_max = max_angles.get(ax_i, 0.0)
+                if abs(clamped[ax_i]) > abs(prev_max):
+                    max_angles[ax_i] = clamped[ax_i]
+                else:
+                    clamped[ax_i] = prev_max
+            clamped_eulers.append(clamped)
+
+        # Free physics cache and remove rigid body from this object
+        bpy.ops.ptcache.free_bake({"point_cache": rw.point_cache})
+        bpy.context.view_layer.objects.active = physics_obj
+        physics_obj.select_set(True)
+        bpy.ops.rigidbody.object_remove()
+        physics_obj.select_set(False)
+
+        # Re-keyframe with clamped rotation (location stays at pivot)
+        for frame_i, euler_vals in enumerate(clamped_eulers):
+            frame = frame_i + 1
+            physics_obj.location = pivot
+            physics_obj.rotation_euler = Euler(euler_vals)
+            physics_obj.keyframe_insert(data_path="location", frame=frame)
+            physics_obj.keyframe_insert(data_path="rotation_euler", frame=frame)
+
+        # Linear interpolation
+        if physics_obj.animation_data and physics_obj.animation_data.action:
+            for fc in physics_obj.animation_data.action.fcurves:
+                for kp in fc.keyframe_points:
+                    kp.interpolation = 'LINEAR'
+
+        print(f"    Post-process {j.name}: clamped to monotonic opening")
+
+    print(f"    Bullet physics setup complete")
+
+
+# ═══════════════════════════════════════════════════════════════
+# Kinematic Collision Response (BVHTree + state memory)
+# ═══════════════════════════════════════════════════════════════
+
+def setup_collision_response(part_objects, links, joints, parent_map, children_map,
+                              animated_joint_names, num_frames):
+    """Kinematic collision avoidance with one-way animation and anticipation.
+
+    Three phases:
+      0. Re-animate animated joints with one-way half-speed curve (no round-trip).
+         sin(t * pi/2) * target: smooth 0 → target over full duration.
+      1. Raw collision detection with state memory — binary-search per frame for
+         the minimum passive-joint angle that clears collision.  q never decreases.
+      2. Anticipation smoothing — spread each angle jump backward over LEAD frames
+         so passive parts begin opening before the collision frame.
+      3. Keyframe passive parts with the smoothed trajectory.
+
+    Deterministic, no solver drift, generalises to any joint type.
+    """
+    import time as _time
+    from mathutils.bvhtree import BVHTree
+
+    t0 = _time.time()
+
+    # ── Setup maps ──
+    link_part_map = {}
+    for ln, info in links.items():
+        if info["part_idx"] is not None:
+            link_part_map[ln] = info["part_idx"]
+    part_link_map = {pi: ln for ln, pi in link_part_map.items()}
+
+    def _descendant_parts(joint):
+        parts = []
+        q = deque([joint.child_link])
+        vis = set()
+        while q:
+            ln = q.popleft()
+            if ln in vis:
+                continue
+            vis.add(ln)
+            if ln in link_part_map:
+                parts.append(link_part_map[ln])
+            for cln, cj in children_map.get(ln, []):
+                if cj.jtype == "fixed":
+                    q.append(cln)
+        return parts
+
+    passive_joints = [j for j in joints if j.jtype != "fixed" and j.name not in animated_joint_names]
+    if not passive_joints:
+        print("  No passive joints — collision response skipped")
+        return
+
+    passive_joint_parts = {j.name: _descendant_parts(j) for j in passive_joints}
+
+    animated_joints = [j for j in joints if j.name in animated_joint_names and j.jtype != "fixed"]
+    animated_part_indices = set()
+    for j in animated_joints:
+        animated_part_indices.update(_descendant_parts(j))
+
+    rest_fk = forward_kinematics_at_q(links, joints, parent_map, children_map)
+
+    print(f"\n  Kinematic collision response (anticipation + one-way):")
+    print(f"    Passive joints: {[j.name for j in passive_joints]}")
+    print(f"    Animated joints: {[j.name for j in animated_joints]}")
+    print(f"    Animated parts: {sorted(animated_part_indices)}")
+
+    # ── Phase 0: Re-animate with one-way half-speed curve ──
+    # Replace round-trip sin(t*pi) with one-way sin(t*pi/2)
+    print(f"    Phase 0: Re-animating {len(animated_joints)} joints with one-way curve...")
+
+    for api in animated_part_indices:
+        if api not in part_objects:
+            continue
+        obj = part_objects[api]
+        if obj.animation_data:
+            obj.animation_data_clear()
+
+    for frame in range(1, num_frames + 1):
+        bpy.context.scene.frame_set(frame)
+        t = (frame - 1) / max(num_frames - 1, 1)
+
+        q_anim = {}
+        for aj in animated_joints:
+            if aj.jtype in ("prismatic", "revolute"):
+                tgt = aj.upper if abs(aj.upper) >= abs(aj.lower) else aj.lower
+            elif aj.jtype == "continuous":
+                tgt = (aj.upper if abs(aj.upper) >= abs(aj.lower) else aj.lower) \
+                      if abs(aj.upper - aj.lower) > 1e-6 else 1.0
+            else:
+                continue
+            q_anim[aj.name] = math.sin(t * math.pi / 2) * tgt
+
+        fk = forward_kinematics_at_q(links, joints, parent_map, children_map, q_anim)
+
+        for api in animated_part_indices:
+            if api not in part_objects:
+                continue
+            ln = part_link_map.get(api)
+            if not ln:
+                continue
+            T_cur = fk.get(ln, Matrix.Identity(4))
+            T_rest = rest_fk.get(ln, Matrix.Identity(4))
+            try:
+                delta = T_cur @ T_rest.inverted()
+            except Exception:
+                delta = Matrix.Identity(4)
+            obj = part_objects[api]
+            obj.matrix_world = delta
+            obj.keyframe_insert(data_path="location", frame=frame)
+            obj.keyframe_insert(data_path="rotation_euler", frame=frame)
+            obj.keyframe_insert(data_path="scale", frame=frame)
+
+    for api in animated_part_indices:
+        if api not in part_objects:
+            continue
+        obj = part_objects[api]
+        if obj.animation_data and obj.animation_data.action:
+            for fc in obj.animation_data.action.fcurves:
+                for kp in fc.keyframe_points:
+                    kp.interpolation = 'LINEAR'
+
+    # ── Pre-cache passive mesh data ──
+    passive_mesh_cache = {}
+    for j in passive_joints:
+        for cpi in passive_joint_parts[j.name]:
+            if cpi not in part_objects:
+                continue
+            mesh = part_objects[cpi].data
+            passive_mesh_cache[cpi] = (
+                [Vector(v.co) for v in mesh.vertices],
+                [list(p.vertices) for p in mesh.polygons],
+            )
+
+    LEAD_FRAMES = 10   # anticipation: spread jumps backward over this many frames
+
+    # ── Phase 1+2+3 per passive joint ──
+    for j in passive_joints:
+        child_parts = passive_joint_parts[j.name]
+        if not child_parts:
+            continue
+
+        target = j.upper if abs(j.upper) >= abs(j.lower) else j.lower
+        print(f"    {j.name} ({j.jtype}): target={target:.4f}, parts={child_parts}")
+
+        # ── Compute adaptive PROXIMITY from rest-state distance ──
+        # At rest (frame 1, q=0), measure minimum distance between animated
+        # and passive meshes. Set PROXIMITY to 80% of rest distance so that
+        # collision is only flagged when the gap is mostly closed.
+        bpy.context.scene.frame_set(1)
+        depsgraph = bpy.context.evaluated_depsgraph_get()
+        animated_rest_verts = []
+        for api in animated_part_indices:
+            if api not in part_objects:
+                continue
+            aobj = part_objects[api].evaluated_get(depsgraph)
+            for v in aobj.data.vertices:
+                animated_rest_verts.append(aobj.matrix_world @ v.co)
+
+        rest_min_dist = float('inf')
+        for cpi in child_parts:
+            if cpi not in passive_mesh_cache:
+                continue
+            verts, polys = passive_mesh_cache[cpi]
+            pbvh = BVHTree.FromPolygons(verts, polys)   # passive at rest (q=0)
+            for av in animated_rest_verts:
+                result = pbvh.find_nearest(av)
+                if result[3] is not None:
+                    rest_min_dist = min(rest_min_dist, result[3])
+
+        if rest_min_dist < 0.005:
+            PROXIMITY = 0.002   # objects nearly overlap at rest — tiny threshold
+        else:
+            PROXIMITY = min(rest_min_dist * 0.15, 0.01)   # 15% of rest gap, max 1cm
+        print(f"      Rest min distance: {rest_min_dist:.4f}, adaptive PROXIMITY: {PROXIMITY:.4f}")
+
+        # ── Phase 1: Raw collision detection with state memory ──
+        q_raw = [0.0] * (num_frames + 1)   # 1-indexed
+        q_current = 0.0
+        collision_frames = 0
+
+        for frame in range(1, num_frames + 1):
+            bpy.context.scene.frame_set(frame)
+            depsgraph = bpy.context.evaluated_depsgraph_get()
+
+            # Cache animated verts for this frame (one-way keyframes)
+            animated_world_verts = []
+            for api in animated_part_indices:
+                if api not in part_objects:
+                    continue
+                aobj = part_objects[api].evaluated_get(depsgraph)
+                mat_w = aobj.matrix_world
+                for v in aobj.data.vertices:
+                    animated_world_verts.append(mat_w @ v.co)
+
+            def _check_collision(q_val):
+                q_values = {j.name: q_val}
+                fk_q = forward_kinematics_at_q(links, joints, parent_map, children_map, q_values)
+                for cpi in child_parts:
+                    if cpi not in passive_mesh_cache:
+                        continue
+                    ln = part_link_map.get(cpi)
+                    if not ln:
+                        continue
+                    T_cur = fk_q.get(ln, Matrix.Identity(4))
+                    T_rest = rest_fk.get(ln, Matrix.Identity(4))
+                    try:
+                        delta = T_cur @ T_rest.inverted()
+                    except Exception:
+                        delta = Matrix.Identity(4)
+                    verts, polys = passive_mesh_cache[cpi]
+                    moved = [delta @ v for v in verts]
+                    pbvh = BVHTree.FromPolygons(moved, polys)
+                    for av in animated_world_verts:
+                        result = pbvh.find_nearest(av)
+                        if result[3] is not None and result[3] < PROXIMITY:
+                            return True
+                return False
+
+            if not _check_collision(q_current):
+                q_raw[frame] = q_current
+            else:
+                collision_frames += 1
+                q_lo = q_current
+                q_hi = target
+                for _ in range(12):
+                    q_mid = (q_lo + q_hi) / 2.0
+                    if _check_collision(q_mid):
+                        q_lo = q_mid
+                    else:
+                        q_hi = q_mid
+                q_safe = q_hi + abs(target) * 0.02   # small clearance
+                if target > 0:
+                    q_safe = min(q_safe, target)
+                else:
+                    q_safe = max(q_safe, target)
+                q_current = q_safe
+                q_raw[frame] = q_current
+
+        print(f"      Phase 1: {collision_frames}/{num_frames} collisions, final q={q_current:.4f}")
+
+        # ── Phase 2: Anticipation smoothing ──
+        # Find every frame where q_raw jumps, spread the increase backward.
+        q_smooth = list(q_raw)
+
+        jumps = []
+        for f in range(2, num_frames + 1):
+            if q_raw[f] > q_raw[f - 1] + 1e-6:
+                jumps.append((f, q_raw[f - 1], q_raw[f]))
+
+        for jump_frame, q_before, q_after in jumps:
+            lead_start = max(1, jump_frame - LEAD_FRAMES)
+            span = max(jump_frame - lead_start, 1)
+            for f in range(lead_start, jump_frame):
+                frac = (f - lead_start) / span
+                interp = q_before + (q_after - q_before) * math.sin(frac * math.pi / 2)
+                q_smooth[f] = max(q_smooth[f], interp)
+
+        # Enforce monotonicity
+        for f in range(2, num_frames + 1):
+            q_smooth[f] = max(q_smooth[f], q_smooth[f - 1])
+
+        lead_start_first = max(1, jumps[0][0] - LEAD_FRAMES) if jumps else None
+
+        print(f"      Phase 2: anticipation from frame {lead_start_first or 'N/A'}, "
+              f"final q={q_smooth[num_frames]:.4f}")
+
+        # ── Phase 3: Keyframe passive parts (every frame for clean interpolation) ──
+        for frame in range(1, num_frames + 1):
+            q_val = q_smooth[frame]
+            bpy.context.scene.frame_set(frame)
+
+            if abs(q_val) < 1e-6:
+                # Identity — rest pose
+                for cpi in child_parts:
+                    if cpi not in part_objects:
+                        continue
+                    obj = part_objects[cpi]
+                    obj.matrix_world = Matrix.Identity(4)
+                    obj.keyframe_insert(data_path="location", frame=frame)
+                    obj.keyframe_insert(data_path="rotation_euler", frame=frame)
+                    obj.keyframe_insert(data_path="scale", frame=frame)
+            else:
+                q_values = {j.name: q_val}
+                fk_q = forward_kinematics_at_q(links, joints, parent_map, children_map, q_values)
+                for cpi in child_parts:
+                    if cpi not in part_objects:
+                        continue
+                    ln = part_link_map.get(cpi)
+                    if not ln:
+                        continue
+                    T_cur = fk_q.get(ln, Matrix.Identity(4))
+                    T_rest = rest_fk.get(ln, Matrix.Identity(4))
+                    try:
+                        delta = T_cur @ T_rest.inverted()
+                    except Exception:
+                        delta = Matrix.Identity(4)
+                    obj = part_objects[cpi]
+                    obj.matrix_world = delta
+                    obj.keyframe_insert(data_path="location", frame=frame)
+                    obj.keyframe_insert(data_path="rotation_euler", frame=frame)
+                    obj.keyframe_insert(data_path="scale", frame=frame)
+
+        # Linear interpolation for passive parts
+        for cpi in child_parts:
+            if cpi not in part_objects:
+                continue
+            obj = part_objects[cpi]
+            if obj.animation_data and obj.animation_data.action:
+                for fc in obj.animation_data.action.fcurves:
+                    for kp in fc.keyframe_points:
+                        kp.interpolation = 'LINEAR'
+
+        print(f"      Phase 3: keyframed {num_frames} frames for parts {child_parts}")
+
+    elapsed = _time.time() - t0
+    print(f"  Collision response done ({elapsed:.2f}s)")
 
 
 def animate_flip(part_objects, moving_indices, num_frames):
@@ -1433,6 +2491,102 @@ def animate_flip_place(part_objects, moving_indices, num_frames):
                     kp.interpolation = 'LINEAR'
 
     print(f"  Flip animation set for {len(moving_objs)} parts")
+
+
+def animate_cap_detach(part_objects, moving_indices, num_frames):
+    """Custom animation: cap unscrews and flies off the bottle/pot.
+
+    One-way motion: cap rotates (unscrewing) while lifting upward,
+    then separates completely from the body.
+    """
+    print(f"\nCustom cap_detach animation for {num_frames} frames...")
+
+    moving_objs = [part_objects[i] for i in (moving_indices or part_objects.keys())
+                   if i in part_objects]
+    body_objs = [part_objects[i] for i in part_objects.keys()
+                 if i not in (moving_indices or set())]
+    if not moving_objs:
+        print("  WARNING: no moving objects for cap_detach")
+        return
+
+    # Bounding box of cap (moving parts)
+    cap_coords = []
+    for obj in moving_objs:
+        for v in obj.data.vertices:
+            cap_coords.append(obj.matrix_world @ v.co)
+    if not cap_coords:
+        return
+
+    cap_min_z = min(v.z for v in cap_coords)
+    cap_max_z = max(v.z for v in cap_coords)
+    cap_cx = (min(v.x for v in cap_coords) + max(v.x for v in cap_coords)) / 2.0
+    cap_cy = (min(v.y for v in cap_coords) + max(v.y for v in cap_coords)) / 2.0
+    cap_cz = (cap_min_z + cap_max_z) / 2.0
+    cap_height = cap_max_z - cap_min_z
+    pivot = Vector((cap_cx, cap_cy, cap_cz))
+
+    # Bounding box of body to determine fly-off distance
+    body_coords = []
+    for obj in body_objs:
+        for v in obj.data.vertices:
+            body_coords.append(obj.matrix_world @ v.co)
+    if body_coords:
+        body_max_z = max(v.z for v in body_coords)
+        body_extent = max(
+            max(v.x for v in body_coords) - min(v.x for v in body_coords),
+            max(v.y for v in body_coords) - min(v.y for v in body_coords),
+            max(v.z for v in body_coords) - min(v.z for v in body_coords),
+        )
+    else:
+        body_max_z = cap_max_z
+        body_extent = cap_height * 5
+
+    # Fly-off parameters
+    lift_distance = body_extent * 1.2   # fly up 1.2x body height
+    n_rotations = 3.0                   # 3 full unscrewing turns
+    total_rotation = n_rotations * 2 * math.pi
+
+    print(f"  Cap bbox z=[{cap_min_z:.3f},{cap_max_z:.3f}], height={cap_height:.3f}")
+    print(f"  Pivot: [{pivot.x:.3f}, {pivot.y:.3f}, {pivot.z:.3f}]")
+    print(f"  Lift distance: {lift_distance:.3f}, Rotations: {n_rotations}")
+
+    def smoothstep(edge0, edge1, x):
+        t = max(0.0, min(1.0, (x - edge0) / (edge1 - edge0)))
+        return t * t * (3.0 - 2.0 * t)
+
+    for frame in range(1, num_frames + 1):
+        bpy.context.scene.frame_set(frame)
+        t = (frame - 1) / max(num_frames - 1, 1)
+
+        # Rotation: accelerating unscrew (starts slow, speeds up)
+        rot_progress = smoothstep(0.0, 0.8, t)
+        angle = total_rotation * rot_progress
+
+        # Vertical lift: starts after initial unscrew, accelerates
+        lift_progress = smoothstep(0.1, 1.0, t)
+        z_offset = lift_distance * lift_progress
+
+        # Build transform: rotate around Z at pivot, then lift upward
+        to_pivot = Matrix.Translation(-pivot)
+        rot = Matrix.Rotation(angle, 4, 'Z')
+        from_pivot = Matrix.Translation(pivot)
+        lift = Matrix.Translation(Vector((0, 0, z_offset)))
+        transform = lift @ from_pivot @ rot @ to_pivot
+
+        for obj in moving_objs:
+            obj.matrix_world = transform
+            obj.keyframe_insert(data_path="location", frame=frame)
+            obj.keyframe_insert(data_path="rotation_euler", frame=frame)
+            obj.keyframe_insert(data_path="scale", frame=frame)
+
+    # Linear interpolation
+    for obj in moving_objs:
+        if obj.animation_data and obj.animation_data.action:
+            for fc in obj.animation_data.action.fcurves:
+                for kp in fc.keyframe_points:
+                    kp.interpolation = 'LINEAR'
+
+    print(f"  Cap detach animation set for {len(moving_objs)} parts")
 
 
 def forward_kinematics_selective(links, joints, parent_map, children_map,
@@ -1678,6 +2832,63 @@ def render_moving_view(out_dir, view_name, num_frames, center, distance,
     return nobg_dir, bg_dir
 
 
+def check_static_video(frame_dir, num_frames, iou_threshold=0.98, mse_threshold=0.001):
+    """Check if rendered video is static (no meaningful motion).
+
+    Compares first frame vs midpoint frame using:
+      1. Alpha mask IoU (silhouette overlap) — catches shape/position changes
+      2. RGB MSE on visible pixels — catches subtle color/lighting changes
+
+    Returns True if the video should be considered static and deleted.
+    """
+    import numpy as np
+
+    mid = max(1, num_frames // 2)
+    first_path = os.path.join(frame_dir, "frame_0001.png")
+    mid_path = os.path.join(frame_dir, f"frame_{mid:04d}.png")
+
+    if not os.path.exists(first_path) or not os.path.exists(mid_path):
+        return False
+
+    img1 = bpy.data.images.load(first_path)
+    img2 = bpy.data.images.load(mid_path)
+
+    px1 = list(img1.pixels[:])
+    px2 = list(img2.pixels[:])
+    w, h = img1.size[0], img1.size[1]
+
+    bpy.data.images.remove(img1)
+    bpy.data.images.remove(img2)
+
+    px1 = np.array(px1, dtype=np.float32).reshape(h * w, 4)
+    px2 = np.array(px2, dtype=np.float32).reshape(h * w, 4)
+
+    # Alpha mask IoU
+    mask1 = px1[:, 3] > 0.5
+    mask2 = px2[:, 3] > 0.5
+
+    union = np.sum(mask1 | mask2)
+    if union == 0:
+        return True  # both frames empty → static
+
+    iou = float(np.sum(mask1 & mask2)) / float(union)
+    if iou < iou_threshold:
+        return False  # silhouette changed → not static
+
+    # RGB MSE on visible pixels
+    visible = mask1 | mask2
+    n_vis = int(np.sum(visible))
+    if n_vis > 0:
+        mse = float(np.mean((px1[visible, :3] - px2[visible, :3]) ** 2))
+    else:
+        mse = 0.0
+
+    is_static = mse < mse_threshold
+    if is_static:
+        print(f"  STATIC detected: IoU={iou:.4f}, MSE={mse:.6f} ({frame_dir})")
+    return is_static
+
+
 def frames_to_video(frame_dir, output_mp4, fps):
     if not FFMPEG_BIN:
         print(f"  WARNING: ffmpeg not found, skipping video")
@@ -1726,7 +2937,19 @@ def main():
             print(f"ERROR: {label} not found: {p}")
             return
 
+    import time as _time
+    _timers = {}
+    def _tick(name):
+        _timers[name] = _time.time()
+    def _tock(name):
+        elapsed = _time.time() - _timers[name]
+        print(f"  [TIMER] {name}: {elapsed:.1f}s")
+        _timers[name] = elapsed  # store elapsed for summary
+
+    _tick("total")
+
     # Parse URDF
+    _tick("parse_urdf")
     print("\nParsing URDF...")
     links, joints = parse_urdf(URDF_PATH)
     parent_map, children_map = build_kinematic_tree(joints)
@@ -1748,18 +2971,23 @@ def main():
     # Load origins
     with open(ORIGINS_PATH) as f:
         origins = json.load(f)
+    _tock("parse_urdf")
 
     # Clear scene
     clear_scene()
 
     # GPU rendering
-    setup_cycles_gpu()
-    setup_render_settings(args.resolution, args.fps, NUM_FRAMES, args.samples)
+    _tick("setup_engine")
+    setup_render_engine(args.engine)
+    setup_render_settings(args.resolution, args.fps, NUM_FRAMES, args.samples,
+                          max_bounces=args.max_bounces, engine=args.engine)
 
     # Envmap lighting
     setup_envmap_lighting(args.envmap, strength=1.0)
+    _tock("setup_engine")
 
     # Load parts (skip excluded indices like unknown_part)
+    _tick("load_objs")
     print("\nLoading per-part OBJs...")
     part_objects = load_scene_parts(OBJS_DIR, origins, exclude_indices=exclude_indices)
     if not part_objects:
@@ -1776,8 +3004,15 @@ def main():
     if orphan_indices:
         print(f"  {len(orphan_indices)} orphan part(s) removed")
 
+    _tock("load_objs")
+
     # Enhance materials for PartNet factories (metallic, roughness, textures)
+    _tick("materials")
     enhance_partnet_materials(FACTORY, args.seed, part_objects, args.base)
+
+    # Enhance materials for PhysXNet/PhysX_mobility factories
+    _enhance_physxnet_materials(FACTORY, args.seed, part_objects)
+    _tock("materials")
 
     # Compute scene bounds at rest
     all_objs = list(part_objects.values())
@@ -1794,20 +3029,41 @@ def main():
     print(f"  Animode: {args.animode} (limit_scale={scale:.1f}x)")
 
     # Animate
-    # Check for custom animation (e.g. "flip" for PotFactory)
+    _tick("animate")
+    animated_joint_names = None
     animode_cfg = FACTORY_RULES.get(FACTORY, {}).get("animode_joints", {})
     custom_anim = animode_cfg.get(args.animode)
     if custom_anim == "flip":
         animate_flip(part_objects, moving_indices, NUM_FRAMES)
     elif custom_anim == "flip_place":
         animate_flip_place(part_objects, moving_indices, NUM_FRAMES)
+    elif custom_anim == "cap_detach":
+        animate_cap_detach(part_objects, moving_indices, NUM_FRAMES)
     elif movable:
-        animate_parts(part_objects, links, joints, parent_map, children_map, origins, NUM_FRAMES,
-                       moving_indices=moving_indices)
+        anim_result = animate_parts(part_objects, links, joints, parent_map, children_map, origins, NUM_FRAMES,
+                                    moving_indices=moving_indices)
+        if anim_result is False:
+            print("  No matching joints for this animode - exiting without rendering")
+            sys.exit(0)
+        animated_joint_names = anim_result
     else:
         print("  No movable joints - rendering static scene")
+    _tock("animate")
+
+    # Collision response: when >=2 movable joints and some are not animated,
+    # use BVHTree kinematic collision avoidance (e.g. drawer pushes door open).
+    _tick("collision")
+    if animated_joint_names is not None and len(movable) >= 2:
+        non_animated_movable = [j for j in movable if j.name not in animated_joint_names]
+        if non_animated_movable:
+            setup_collision_response(
+                part_objects, links, joints, parent_map, children_map,
+                animated_joint_names, NUM_FRAMES,
+            )
+    _tock("collision")
 
     # Render views (single render produces both bg and nobg via compositor)
+    _tick("render_all")
     for view_name in args.views:
         if view_name not in VIEW_CONFIGS:
             print(f"  WARNING: Unknown view '{view_name}'")
@@ -1822,6 +3078,14 @@ def main():
             render_nobg=not args.skip_nobg,
             animode_suffix=animode_suffix,
         )
+
+        # Static video filter: delete frames with no meaningful motion
+        if nobg_dir and check_static_video(nobg_dir, NUM_FRAMES):
+            shutil.rmtree(nobg_dir)
+            nobg_dir = None
+        if bg_dir and check_static_video(bg_dir, NUM_FRAMES):
+            shutil.rmtree(bg_dir)
+            bg_dir = None
 
         if not args.png_only:
             if nobg_dir:
@@ -1847,6 +3111,14 @@ def main():
             animode_suffix=animode_suffix,
         )
 
+        # Static video filter for moving views
+        if nobg_dir and check_static_video(nobg_dir, NUM_FRAMES):
+            shutil.rmtree(nobg_dir)
+            nobg_dir = None
+        if bg_dir and check_static_video(bg_dir, NUM_FRAMES):
+            shutil.rmtree(bg_dir)
+            bg_dir = None
+
         if not args.png_only:
             if nobg_dir:
                 mp4_nobg = os.path.join(OUT_DIR, f"{view_name}{animode_suffix}_nobg.mp4")
@@ -1855,7 +3127,23 @@ def main():
                 mp4_bg = os.path.join(OUT_DIR, f"{view_name}{animode_suffix}_bg.mp4")
                 frames_to_video(bg_dir, mp4_bg, args.fps)
 
+    _tock("render_all")
+    _tock("total")
+
+    # Print timing summary
     print(f"\n{'='*60}")
+    print(f"TIMING SUMMARY ({args.engine}, bounces={args.max_bounces or 'default'}):")
+    print(f"{'='*60}")
+    for name in ["parse_urdf", "setup_engine", "load_objs", "materials",
+                  "animate", "collision", "render_all", "total"]:
+        if name in _timers and isinstance(_timers[name], float):
+            pct = _timers[name] / _timers["total"] * 100 if _timers["total"] > 0 else 0
+            print(f"  {name:20s}: {_timers[name]:8.1f}s  ({pct:5.1f}%)")
+    n_views = len(args.views) + len(args.moving_views)
+    if n_views > 0 and "render_all" in _timers:
+        print(f"  {'per_view':20s}: {_timers['render_all']/n_views:8.1f}s  ({NUM_FRAMES} frames)")
+        print(f"  {'per_frame':20s}: {_timers['render_all']/n_views/NUM_FRAMES:8.2f}s")
+    print(f"{'='*60}")
     print(f"DONE! Output: {OUT_DIR}")
     print(f"{'='*60}")
 

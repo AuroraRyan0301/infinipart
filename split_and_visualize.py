@@ -158,6 +158,13 @@ try:
 except ImportError:
     pass
 
+# Merge PhysXNet + PhysX_mobility split rules
+try:
+    from physxnet_factory_rules import merge_split_rules as physxnet_merge_split_rules
+    FACTORY_RULES = physxnet_merge_split_rules(FACTORY_RULES)
+except ImportError:
+    pass
+
 
 def parse_urdf_moving_indices(urdf_path):
     """Parse URDF to find which part indices are descendants of movable joints.

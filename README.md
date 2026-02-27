@@ -1,213 +1,306 @@
 # InfiniPart
 
-Multi-view articulated object rendering and simulation pipeline built on [Infinigen](https://github.com/princeton-vl/infinigen) (v1.19+, Infinigen-Sim) and [Infinite-Mobility](https://github.com/OpenRobotLab/Infinite-Mobility). Generates procedural articulated 3D objects with **built-in joint definitions**, exports to URDF/MJCF/USD, and renders multi-view motion videos.
+Multi-view articulated object rendering pipeline for generating physics-aware training data. Built on [Infinigen-Sim](https://github.com/princeton-vl/infinigen) (v1.19+) and [Infinite-Mobility](https://github.com/OpenRobotLab/Infinite-Mobility).
 
-## What's New (vs Infinite-Mobility)
+Generates multi-view motion videos of articulated 3D objects with:
+- **Positive samples**: Correct URDF-driven joint animations + custom animations (lid flip, cap detach)
+- **Negative samples**: 7 types of intentionally wrong articulations (wrong joint type, wrong axis, etc.)
+- **Dual-part splits**: Normalized body/moving OBJ meshes per animation mode
+- **3 data sources**: Infinite-Mobility (16 factories), PhysXNet (13 factories), PhysX_mobility (5 factories)
 
-This repo upgrades from Infinite-Mobility (Blender 3.6, static meshes + external URDF) to **Infinigen-Sim** (Blender 4.2, native articulation):
-
-- **17 new sim-ready articulated factories** with joints embedded in Blender Geometry Nodes
-- **Kinematic compiler** that auto-extracts joint trees from geometry node graphs
-- **3 simulation export formats**: URDF (PyBullet/Isaac Gym), MJCF (MuJoCo), USD (Isaac Sim)
-- **Physics material system** with density, friction, and joint dynamics
-- **Blender 4.2** with `bpy==4.2.0` Python bindings
-
-Plus the proven InfiniPart rendering pipeline from Infinite-Mobility.
-
-## Sim-Ready Object Factories (17 categories)
-
-Located in `infinigen/assets/sim_objects/`:
-
-| Factory | Joint Types | Description |
-|---------|------------|-------------|
-| BoxFactory | Hinge | Articulated box with hinged lid |
-| CabinetFactory | Hinge | Cabinet with hinged doors |
-| DishwasherFactory | Hinge + Sliding | Door hinge + rack slider |
-| SimDoorFactory | Hinge | Door with handle articulation |
-| DoorHandleFactory | Hinge + Sliding | Lever/bar handle |
-| DrawerFactory | Sliding | Pullout drawer |
-| FaucetFactory | Hinge | Tap handle rotation |
-| LampFactory | Hinge + Sliding | Articulated arm joints |
-| MicrowaveFactory | Hinge + Sliding | Door hinge + turntable |
-| OvenFactory | Hinge + Sliding | Door hinge + rack slider |
-| PepperGrinderFactory | Hinge | Twist grinding mechanism |
-| PlierFactory | Hinge | Pivot joint for handles |
-| RefrigeratorFactory | Hinge + Sliding | Door(s) + drawer shelves |
-| SoapDispenserFactory | Hinge + Sliding | Pump mechanism |
-| StovetopFactory | Hinge | Knob rotation + grate lift |
-| ToasterFactory | Hinge + Sliding | Lever + lid |
-| TrashFactory | Hinge + Sliding | Lid hinge + pedal |
-| WindowFactory | Hinge + Sliding | Sash sliding + casement hinge |
-
-## Rendering Pipeline (from Infinite-Mobility)
-
-Also includes the InfiniPart multi-view rendering pipeline with **16 original object categories**:
-
-- BeverageFridge, Microwave, Oven, Toilet, KitchenCabinet, Window, LiteDoor, OfficeChair, Tap, Lamp, Pot, Bottle, Dishwasher, BarChair, Pan, TV
-- **Per-category animation modes (animodes)**: Independently control joint subsets
-- **32 camera views per animation**: 16 fixed hemisphere views + 8 back-to-front orbits + 8 front-hemisphere sweeps
-- **Moving camera support**: Animated cameras that orbit or sweep during rendering
-- **Batch pipeline**: Multi-seed x multi-animode x multi-view x multi-GPU parallel rendering
-
-## Prerequisites
-
-- **Python 3.11** (for Infinigen-Sim conda env)
-- **Blender 3.6** (headless, for InfiniPart rendering scripts)
-- **NVIDIA GPU** with CUDA support (tested on L20X 143GB)
-- **ffmpeg** for video encoding
-
-## Setup
-
-### Infinigen-Sim (sim-ready articulated assets)
+## Quick Start (Single Node)
 
 ```bash
 # 1. Clone
 git clone https://github.com/AuroraRyan0301/infinipart.git
 cd infinipart
 
-# 2. Create conda env
-conda create -n infinigen-sim python=3.11 -y
-conda activate infinigen-sim
-
-# 3. Install with sim extras
-INFINIGEN_MINIMAL_INSTALL=True pip install -e ".[sim]"
-
-# 4. (Optional) Install additional deps for rendering scripts
-pip install urdfpy open3d
-```
-
-### InfiniPart Rendering (Blender-based)
-
-```bash
-# 1. Download Blender 3.6
+# 2. Install Blender 3.6 (headless)
 wget https://download.blender.org/release/Blender3.6/blender-3.6.0-linux-x64.tar.xz
 tar xf blender-3.6.0-linux-x64.tar.xz
 
-# 2. Update paths in scripts:
-#    - BLENDER path in batch_generate_all.py and render_articulation.py
-#    - BASE_DIR to your repo root
-#    - Envmap HDR path (--envmap flag)
+# 3. Install Python dependencies (conda recommended)
+conda create -n infinipart python=3.10 -y
+conda activate infinipart
+pip install trimesh scipy numpy urdfpy imageio opencv-python-headless
+
+# 4. Pull envmaps and PBR textures (stored in Git LFS)
+git lfs pull
+
+# 5. Run full pipeline on 4 GPUs
+bash run_all.sh
 ```
 
-## Quick Start
+## Cluster Deployment (Multi-Node)
 
-### Generate sim-ready assets (Infinigen-Sim)
+Designed for multi-node GPU clusters (tested on 4x L20X 143GB, targeting 100x 4090).
+
+### run_all.sh Configuration
+
+All parameters are set via environment variables:
+
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `WORK_DIR` | `/mnt/data/yurh/Infinigen-Sim` | Project root |
+| `PYTHON` | `.../miniconda3/envs/partpacker_wan/bin/python` | Python executable |
+| `BLENDER` | `.../blender-3.6.0-linux-x64/blender` | Blender binary |
+| `N_GPUS` | `4` | GPUs per node |
+| `N_SEEDS` | `50` | Seeds per IM factory |
+| `SOURCE` | `all` | `im`, `physxnet`, `physxmob`, or `all` |
+| `SHARD_ID` | (empty) | This node's shard index (0-based) |
+| `N_SHARDS` | (empty) | Total number of shards/nodes |
+| `SKIP_GENERATE` | `0` | Skip asset generation stage |
+| `SKIP_POSITIVE` | `0` | Skip positive rendering stage |
+| `SKIP_NEGATIVE` | `0` | Skip negative rendering stage |
+| `DRY_RUN` | `0` | Print job plan without executing |
+
+### Example: 25-node cluster with 4 GPUs each
 
 ```bash
-conda activate infinigen-sim
+# On each node, set SHARD_ID=0..24
+# Node 0:
+WORK_DIR=/path/to/infinipart PYTHON=/path/to/python BLENDER=/path/to/blender \
+  SHARD_ID=0 N_SHARDS=25 N_GPUS=4 bash run_all.sh
 
-# Generate a single sim-ready refrigerator and export to URDF
-python -m infinigen.core.sim.sim_factory \
-  --factory RefrigeratorFactory --seed 0 \
-  --output_dir outputs/sim/RefrigeratorFactory/0 \
-  --export_format urdf
+# Node 1:
+SHARD_ID=1 N_SHARDS=25 bash run_all.sh
+
+# ... Node 24:
+SHARD_ID=24 N_SHARDS=25 bash run_all.sh
 ```
 
-### Generate assets for rendering (Blender)
+Each node processes its shard of (factory, seed) pairs across all 3 stages. Logs are written to `pipeline_shard_K_of_N_YYYYMMDD_HHMMSS.log`.
+
+### SLURM Example
 
 ```bash
-CUDA_VISIBLE_DEVICES=0 blender --background --python-use-system-env \
-  --python infinigen_examples/generate_individual_assets.py -- \
-  --output_folder outputs/OvenFactory -f OvenFactory -n 1 --seed 0
+#!/bin/bash
+#SBATCH --job-name=infinipart
+#SBATCH --array=0-24
+#SBATCH --gres=gpu:4
+#SBATCH --cpus-per-task=16
+#SBATCH --time=48:00:00
+
+export SHARD_ID=$SLURM_ARRAY_TASK_ID
+export N_SHARDS=25
+export N_GPUS=4
+export WORK_DIR=/path/to/infinipart
+export PYTHON=/path/to/python
+export BLENDER=/path/to/blender
+
+cd $WORK_DIR
+bash run_all.sh
 ```
 
-### Render single factory/seed/animode
+## Pipeline Overview
 
-```bash
-CUDA_VISIBLE_DEVICES=0 blender --background --python-use-system-env \
-  --python render_articulation.py -- \
-  --factory OvenFactory --seed 0 --device 0 \
-  --output_dir outputs/motion_videos/OvenFactory/0 \
-  --resolution 512 --samples 32 --duration 4.0 --fps 30 \
-  --animode 0 --skip_bg \
-  --views hemi_00 hemi_01 hemi_02 hemi_03 \
-  --moving_views orbit_00 sweep_00
+### 3-Stage Pipeline (run_pipeline.py)
+
+```
+Stage 1: Asset Generation
+  IM factories  → Blender generate + split_precompute.py + verify_split.py
+  PhysXNet      → physxnet_loader.py (JSON → URDF + OBJ symlinks)
+  PhysX_mobility → physxnet_loader.py (rewrite URDF with absolute paths)
+
+Stage 2: Positive Rendering (render_articulation.py)
+  For each (factory, seed, animode):
+    → Parse URDF joints
+    → Select joints by animode rules
+    → Animate via Blender keyframes (URDF-driven or custom animation)
+    → Render 32 views (16 hemi + 8 orbit + 8 sweep)
+    → STATIC detection: delete videos with IoU ≈ 1.0
+
+Stage 3: Negative Rendering (render_negative_samples.py)
+  For each (factory, seed, joint):
+    → 7 mutation types × all views
+    → Export metadata.json with mutation descriptions
 ```
 
-### Batch pipeline (generate + render all)
+### Factory Sources
 
-```bash
-# Generate 10 seeds + render all animodes x 32 views on 4 GPUs
-python batch_generate_all.py --n_seeds 10 --n_gpus 4 --no_split
+| Source | Factories | Objects | Description |
+|--------|-----------|---------|-------------|
+| **IM** (Infinite-Mobility) | 16 | ~50 seeds each | BeverageFridge, Bottle, Dishwasher, KitchenCabinet, Lamp, LiteDoor, Microwave, OfficeChair, Oven, Pan, Pot, Tap, Toilet, TV, Window, BarChair |
+| **PhysXNet** | 13 | ~32K total | Container, Electronics, Furniture, Kitchen, Lighting, Plumbing, Tool (+ sub-categories) |
+| **PhysX_mobility** | 5 | ~2K total | Electronics, Furniture, Kitchen, Plumbing, Tool |
 
-# Render only (assets already generated)
-python batch_generate_all.py --n_seeds 10 --n_gpus 4 --render_only --no_split
+### Animation Modes (Animodes)
 
-# Single factory
-python batch_generate_all.py --n_seeds 10 --n_gpus 4 --factory OvenFactory --render_only --no_split
+Each factory defines numbered animodes that control which joints are animated:
+
+| Animode | Selector | Example |
+|---------|----------|---------|
+| 0 | Revolute joints only | Door hinge |
+| 1 | Prismatic joints only | Drawer slide |
+| 2 | Continuous joints only | Cap rotation |
+| 3 | All joints | Combined motion |
+| Custom | String value | `"flip"`, `"flip_place"`, `"cap_detach"` |
+
+**Per-factory animode table:**
+
+| Factory | 0 | 1 | 2 | 3 | 4 |
+|---------|---|---|---|---|---|
+| DishwasherFactory | door (revolute) | racks (prismatic) | all | - | - |
+| OvenFactory | door (revolute) | racks (prismatic) | all | - | - |
+| ToiletFactory | cover (revolute) | seat (revolute) | flush (prismatic) | all | - |
+| WindowFactory | pane1 (revolute) | pane2 (revolute) | sliding (prismatic) | all revolute | all |
+| PotFactory | lid lift | lid rotate | all URDF | **flip** | **flip+place** |
+| BottleFactory | cap lift | cap rotate | all URDF | **cap_detach** | - |
+| LampFactory | arm height | bulb slide | arm rotate | all | - |
+| TVFactory | tilt (revolute) | height (prismatic) | all | - | - |
+
+Custom animations (`flip`, `flip_place`, `cap_detach`) use procedural keyframes instead of URDF joint limits.
+
+### Negative Sample Types (7)
+
+| Type | Mutation | Effect |
+|------|----------|--------|
+| `wrong_joint_type` | Swap revolute ↔ prismatic | Sliding instead of rotation or vice versa |
+| `wrong_axis` | Cyclic-permute axis (X→Y→Z→X) | Motion along wrong direction |
+| `wrong_direction` | Rotate axis by 45° | Tilted/skewed motion |
+| `over_motion` | Scale limits by 2.5× | Exceeds physical bounds |
+| `wrong_parts_moving` | Invert moving vs static parts | Body moves instead of part |
+| `jitter` | Gaussian noise per frame | Jerky/noisy motion |
+| `part_detach` | Large prismatic displacement | Part flies off |
+
+### Camera Views (32 per object)
+
+- **16 hemi views** (`hemi_00`–`hemi_15`): 4×4 grid on front hemisphere (azimuth ±67.5°, elevation 5/25/45/65°)
+- **8 orbit views** (`orbit_00`–`orbit_07`): Camera travels ~180° back→front
+- **8 sweep views** (`sweep_00`–`sweep_07`): Front hemisphere pans/tilts/diagonals
+
+## Dual-Part Splits (split_precompute.py)
+
+Pre-computes normalized body/moving OBJ meshes for each animode:
+
+```
+precompute/{Factory}/{identifier}/
+    part0.obj                    # default: body (static parts)
+    part1.obj                    # default: moving (all movable parts)
+    anim0/part0.obj, part1.obj   # revolute joints only
+    anim1/part0.obj, part1.obj   # prismatic joints only
+    anim10/part0.obj, part1.obj  # joint 0 only
+    anim11/part0.obj, part1.obj  # joint 1 only
+    metadata.json                # split info + joint definitions
 ```
 
-## Architecture
+Features:
+- Normalized to [-0.95, 0.95] bounding box
+- Relative motion threshold: joints with < 10% normalized motion are skipped
+- Animode deduplication: identical splits are not duplicated
+- Semantic part info from PhysXNet/PhysXMob JSON
 
-### Infinigen-Sim Joint System
+## Output Structure
 
-Joints are defined **inside Blender Geometry Nodes** using custom node groups:
-
-- `nodegroup_hinge_joint` -- Revolute joints (doors, lids, knobs)
-- `nodegroup_sliding_joint` -- Prismatic joints (drawers, sliders)
-- `kinematic_compiler.py` -- Auto-extracts kinematic DAG from node trees
-- Exporters convert to URDF/MJCF/USD with mass, inertia, collision geometry
-
-### Animation Modes (animodes)
-
-Each factory defines animation modes that select specific joint subsets:
-
-| Factory | Animode 0 | Animode 1 | Animode 2 | Animode 3 | Animode 4 |
-|---------|-----------|-----------|-----------|-----------|-----------|
-| Oven | door (revolute) | racks (prismatic) | all | - | - |
-| Toilet | cover (revolute) | seat ring (revolute) | flush (prismatic) | all | - |
-| Window | pane 1 (revolute) | pane 2 (revolute) | sliding (prismatic) | all revolute | all |
-| Pot | lid lift (prismatic) | lid rotate (continuous) | URDF all | flip in-place | flip+place beside |
-| Lamp | arm height (prismatic) | bulb slide (prismatic) | arm rotate (revolute) | all | - |
-| BarChair | height (prismatic) | spin (continuous) | all | - | - |
-| TV | tilt (revolute) | height (prismatic) | all | - | - |
-| Pan | lid lift (prismatic) | - | - | - | - |
-
-Joint selectors support multiple formats:
-- `("type",)` -- all significant joints of that type
-- `("type", ordinal)` -- nth joint by kinematic depth (0=shallowest, -1=deepest)
-- `("type", "axis", "x"|"y"|"z")` -- joints with given primary axis
-- `("type", "sign", "+"|"-")` -- joints filtered by limit sign
-
-### Camera Views (32 total)
-
-**16 fixed hemisphere views** (`hemi_00` to `hemi_15`):
-- 4x4 grid on front hemisphere (azimuth +/-67.5 deg, elevation 5/25/45/65 deg)
-
-**8 orbit views** (`orbit_00` to `orbit_07`):
-- Camera travels ~180 deg from back to front of object
-
-**8 sweep views** (`sweep_00` to `sweep_07`):
-- Camera moves within front hemisphere (horizontal pans, vertical tilts, diagonal paths)
-
-### Output Structure
-
+### Positive Samples
 ```
 outputs/motion_videos/{Factory}/{seed}/
-  hemi_00_nobg.mp4          # animode 0, fixed view 0
-  hemi_00_anim1_nobg.mp4    # animode 1, fixed view 0
-  orbit_00_nobg.mp4         # animode 0, orbit view 0
-  sweep_03_anim2_nobg.mp4   # animode 2, sweep view 3
-  ...
+    hemi_00_nobg.mp4              # animode 0, fixed view
+    hemi_00_anim1_nobg.mp4        # animode 1, fixed view
+    orbit_00_nobg.mp4             # animode 0, orbit view
+    sweep_03_anim2_nobg.mp4       # animode 2, sweep view
 ```
 
-Each video: 512x512, 30fps, 4 seconds (120 frames), transparent background (nobg).
+### Negative Samples
+```
+outputs/negatives/{Factory}/{seed}/
+    {joint_name}/{neg_type}/
+        hemi_00_nobg.mp4
+        orbit_00_nobg.mp4
+        ...
+    metadata.json                 # mutation descriptions per sample
+```
+
+Video specs: 512×512, 30fps, 4 seconds (120 frames), transparent background.
+
+## Material System
+
+### PBR Textures (pbr_textures/)
+
+11 material categories from [ambientCG](https://ambientcg.com/) (CC0 license):
+ceramic, concrete, fabric, leather, marble, metal, paper, plastic, rubber, stone, wood
+
+Used by `pbr_material_system.py` for PhysXNet/PhysXMob objects. Material assignment:
+1. ShapeNet texture (if available)
+2. PartNet textured_objs (if available)
+3. Keyword-based ambientCG PBR mapping (e.g., "handle" → metal, "cushion" → fabric)
+
+### HDR Environment Maps (envmap/indoor/)
+
+35 indoor HDR environment maps (2K EXR) from [Poly Haven](https://polyhaven.com/) (CC0 license):
+churches, classrooms, gyms, restaurants, studios, hospitals, offices, etc.
+
+Random envmap selection per render for lighting diversity.
 
 ## Key Scripts
 
 | Script | Description |
 |--------|-------------|
-| `render_articulation.py` | Core Blender rendering: URDF parsing, joint animation, multi-view camera, compositor |
-| `render_articulation_video.py` | Video-specific rendering pipeline |
-| `batch_generate_all.py` | Batch pipeline: generate assets + render across multiple GPUs |
-| `batch_render_pipeline.py` | Lower-level batch render orchestration |
-| `split_and_visualize.py` | 2-part decomposition for part-aware training data |
-| `convert_partnet.py` | Convert PartNet-Mobility dataset to Infinite-Mobility format |
-| `partnet_factory_rules.py` | Factory rules for 40 categories (14 Sapien + 26 PartNet) |
-| `show.py` | Interactive visualization tool |
-| `paralled_generate.py` | Parallel generation entry point |
+| **run_pipeline.py** | Unified 3-stage pipeline: generate → positive render → negative render |
+| **run_all.sh** | Cluster deployment wrapper with sharding support |
+| **render_articulation.py** | Core Blender renderer: URDF parsing, joint animation, 32-view camera, compositor |
+| **render_negative_samples.py** | Negative sample renderer: 7 mutation types per joint |
+| **split_precompute.py** | Dual-part split: normalization + per-animode body/moving OBJ export |
+| **physxnet_loader.py** | PhysXNet/PhysXMob scene preparation (JSON → URDF + OBJ) |
+| **physxnet_factory_rules.py** | PhysXNet/PhysXMob factory rules and seed→object_id mapping |
+| **pbr_material_system.py** | PBR material assignment for PhysXNet/PhysXMob objects |
+| **batch_generate_all.py** | IM-focused batch pipeline: generate + render + split |
+| **batch_produce.py** | Production pipeline: auto-discover all 81 factories |
+| **convert_partnet.py** | PartNet-Mobility → IM format converter |
+| **partnet_factory_rules.py** | 40 PartNet factory rules (14 Sapien + 26 new) |
+| **verify_split.py** | Visual verification of precomputed splits |
+| **download_pbr_textures.sh** | Download PBR textures from ambientCG |
+
+## Data Dependencies
+
+### Required External Data
+
+| Data | Path (configurable) | Description |
+|------|---------------------|-------------|
+| Infinite-Mobility outputs | `$BASE/outputs/{Factory}/{seed}/` | Pre-generated IM assets (OBJ + URDF) |
+| PhysXNet dataset | See `physxnet_loader.py` | PhysXNet JSON + OBJ files |
+| PhysX_mobility dataset | See `physxnet_loader.py` | PhysX_mobility URDF + OBJ |
+
+### Included in Repo (via Git LFS)
+
+| Data | Path | Size |
+|------|------|------|
+| HDR envmaps | `envmap/indoor/` | 533 MB (35 EXR files) |
+| PBR textures | `pbr_textures/` | 132 MB (11 categories) |
+
+## Test Results
+
+All positive sample tests pass (90/90 jobs, 0 failures):
+
+### IM Factories (51 jobs)
+```
+16 factories × all animodes = 51 jobs
+Result: 51 OK, 0 FAIL
+```
+
+### PhysXNet + PhysX_mobility (39 jobs)
+```
+10 factories × all animodes = 39 jobs
+Result: 39 OK, 0 FAIL
+```
+
+Run tests:
+```bash
+bash test_all_positive.sh          # IM factories
+bash test_physxnet_positive.sh     # PhysXNet + PhysXMob
+```
+
+## Prerequisites
+
+- **Python 3.10+** with trimesh, scipy, numpy, urdfpy, imageio, opencv
+- **Blender 3.6** (headless, for rendering scripts)
+- **NVIDIA GPU** with CUDA (tested: L20X 143GB, targeting 4090 24GB)
+- **ffmpeg** for video encoding
+- **Git LFS** for envmaps and PBR textures
 
 ## Credits
 
-- [Infinigen](https://github.com/princeton-vl/infinigen) by Princeton Vision & Learning Lab (Infinigen-Sim articulation system)
-- [Infinite-Mobility](https://github.com/OpenRobotLab/Infinite-Mobility) by OpenRobotLab (procedural articulated object generation)
+- [Infinigen](https://github.com/princeton-vl/infinigen) by Princeton Vision & Learning Lab
+- [Infinite-Mobility](https://github.com/OpenRobotLab/Infinite-Mobility) by OpenRobotLab
+- HDR envmaps from [Poly Haven](https://polyhaven.com/) (CC0)
+- PBR textures from [ambientCG](https://ambientcg.com/) (CC0)

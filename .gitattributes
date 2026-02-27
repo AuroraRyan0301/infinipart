@@ -13,3 +13,5 @@ Makefile text whitespace=-tab-in-indent,blank-at-eol,tabwidth=4
 *.zip binary
 *.tgz binary
 *.gz binary
+*.exr filter=lfs diff=lfs merge=lfs -text
+*.hdr filter=lfs diff=lfs merge=lfs -text

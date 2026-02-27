@@ -95,3 +95,14 @@ MUJOCO_LOG.TXT
 mjcf/
 urdf/
 usd/
+
+# Generated data
+test_output/
+benchmark_output/
+precompute/
+.factory_cache/
+shapenet/
+
+# Allow checked-in assets
+!pbr_textures/**
+!envmap/**
