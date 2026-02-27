@@ -1755,8 +1755,32 @@ def setup_rigid_body_physics(part_objects, links, joints, parent_map, children_m
         return parts
 
     # --- classify joints & parts ---
-    passive_joints = [j for j in joints if j.jtype != "fixed" and j.name not in animated_joint_names]
+    # Exclude passive joints that are kinematic descendants of animated joints.
+    # Their parts already follow via FK (parent rotation propagates); clearing
+    # their keyframes and making them ACTIVE would lose the parent motion.
+    animated_joint_name_set = set(animated_joint_names)
+    descendant_of_animated = set()
+    for j in joints:
+        if j.jtype == "fixed" or j.name in animated_joint_name_set:
+            continue
+        # Walk up the kinematic tree from this joint's parent_link
+        curr = j.parent_link
+        while curr in parent_map:
+            ancestor_link, ancestor_joint = parent_map[curr]
+            if ancestor_joint.name in animated_joint_name_set:
+                descendant_of_animated.add(j.name)
+                break
+            curr = ancestor_link
+
+    passive_joints = [j for j in joints
+                      if j.jtype != "fixed"
+                      and j.name not in animated_joint_names
+                      and j.name not in descendant_of_animated]
     animated_joints = [j for j in joints if j.jtype != "fixed" and j.name in animated_joint_names]
+
+    if descendant_of_animated:
+        print(f"  Descendant joints excluded from collision (follow parent via FK): "
+              f"{sorted(descendant_of_animated)}")
 
     if not passive_joints:
         print("  No passive joints for Bullet physics")
@@ -1767,6 +1791,10 @@ def setup_rigid_body_physics(part_objects, links, joints, parent_map, children_m
     animated_part_set = set()
     for j in animated_joints:
         animated_part_set.update(_descendant_parts(j))
+    # Descendant joints' parts are also driven by FK (animated), not physics
+    for j in joints:
+        if j.name in descendant_of_animated:
+            animated_part_set.update(_descendant_parts(j))
 
     all_movable = set()
     for j in joints:
@@ -2101,7 +2129,31 @@ def setup_collision_response(part_objects, links, joints, parent_map, children_m
                     q.append(cln)
         return parts
 
-    passive_joints = [j for j in joints if j.jtype != "fixed" and j.name not in animated_joint_names]
+    # Exclude passive joints that are kinematic descendants of animated joints.
+    # Their parts follow via FK (parent rotation propagates); treating them as
+    # passive would lose the parent motion since Phase 3 only uses their own q.
+    animated_joint_name_set = set(animated_joint_names)
+    descendant_of_animated = set()
+    for j in joints:
+        if j.jtype == "fixed" or j.name in animated_joint_name_set:
+            continue
+        curr = j.parent_link
+        while curr in parent_map:
+            ancestor_link, ancestor_joint = parent_map[curr]
+            if ancestor_joint.name in animated_joint_name_set:
+                descendant_of_animated.add(j.name)
+                break
+            curr = ancestor_link
+
+    passive_joints = [j for j in joints
+                      if j.jtype != "fixed"
+                      and j.name not in animated_joint_names
+                      and j.name not in descendant_of_animated]
+
+    if descendant_of_animated:
+        print(f"  Descendant joints excluded from collision (follow parent via FK): "
+              f"{sorted(descendant_of_animated)}")
+
     if not passive_joints:
         print("  No passive joints — collision response skipped")
         return
@@ -2112,6 +2164,10 @@ def setup_collision_response(part_objects, links, joints, parent_map, children_m
     animated_part_indices = set()
     for j in animated_joints:
         animated_part_indices.update(_descendant_parts(j))
+    # Descendant joints' parts also follow via FK — include them as animated
+    for j in joints:
+        if j.name in descendant_of_animated:
+            animated_part_indices.update(_descendant_parts(j))
 
     rest_fk = forward_kinematics_at_q(links, joints, parent_map, children_map)
 

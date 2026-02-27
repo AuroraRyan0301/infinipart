@@ -72,9 +72,8 @@ def parse_urdf_joints(urdf_path):
         static_gidxs: set of group indices not under any movable joint.
         all_gidxs: set of all group indices found in the URDF.
     """
-    # Min motion thresholds to filter negligible joints
-    MIN_PRISMATIC = 0.01   # 1cm
-    MIN_ROTARY = 0.1       # ~6 degrees
+    # Absolute thresholds removed — filtering is done post-normalization
+    # in process_object() using relative (normalized) thresholds.
 
     tree = ET.parse(urdf_path)
     root = tree.getroot()
@@ -173,10 +172,8 @@ def parse_urdf_joints(urdf_path):
         if jtype not in ("revolute", "prismatic", "continuous"):
             continue
         motion_range = abs(upper - lower)
-        if jtype == "prismatic" and motion_range < MIN_PRISMATIC:
-            continue
-        if jtype in ("revolute", "continuous") and motion_range < MIN_ROTARY:
-            continue
+        if motion_range < 1e-6:
+            continue  # zero-range joint
         desc_gidxs = bfs_descendant_gidxs(child_link)
         if not desc_gidxs:
             continue
@@ -817,17 +814,40 @@ def process_object(factory_name, seed, source, base_dir, output_dir, force=False
     all_v = np.concatenate([m.vertices for m in meshes.values()])
     print(f"  Normalized range: [{all_v.min():.3f}, {all_v.max():.3f}]")
 
-    # 4. Post-filter: remove prismatic joints with negligible normalized motion
-    #    In normalized space, prismatic motion = motion_range * scale.
-    #    Threshold 0.1 ≈ 5% of object size — below this it's invisible at 256px.
-    MIN_NORMALIZED_PRISMATIC = 0.1
+    # 4. Post-filter: remove joints with negligible normalized motion
+    #    All filtering uses normalized (relative) space so small parts on large
+    #    objects are correctly filtered while large parts on small objects are kept.
+    #    Prismatic: motion_range * scale (linear displacement in [-0.95, 0.95] space)
+    #    Revolute:  estimate swept arc = motion_range * max_radius * scale
+    #              where max_radius = max distance from axis to any vertex in the group
+    MIN_NORMALIZED_MOTION = 0.1  # ~5% of object size, invisible at 256px
     filtered_joints = []
     for jname, jtype, gidxs, mrange, ax_orig, ax_dir in joints:
         if jtype == "prismatic":
             norm_motion = mrange * scale
-            if norm_motion < MIN_NORMALIZED_PRISMATIC:
+            if norm_motion < MIN_NORMALIZED_MOTION:
                 print(f"  FILTER joint {jname}: prismatic {mrange:.4f}m "
-                      f"= {norm_motion:.4f} normalized (< {MIN_NORMALIZED_PRISMATIC})")
+                      f"= {norm_motion:.4f} normalized (< {MIN_NORMALIZED_MOTION})")
+                continue
+        elif jtype in ("revolute", "continuous"):
+            # Estimate max swept arc in normalized space
+            norm_origin = (np.array(ax_orig) - np.array(center)) * scale
+            axis = np.array(ax_dir)
+            # Find max radius from axis to any vertex in this joint's groups
+            max_radius = 0.0
+            for g in gidxs:
+                if g in meshes:
+                    verts = meshes[g].vertices  # already normalized
+                    # Distance from each vertex to the rotation axis line
+                    diff = verts - norm_origin
+                    proj = np.outer(diff @ axis, axis)  # project onto axis
+                    perp = diff - proj
+                    r = np.linalg.norm(perp, axis=1).max()
+                    max_radius = max(max_radius, r)
+            swept_arc = mrange * max_radius  # arc length in normalized space
+            if swept_arc < MIN_NORMALIZED_MOTION:
+                print(f"  FILTER joint {jname}: {jtype} {mrange:.4f}rad "
+                      f"r={max_radius:.4f} arc={swept_arc:.4f} normalized (< {MIN_NORMALIZED_MOTION})")
                 continue
         filtered_joints.append((jname, jtype, gidxs, mrange, ax_orig, ax_dir))
 
