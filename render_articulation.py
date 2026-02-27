@@ -1444,7 +1444,8 @@ def load_scene_parts(objs_dir, origins, exclude_indices=None):
             print(f"  SKIP part {part_idx}: excluded")
             continue
 
-        obj_path = os.path.join(objs_dir, str(part_idx), f"{part_idx}.obj")
+        part_dir = os.path.join(objs_dir, str(part_idx))
+        obj_path = os.path.join(part_dir, f"{part_idx}.obj")
 
         if not os.path.exists(obj_path):
             print(f"  SKIP part {part_idx}: OBJ not found")
@@ -1453,6 +1454,19 @@ def load_scene_parts(objs_dir, origins, exclude_indices=None):
         imported = import_obj_with_textures(obj_path)
         if not imported:
             continue
+
+        # Load extra OBJs for multi-visual links (e.g. {idx}_extra_0.obj)
+        extra_idx = 0
+        while True:
+            extra_path = os.path.join(part_dir, f"{part_idx}_extra_{extra_idx}.obj")
+            if not os.path.exists(extra_path):
+                break
+            extra_imported = import_obj_with_textures(extra_path)
+            if extra_imported:
+                imported.extend(extra_imported)
+            extra_idx += 1
+        if extra_idx > 0:
+            print(f"  Part {part_idx}: loaded {extra_idx} extra OBJ(s)")
 
         obj = join_objects(imported, name=f"part_{part_idx}")
         if obj is None:
