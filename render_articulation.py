@@ -1533,6 +1533,8 @@ def animate_parts(part_objects, links, joints, parent_map, children_map, origins
 
     print(f"  Animated joints: {sorted(animated_joint_names)}")
 
+    frozen_joints = set()  # descendant joints kept at q=0 for rigid following
+
     if _CURRENT_ANIMODE >= 10:
         # Per-joint mode: animate only the Nth movable joint (0-indexed)
         joint_index = _CURRENT_ANIMODE - 10
@@ -1616,6 +1618,28 @@ def animate_parts(part_objects, links, joints, parent_map, children_map, origins
                     selected.add(candidates[sel_ord][1])
 
         if selected:
+            # Prune descendant joints: if joint B is a kinematic descendant
+            # of joint A, and both are selected with a single-type selector,
+            # freeze B at q=0 so its parts follow A rigidly (avoids compound
+            # rotation artifacts in hierarchical URDFs like lamps with
+            # arm + head joints).
+            # Frozen joints stay in animated_joint_names (so collision code
+            # doesn't treat them as passive) but are excluded from FK animation.
+            frozen_joints = set()
+            if len(selectors) == 1 and len(selected) > 1:
+                for jname in list(selected):
+                    j = joint_by_name[jname]
+                    curr = j.parent_link
+                    while curr in parent_map:
+                        ancestor_link, ancestor_joint = parent_map[curr]
+                        if ancestor_joint.name in selected:
+                            frozen_joints.add(jname)
+                            break
+                        curr = ancestor_link
+                if frozen_joints:
+                    print(f"  Frozen descendant joints (q=0, rigid follow): "
+                          f"{sorted(frozen_joints)}")
+
             animated_joint_names = selected
             print(f"  Animode {_CURRENT_ANIMODE}: {sorted(selected)}")
         else:
@@ -1630,9 +1654,11 @@ def animate_parts(part_objects, links, joints, parent_map, children_map, origins
         bpy.context.scene.frame_set(frame)
 
         # Compute FK at this frame, only animating joints on paths to moving parts
+        # Frozen joints (pruned descendants) stay at q=0 for rigid following
+        active_for_fk = animated_joint_names - frozen_joints if frozen_joints else animated_joint_names
         link_T = forward_kinematics_selective(
             links, joints, parent_map, children_map,
-            frame, num_frames, animated_joint_names,
+            frame, num_frames, active_for_fk,
         )
 
         # Apply transforms ONLY to animated (moving) parts
