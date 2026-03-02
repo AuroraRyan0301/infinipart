@@ -598,26 +598,18 @@ def build_reduced_graph(links, joints, root_link, fixed_joints, movable_joints):
     """
     # All link names that have meshes (part_idx != None)
     mesh_links = {name for name, info in links.items() if info["part_idx"] is not None}
-
-    # Build adjacency graph: link -> [(neighbor_link, joint)]
-    adjacency = defaultdict(list)
-    for j in joints:
-        if j.parent_link in mesh_links and j.child_link in mesh_links:
-            adjacency[j.parent_link].append((j.child_link, j))
-            adjacency[j.child_link].append((j.parent_link, j))
-
-    # Names of fixed joints (joints to merge across)
-    fixed_joint_names = {j.name for j in fixed_joints}
-    # Also include original URDF fixed-type joints
-    for j in joints:
-        if j.jtype == "fixed":
-            fixed_joint_names.add(j.name)
+    all_links = set(links.keys())
 
     # Names of movable joints (edges in reduced graph)
     movable_joint_names = {j.name for j in movable_joints}
 
-    # Union-Find for merging fixed-joint-connected links
-    parent = {link: link for link in mesh_links}
+    # Any joint NOT in movable set is treated as fixed for merging
+    # (includes URDF fixed-type, zero-range revolute, classified-fixed, etc.)
+    fixed_joint_names = {j.name for j in joints if j.name not in movable_joint_names}
+
+    # Union-Find over ALL links (including abstract/meshless ones)
+    # so that abstract links get merged with their mesh neighbors via fixed joints
+    parent = {link: link for link in all_links}
 
     def find(x):
         while parent[x] != x:
@@ -630,16 +622,24 @@ def build_reduced_graph(links, joints, root_link, fixed_joints, movable_joints):
         if ra != rb:
             parent[ra] = rb
 
-    # Merge links connected by fixed joints
+    # Merge links connected by fixed joints (all links, not just mesh)
     for j in joints:
         if j.name in fixed_joint_names:
-            if j.parent_link in mesh_links and j.child_link in mesh_links:
+            if j.parent_link in all_links and j.child_link in all_links:
                 union(j.parent_link, j.child_link)
 
-    # Build merged groups
+    # Build merged groups (only keep groups containing at least one mesh link)
     groups = defaultdict(set)
-    for link in mesh_links:
+    for link in all_links:
         groups[find(link)].add(link)
+
+    # Filter: only groups with at least one mesh link, and only store mesh links
+    filtered_groups = {}
+    for rep, members in groups.items():
+        mesh_members = members & mesh_links
+        if mesh_members:
+            filtered_groups[rep] = mesh_members
+    groups = filtered_groups
 
     merged_groups = []
     link_to_group_idx = {}
@@ -668,16 +668,36 @@ def build_reduced_graph(links, joints, root_link, fixed_joints, movable_joints):
                 for child, _ in children_map_local.get(current, []):
                     queue.append(child)
 
+    # Map union-find representatives to group indices (for resolving abstract links)
+    rep_to_group_idx = {}
+    for representative, members in groups.items():
+        # find the group idx that contains these members
+        for m in members:
+            if m in link_to_group_idx:
+                rep_to_group_idx[representative] = link_to_group_idx[m]
+                break
+
+    def resolve_link_to_group(link_name):
+        """Resolve a link (possibly abstract/meshless) to its group index."""
+        if link_name in link_to_group_idx:
+            return link_to_group_idx[link_name]
+        # Use union-find: abstract link's representative should map to a mesh group
+        if link_name in parent:
+            rep = find(link_name)
+            if rep in rep_to_group_idx:
+                return rep_to_group_idx[rep]
+        return None
+
     # Build reduced edges (movable joints between different groups)
     reduced_edges = []
     seen_edges = set()
     for j in joints:
         if j.name not in movable_joint_names:
             continue
-        if j.parent_link not in link_to_group_idx or j.child_link not in link_to_group_idx:
+        ga = resolve_link_to_group(j.parent_link)
+        gb = resolve_link_to_group(j.child_link)
+        if ga is None or gb is None:
             continue
-        ga = link_to_group_idx[j.parent_link]
-        gb = link_to_group_idx[j.child_link]
         if ga == gb:
             continue  # same group (shouldn't happen but safety check)
         edge_key = (min(ga, gb), max(ga, gb))
