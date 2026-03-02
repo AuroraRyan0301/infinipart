@@ -98,9 +98,10 @@ def parse_args():
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--envmap", default=None, help="Path to envmap HDR/EXR")
     parser.add_argument("--skip_existing", action="store_true")
-    parser.add_argument("--color_mode", default="part", choices=["part", "group"],
+    parser.add_argument("--color_mode", default="both", choices=["part", "group", "both"],
                         help="part: binary part0/part1 coloring; "
-                             "group: each reduced graph node gets a unique color")
+                             "group: each reduced graph node gets unique color; "
+                             "both: render both passes (default)")
     return parser.parse_args(argv)
 
 
@@ -1053,121 +1054,119 @@ def main():
         # Normalize
         normalize_parts(parts, center, scale)
 
-        # Assign materials based on color_mode
-        two_coloring = split_info.get("two_coloring", {})
-
-        if args.color_mode == "group":
-            # Per-group coloring: each reduced graph node gets a unique color
-            # Distinct color palette (max 12 groups, highly distinguishable)
-            GROUP_COLORS = [
-                (0.22, 0.46, 0.72),  # blue
-                (0.89, 0.35, 0.13),  # orange
-                (0.17, 0.63, 0.17),  # green
-                (0.84, 0.15, 0.16),  # red
-                (0.58, 0.40, 0.74),  # purple
-                (0.55, 0.34, 0.29),  # brown
-                (0.89, 0.47, 0.76),  # pink
-                (0.50, 0.50, 0.50),  # gray
-                (0.74, 0.74, 0.13),  # olive
-                (0.09, 0.75, 0.81),  # cyan
-                (0.98, 0.60, 0.01),  # amber
-                (0.40, 0.76, 0.65),  # teal
-            ]
-            # Build link_idx -> group_index mapping
-            all_groups = []
-            for group in two_coloring.get("part0_groups", []):
-                all_groups.append(group)
-            for group in two_coloring.get("part1_groups", []):
-                all_groups.append(group)
-
-            idx_to_group = {}
-            for gi, group in enumerate(all_groups):
-                for link_idx in group:
-                    idx_to_group[link_idx] = gi
-
-            for link_name, obj in parts.items():
-                idx = links[link_name]["part_idx"]
-                gi = idx_to_group.get(idx, 0)
-                color = GROUP_COLORS[gi % len(GROUP_COLORS)]
-                assign_material(obj, color, metallic=0.25, roughness=0.5)
-        else:
-            # Binary part0/part1 coloring
-            part0_link_idxs = set()
-            for group in two_coloring.get("part0_groups", []):
-                part0_link_idxs.update(group)
-            part1_link_idxs = set()
-            for group in two_coloring.get("part1_groups", []):
-                part1_link_idxs.update(group)
-
-            for link_name, obj in parts.items():
-                idx = links[link_name]["part_idx"]
-                if idx in part0_link_idxs:
-                    assign_material(obj, (0.45, 0.55, 0.65), metallic=0.2, roughness=0.6)
-                elif idx in part1_link_idxs:
-                    assign_material(obj, (0.85, 0.55, 0.25), metallic=0.3, roughness=0.4)
-                else:
-                    assign_material(obj, (0.6, 0.6, 0.6), metallic=0.1, roughness=0.7)
-
-        # Animate
+        # Animate (same for all color modes — do once)
         animate_scene_normalized(parts, joints, children_map, root_link,
                                  joints_by_name, split_info, num_frames,
                                  center, scale)
 
-        # Compute camera distance from bounding box
-        # After normalization, extent should be ~2 (unit cube)
+        # Camera setup
         cam_center = [0.0, 0.0, 0.0]
         cam_distance = 3.6  # ~2.0 * 1.8
 
-        # Output suffix: _nobg for part mode, _group for group mode
-        vid_suffix = "_group" if args.color_mode == "group" else "_nobg"
+        # Determine which color passes to render
+        two_coloring = split_info.get("two_coloring", {})
+        if args.color_mode == "both":
+            color_passes = ["part", "group"]
+        else:
+            color_passes = [args.color_mode]
 
-        # Render static views
-        for view_name, (elev, azim) in sorted(static_views.items()):
-            mp4_path = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-            if args.skip_existing and os.path.exists(mp4_path):
-                print(f"  SKIP {view_name} (exists)")
-                continue
+        GROUP_COLORS = [
+            (0.22, 0.46, 0.72),  # blue
+            (0.89, 0.35, 0.13),  # orange
+            (0.17, 0.63, 0.17),  # green
+            (0.84, 0.15, 0.16),  # red
+            (0.58, 0.40, 0.74),  # purple
+            (0.55, 0.34, 0.29),  # brown
+            (0.89, 0.47, 0.76),  # pink
+            (0.50, 0.50, 0.50),  # gray
+            (0.74, 0.74, 0.13),  # olive
+            (0.09, 0.75, 0.81),  # cyan
+            (0.98, 0.60, 0.01),  # amber
+            (0.40, 0.76, 0.65),  # teal
+        ]
 
-            frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-            os.makedirs(frame_dir, exist_ok=True)
+        for color_pass in color_passes:
+            vid_suffix = "_group" if color_pass == "group" else "_nobg"
+            print(f"  --- Color pass: {color_pass} (suffix: {vid_suffix}) ---")
 
-            cam = create_camera(view_name, cam_center, cam_distance, elev, azim)
-            bpy.context.scene.camera = cam
-            bpy.context.scene.render.filepath = os.path.join(frame_dir, "frame_")
-            bpy.ops.render.render(animation=True)
-
-            # Encode video
-            ok = frames_to_video(frame_dir, mp4_path, args.fps)
-            if ok:
-                print(f"  {view_name}: OK -> {mp4_path}")
+            # Assign materials for this pass
+            if color_pass == "group":
+                all_groups = []
+                for group in two_coloring.get("part0_groups", []):
+                    all_groups.append(group)
+                for group in two_coloring.get("part1_groups", []):
+                    all_groups.append(group)
+                idx_to_group = {}
+                for gi, group in enumerate(all_groups):
+                    for link_idx in group:
+                        idx_to_group[link_idx] = gi
+                for link_name, obj in parts.items():
+                    idx = links[link_name]["part_idx"]
+                    gi = idx_to_group.get(idx, 0)
+                    color = GROUP_COLORS[gi % len(GROUP_COLORS)]
+                    assign_material(obj, color, metallic=0.25, roughness=0.5)
             else:
-                print(f"  {view_name}: FAIL (ffmpeg)")
+                part0_link_idxs = set()
+                for group in two_coloring.get("part0_groups", []):
+                    part0_link_idxs.update(group)
+                part1_link_idxs = set()
+                for group in two_coloring.get("part1_groups", []):
+                    part1_link_idxs.update(group)
+                for link_name, obj in parts.items():
+                    idx = links[link_name]["part_idx"]
+                    if idx in part0_link_idxs:
+                        assign_material(obj, (0.45, 0.55, 0.65), metallic=0.2, roughness=0.6)
+                    elif idx in part1_link_idxs:
+                        assign_material(obj, (0.85, 0.55, 0.25), metallic=0.3, roughness=0.4)
+                    else:
+                        assign_material(obj, (0.6, 0.6, 0.6), metallic=0.1, roughness=0.7)
 
-            remove_camera(cam)
+            # Render static views
+            for view_name, (elev, azim) in sorted(static_views.items()):
+                mp4_path = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
+                if args.skip_existing and os.path.exists(mp4_path):
+                    print(f"  SKIP {view_name}{vid_suffix} (exists)")
+                    continue
 
-        # Render moving views
-        for view_name, (se, sa, ee, ea) in sorted(moving_views.items()):
-            mp4_path = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-            if args.skip_existing and os.path.exists(mp4_path):
-                print(f"  SKIP {view_name} (exists)")
-                continue
+                frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
+                os.makedirs(frame_dir, exist_ok=True)
 
-            frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-            os.makedirs(frame_dir, exist_ok=True)
+                cam = create_camera(view_name, cam_center, cam_distance, elev, azim)
+                bpy.context.scene.camera = cam
+                bpy.context.scene.render.filepath = os.path.join(frame_dir, "frame_")
+                bpy.ops.render.render(animation=True)
 
-            cam = create_animated_camera(view_name, cam_center, cam_distance,
-                                         se, sa, ee, ea, num_frames)
-            bpy.context.scene.camera = cam
-            bpy.context.scene.render.filepath = os.path.join(frame_dir, "frame_")
-            bpy.ops.render.render(animation=True)
+                ok = frames_to_video(frame_dir, mp4_path, args.fps)
+                if ok:
+                    print(f"  {view_name}{vid_suffix}: OK")
+                else:
+                    print(f"  {view_name}{vid_suffix}: FAIL (ffmpeg)")
 
-            ok = frames_to_video(frame_dir, mp4_path, args.fps)
-            if ok:
-                print(f"  {view_name}: OK -> {mp4_path}")
-            else:
-                print(f"  {view_name}: FAIL (ffmpeg)")
+                remove_camera(cam)
 
-            remove_camera(cam)
+            # Render moving views
+            for view_name, (se, sa, ee, ea) in sorted(moving_views.items()):
+                mp4_path = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
+                if args.skip_existing and os.path.exists(mp4_path):
+                    print(f"  SKIP {view_name}{vid_suffix} (exists)")
+                    continue
+
+                frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
+                os.makedirs(frame_dir, exist_ok=True)
+
+                cam = create_animated_camera(view_name, cam_center, cam_distance,
+                                             se, sa, ee, ea, num_frames)
+                bpy.context.scene.camera = cam
+                bpy.context.scene.render.filepath = os.path.join(frame_dir, "frame_")
+                bpy.ops.render.render(animation=True)
+
+                ok = frames_to_video(frame_dir, mp4_path, args.fps)
+                if ok:
+                    print(f"  {view_name}{vid_suffix}: OK")
+                else:
+                    print(f"  {view_name}{vid_suffix}: FAIL (ffmpeg)")
+
+                remove_camera(cam)
 
     # Update metadata with envmap info
     if envmap_path:
