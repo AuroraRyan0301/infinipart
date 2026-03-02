@@ -1583,10 +1583,328 @@ def animate_scene(parts, joints, children_map, root_link,
                     kp.interpolation = 'LINEAR'
 
 
+def _get_link_descendants(start_link, children_map):
+    """Get all descendant link names of start_link (inclusive)."""
+    result = {start_link}
+    stack = [start_link]
+    while stack:
+        link = stack.pop()
+        for child_link, _joint in children_map.get(link, []):
+            if child_link not in result:
+                result.add(child_link)
+                stack.append(child_link)
+    return result
+
+
+def compute_collision_safe_animation(parts, joints, children_map, root_link,
+                                     joints_by_name, split_info, num_frames,
+                                     center, scale):
+    """Compute per-frame joint values with BVH collision avoidance.
+
+    Phase 1: Compute active trajectory, check active vs fixed → clamp
+    Phase 2: Check active vs passive per frame → binary search safe angle
+    Phase 3: Anticipation smoothing for passive joints
+
+    Returns: dict {frame: {joint_name: angle}} for frames 1..num_frames
+    """
+    from mathutils.bvhtree import BVHTree
+
+    classification = split_info["joint_classification"]
+    pre_opening = split_info.get("pre_opening_angles", {})
+    traj_type = split_info["trajectory_type"]
+
+    active_jnames = [jn for jn, cls in classification.items() if cls == "active"]
+    passive_jnames = [jn for jn, cls in classification.items() if cls == "passive"]
+
+    # If no joints to check, fall back to simple animation
+    if not active_jnames:
+        result = {}
+        for frame in range(1, num_frames + 1):
+            t = (frame - 1) / max(num_frames - 1, 1)
+            result[frame] = compute_frame_joint_values(joints_by_name, split_info, t)
+        return result
+
+    # -- Normalization matrices --
+    cx, cy, cz = center
+    S = Matrix.Identity(4)
+    S[0][0] = scale; S[1][1] = scale; S[2][2] = scale
+    S[0][3] = -cx * scale; S[1][3] = -cy * scale; S[2][3] = -cz * scale
+    S_inv = Matrix.Identity(4)
+    S_inv[0][0] = 1.0 / scale; S_inv[1][1] = 1.0 / scale; S_inv[2][2] = 1.0 / scale
+    S_inv[0][3] = cx; S_inv[1][3] = cy; S_inv[2][3] = cz
+
+    # Rest FK in normalized space
+    rest_q = {j.name: 0.0 for j in joints}
+    T_rest_w = forward_kinematics(joints, children_map, root_link, rest_q)
+    T_rest_n = {k: S @ v @ S_inv for k, v in T_rest_w.items()}
+    T_rest_n_inv = {k: v.inverted() for k, v in T_rest_n.items()}
+
+    # Cache mesh data (vertices in normalized rest space)
+    mesh_cache = {}
+    for lname, obj in parts.items():
+        mesh = obj.data
+        verts = [v.co.copy() for v in mesh.vertices]
+        polys = [tuple(p.vertices) for p in mesh.polygons]
+        if verts and polys:
+            mesh_cache[lname] = (verts, polys)
+
+    # -- Link groups --
+    active_links = set()
+    for jn in active_jnames:
+        j = joints_by_name[jn]
+        active_links |= _get_link_descendants(j.child_link, children_map)
+
+    passive_link_map = {}  # {passive_joint_name: set_of_links}
+    for jn in passive_jnames:
+        j = joints_by_name[jn]
+        plinks = _get_link_descendants(j.child_link, children_map) - active_links
+        plinks &= set(parts.keys())  # only loaded parts
+        if plinks:
+            passive_link_map[jn] = plinks
+
+    all_movable_links = set(active_links)
+    for plinks in passive_link_map.values():
+        all_movable_links |= plinks
+    fixed_links = (set(parts.keys()) - all_movable_links) & set(mesh_cache.keys())
+
+    # -- BVH helpers --
+    MAX_SAMPLE_VERTS = 500  # subsample vertices for proximity queries
+
+    def _build_bvh(link_names, joint_values):
+        """Build combined BVH for a set of links at given joint angles."""
+        T_w = forward_kinematics(joints, children_map, root_link, joint_values)
+        T_n = {k: S @ v @ S_inv for k, v in T_w.items()}
+        all_v, all_p, off = [], [], 0
+        for lname in link_names:
+            if lname not in mesh_cache or lname not in T_n:
+                continue
+            verts, polys = mesh_cache[lname]
+            delta = T_n[lname] @ T_rest_n_inv[lname]
+            tverts = [(delta @ Vector((*v, 1.0))).xyz for v in verts]
+            all_v.extend(tverts)
+            all_p.extend([tuple(vi + off for vi in p) for p in polys])
+            off += len(verts)
+        if not all_v or not all_p:
+            return None
+        try:
+            return BVHTree.FromPolygons(all_v, all_p)
+        except Exception:
+            return None
+
+    def _get_sample_points(link_names, joint_values):
+        """Get subsampled world-space vertex positions for a set of links."""
+        T_w = forward_kinematics(joints, children_map, root_link, joint_values)
+        T_n = {k: S @ v @ S_inv for k, v in T_w.items()}
+        pts = []
+        for lname in link_names:
+            if lname not in mesh_cache or lname not in T_n:
+                continue
+            verts, _ = mesh_cache[lname]
+            delta = T_n[lname] @ T_rest_n_inv[lname]
+            step = max(1, len(verts) // MAX_SAMPLE_VERTS)
+            for i in range(0, len(verts), step):
+                pts.append((delta @ Vector((*verts[i], 1.0))).xyz)
+        return pts
+
+    def _measure_min_dist(links_a, links_b, joint_values):
+        """Measure minimum distance between two link groups using BVH find_nearest."""
+        bvh_b = _build_bvh(links_b, joint_values)
+        if bvh_b is None:
+            return float('inf')
+        pts_a = _get_sample_points(links_a, joint_values)
+        min_d = float('inf')
+        for pt in pts_a:
+            loc, norm, idx, dist = bvh_b.find_nearest(pt)
+            if dist is not None and dist < min_d:
+                min_d = dist
+        return min_d
+
+    def _check_collision(links_a, links_b, joint_values, proximity):
+        """Check if link group A penetrates within proximity of link group B."""
+        bvh_b = _build_bvh(links_b, joint_values)
+        if bvh_b is None:
+            return False
+        pts_a = _get_sample_points(links_a, joint_values)
+        for pt in pts_a:
+            loc, norm, idx, dist = bvh_b.find_nearest(pt)
+            if dist is not None and dist < proximity:
+                return True
+        return False
+
+    # ================================================================
+    # Phase 0: Measure rest-state distances → adaptive proximity
+    # ================================================================
+    active_q = {}
+    for frame in range(1, num_frames + 1):
+        t = (frame - 1) / max(num_frames - 1, 1)
+        active_q[frame] = {}
+        for jn in active_jnames:
+            j = joints_by_name[jn]
+            active_q[frame][jn] = compute_trajectory_value(j, traj_type, t)
+
+    # Adaptive proximity for active vs fixed
+    # If parts touch at rest (dist < threshold), skip collision for that pair
+    REST_TOUCH_THRESHOLD = 0.008
+    prox_fixed = None  # None = skip collision
+    if fixed_links and (active_links & set(mesh_cache.keys())):
+        rest_dist = _measure_min_dist(active_links, fixed_links, rest_q)
+        if rest_dist < REST_TOUCH_THRESHOLD:
+            prox_fixed = None  # touching at rest → skip (designed geometry)
+            print(f"    Rest dist (active-fixed): {rest_dist:.5f} (touching, skip collision)")
+        else:
+            prox_fixed = min(rest_dist * 0.15, 0.01)
+            print(f"    Rest dist (active-fixed): {rest_dist:.5f}, proximity: {prox_fixed:.5f}")
+
+    # Adaptive proximity for active vs each passive group
+    prox_passive = {}
+    for pjn, plinks in passive_link_map.items():
+        if plinks & set(mesh_cache.keys()):
+            rest_dist = _measure_min_dist(active_links, plinks, rest_q)
+            if rest_dist < REST_TOUCH_THRESHOLD:
+                # touching at rest → skip collision for this pair
+                print(f"    Rest dist (active-{pjn}): {rest_dist:.5f} (touching, skip)")
+            else:
+                prox_passive[pjn] = min(rest_dist * 0.15, 0.01)
+                print(f"    Rest dist (active-{pjn}): {rest_dist:.5f}, proximity: {prox_passive[pjn]:.5f}")
+
+    # ================================================================
+    # Phase 1: Active trajectory + active-vs-fixed collision → clamp
+    # ================================================================
+    frozen_frame = None
+    if fixed_links and prox_fixed is not None and (active_links & set(mesh_cache.keys())):
+        sample_step = max(1, num_frames // 30)
+        for frame in range(1, num_frames + 1, sample_step):
+            q_test = dict(rest_q)
+            q_test.update(active_q[frame])
+            if _check_collision(active_links, fixed_links, q_test, prox_fixed):
+                # Binary search for exact collision frame
+                lo = max(1, frame - sample_step)
+                hi = frame
+                while hi - lo > 1:
+                    mid = (lo + hi) // 2
+                    q_mid = dict(rest_q)
+                    q_mid.update(active_q[mid])
+                    if _check_collision(active_links, fixed_links, q_mid, prox_fixed):
+                        hi = mid
+                    else:
+                        lo = mid
+                frozen_frame = lo
+                safe_q = dict(active_q[frozen_frame])
+                for f in range(frozen_frame + 1, num_frames + 1):
+                    active_q[f] = dict(safe_q)
+                print(f"    Collision: active vs fixed at frame {frozen_frame}/{num_frames}, clamped")
+                break
+
+    # ================================================================
+    # Phase 2: Active-vs-passive collision → binary search passive angle
+    # ================================================================
+    passive_q_raw = {}  # {joint_name: [0.0]*(num_frames+2)} 1-indexed
+
+    for pjn, plinks in passive_link_map.items():
+        pj = joints_by_name[pjn]
+        target = pre_opening.get(pjn, 0.0)
+        q_raw = [0.0] * (num_frames + 2)
+        prox = prox_passive.get(pjn, 0.005)
+
+        if abs(target) < 1e-8 or not (plinks & set(mesh_cache.keys())):
+            passive_q_raw[pjn] = q_raw
+            continue
+
+        q_current = 0.0
+        # Sample every few frames for speed
+        sample_step = max(1, num_frames // 30)
+        sample_frames = list(range(1, num_frames + 1, sample_step))
+        if sample_frames[-1] != num_frames:
+            sample_frames.append(num_frames)
+
+        for frame in sample_frames:
+            q_all = dict(rest_q)
+            q_all.update(active_q[frame])
+            # Other passive joints at their current estimate
+            for other_pjn in passive_q_raw:
+                q_all[other_pjn] = passive_q_raw[other_pjn][frame]
+            q_all[pjn] = q_current
+
+            if _check_collision(active_links, plinks, q_all, prox):
+                # Binary search for minimum safe passive angle
+                q_lo, q_hi = q_current, target
+                for _ in range(10):
+                    q_mid = (q_lo + q_hi) / 2.0
+                    q_all[pjn] = q_mid
+                    if _check_collision(active_links, plinks, q_all, prox):
+                        q_lo = q_mid  # still colliding, need more opening
+                    else:
+                        q_hi = q_mid  # safe, can try less opening
+                q_safe = q_hi + abs(target) * 0.02  # small clearance
+                q_current = min(q_safe, abs(target)) * (1 if target >= 0 else -1)
+
+            q_raw[frame] = q_current
+
+        # Interpolate between samples
+        for i in range(len(sample_frames) - 1):
+            f0, f1 = sample_frames[i], sample_frames[i + 1]
+            v0, v1 = q_raw[f0], q_raw[f1]
+            for f in range(f0 + 1, f1):
+                frac = (f - f0) / (f1 - f0)
+                q_raw[f] = v0 + (v1 - v0) * frac
+
+        passive_q_raw[pjn] = q_raw
+        if abs(q_current) > 1e-6:
+            print(f"    Passive {pjn}: opened to {q_current:.4f} (target {target:.4f})")
+
+    # ================================================================
+    # Phase 3: Anticipation smoothing for passive joints
+    # ================================================================
+    passive_q_smooth = {}
+    for pjn, q_raw in passive_q_raw.items():
+        q_s = list(q_raw)
+        LEAD = min(10, num_frames // 4)
+
+        # Find jumps and spread backward
+        for f in range(2, num_frames + 1):
+            if abs(q_raw[f]) > abs(q_raw[f - 1]) + 1e-6:
+                lead_start = max(1, f - LEAD)
+                span = max(f - lead_start, 1)
+                for ff in range(lead_start, f):
+                    frac = (ff - lead_start) / span
+                    interp = q_raw[f - 1] + (q_raw[f] - q_raw[f - 1]) * math.sin(frac * math.pi / 2)
+                    if abs(interp) > abs(q_s[ff]):
+                        q_s[ff] = interp
+
+        # Enforce monotonicity (magnitude only increases)
+        for f in range(2, num_frames + 1):
+            if abs(q_s[f]) < abs(q_s[f - 1]):
+                q_s[f] = q_s[f - 1]
+
+        passive_q_smooth[pjn] = q_s
+
+    # ================================================================
+    # Combine into per-frame joint values
+    # ================================================================
+    result = {}
+    for frame in range(1, num_frames + 1):
+        q = {}
+        q.update(active_q[frame])
+        for pjn in passive_jnames:
+            if pjn in passive_q_smooth:
+                q[pjn] = passive_q_smooth[pjn][frame]
+            else:
+                # Passive joint with no collision-relevant parts — use simple animation
+                target = pre_opening.get(pjn, 0.0)
+                t = (frame - 1) / max(num_frames - 1, 1)
+                q[pjn] = target * 0.5 * (1 - math.cos(math.pi * t)) if abs(target) > 1e-8 else 0.0
+        for jn in classification:
+            if jn not in q:
+                q[jn] = 0.0  # fixed joints
+        result[frame] = q
+
+    return result
+
+
 def animate_scene_normalized(parts, joints, children_map, root_link,
                              joints_by_name, split_info, num_frames,
                              center, scale):
-    """Animate using normalized-space FK.
+    """Animate using normalized-space FK with per-frame collision avoidance.
 
     Compute FK in URDF space, then convert to normalized space for delta.
     The normalization is: p_norm = (p_world - center) * scale
@@ -1619,9 +1937,14 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
     T_rest_norm = {k: S @ v @ S_inv for k, v in T_rest_world.items()}
     T_rest_norm_inv = {k: v.inverted() for k, v in T_rest_norm.items()}
 
+    # Compute collision-safe joint values per frame
+    frame_joint_values = compute_collision_safe_animation(
+        parts, joints, children_map, root_link,
+        joints_by_name, split_info, num_frames,
+        center, scale)
+
     for frame in range(1, num_frames + 1):
-        t = (frame - 1) / max(num_frames - 1, 1)
-        joint_values = compute_frame_joint_values(joints_by_name, split_info, t)
+        joint_values = frame_joint_values[frame]
 
         T_frame_world = forward_kinematics(joints, children_map, root_link, joint_values)
         T_frame_norm = {k: S @ v @ S_inv for k, v in T_frame_world.items()}
