@@ -1310,6 +1310,7 @@ def assign_material(obj, color, metallic=0.3, roughness=0.5, name=None):
         bsdf.inputs["Base Color"].default_value = (*color, 1.0)
         bsdf.inputs["Metallic"].default_value = metallic
         bsdf.inputs["Roughness"].default_value = roughness
+        bsdf.inputs["Specular"].default_value = 0.0 if roughness >= 1.0 else 0.5
 
     obj.data.materials.clear()
     obj.data.materials.append(mat)
@@ -1854,7 +1855,7 @@ def main():
                     idx = links[link_name]["part_idx"]
                     gi = idx_to_group.get(idx, 0)
                     color = GROUP_COLORS[gi % len(GROUP_COLORS)]
-                    assign_material(obj, color, metallic=0.25, roughness=0.5)
+                    assign_material(obj, color, metallic=0.0, roughness=1.0)
             elif color_pass == "realistic":
                 factory = metadata.get("factory", "")
                 identifier = metadata.get("identifier", "")
@@ -1890,11 +1891,11 @@ def main():
                 for link_name, obj in parts.items():
                     idx = links[link_name]["part_idx"]
                     if idx in part0_link_idxs:
-                        assign_material(obj, (0.45, 0.55, 0.65), metallic=0.2, roughness=0.6)
+                        assign_material(obj, (0.45, 0.55, 0.65), metallic=0.0, roughness=1.0)
                     elif idx in part1_link_idxs:
-                        assign_material(obj, (0.85, 0.55, 0.25), metallic=0.3, roughness=0.4)
+                        assign_material(obj, (0.85, 0.55, 0.25), metallic=0.0, roughness=1.0)
                     else:
-                        assign_material(obj, (0.6, 0.6, 0.6), metallic=0.1, roughness=0.7)
+                        assign_material(obj, (0.6, 0.6, 0.6), metallic=0.0, roughness=1.0)
 
             # Render static views
             for view_name, (elev, azim) in sorted(static_views.items()):
