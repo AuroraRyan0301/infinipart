@@ -1601,13 +1601,22 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
                                      center, scale):
     """Compute per-frame joint values with BVH collision avoidance.
 
-    Phase 1: Compute active trajectory, check active vs fixed → clamp
-    Phase 2: Check active vs passive per frame → binary search safe angle
-    Phase 3: Anticipation smoothing for passive joints
+    CLAUDE.md spec (Render Simulation Phase):
+      - Active vs Passive part → passive joint yields/opens per-frame
+      - Active vs Fixed part  → STOP all motion
+
+    Two detection strategies based on rest-state geometry:
+      - Parts NOT touching at rest: find_nearest() with adaptive proximity
+      - Parts touching at rest (hinge connections): overlap() count delta
+        (baseline at rest vs current frame — detects new penetration beyond
+         what already exists at the hinge contact area)
 
     Returns: dict {frame: {joint_name: angle}} for frames 1..num_frames
     """
+    import time as _time
     from mathutils.bvhtree import BVHTree
+
+    t0 = _time.time()
 
     classification = split_info["joint_classification"]
     pre_opening = split_info.get("pre_opening_angles", {})
@@ -1616,13 +1625,17 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
     active_jnames = [jn for jn, cls in classification.items() if cls == "active"]
     passive_jnames = [jn for jn, cls in classification.items() if cls == "passive"]
 
-    # If no joints to check, fall back to simple animation
+    # If no active joints, fall back to simple animation
     if not active_jnames:
         result = {}
         for frame in range(1, num_frames + 1):
             t = (frame - 1) / max(num_frames - 1, 1)
             result[frame] = compute_frame_joint_values(joints_by_name, split_info, t)
         return result
+
+    print(f"\n  Collision avoidance:")
+    print(f"    Active joints: {active_jnames}")
+    print(f"    Passive joints: {passive_jnames}")
 
     # -- Normalization matrices --
     cx, cy, cz = center
@@ -1667,15 +1680,20 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
         all_movable_links |= plinks
     fixed_links = (set(parts.keys()) - all_movable_links) & set(mesh_cache.keys())
 
+    print(f"    Active links: {sorted(active_links)}")
+    print(f"    Fixed links: {sorted(fixed_links)}")
+    for pjn, plinks in passive_link_map.items():
+        print(f"    Passive {pjn} links: {sorted(plinks)}")
+
     # -- BVH helpers --
-    MAX_SAMPLE_VERTS = 500  # subsample vertices for proximity queries
+    TOUCH_THRESHOLD = 0.005  # parts closer than this at rest = "touching"
 
     def _build_bvh(link_names, joint_values):
         """Build combined BVH for a set of links at given joint angles."""
         T_w = forward_kinematics(joints, children_map, root_link, joint_values)
         T_n = {k: S @ v @ S_inv for k, v in T_w.items()}
         all_v, all_p, off = [], [], 0
-        for lname in link_names:
+        for lname in sorted(link_names):  # sorted for deterministic polygon order
             if lname not in mesh_cache or lname not in T_n:
                 continue
             verts, polys = mesh_cache[lname]
@@ -1691,23 +1709,23 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
         except Exception:
             return None
 
-    def _get_sample_points(link_names, joint_values):
+    def _get_sample_points(link_names, joint_values, max_pts=500):
         """Get subsampled world-space vertex positions for a set of links."""
         T_w = forward_kinematics(joints, children_map, root_link, joint_values)
         T_n = {k: S @ v @ S_inv for k, v in T_w.items()}
         pts = []
-        for lname in link_names:
+        for lname in sorted(link_names):  # sorted for deterministic index order
             if lname not in mesh_cache or lname not in T_n:
                 continue
             verts, _ = mesh_cache[lname]
             delta = T_n[lname] @ T_rest_n_inv[lname]
-            step = max(1, len(verts) // MAX_SAMPLE_VERTS)
+            step = max(1, len(verts) // max_pts)
             for i in range(0, len(verts), step):
                 pts.append((delta @ Vector((*verts[i], 1.0))).xyz)
         return pts
 
     def _measure_min_dist(links_a, links_b, joint_values):
-        """Measure minimum distance between two link groups using BVH find_nearest."""
+        """Measure minimum distance between two link groups."""
         bvh_b = _build_bvh(links_b, joint_values)
         if bvh_b is None:
             return float('inf')
@@ -1719,8 +1737,8 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
                 min_d = dist
         return min_d
 
-    def _check_collision(links_a, links_b, joint_values, proximity):
-        """Check if link group A penetrates within proximity of link group B."""
+    def _check_proximity(links_a, links_b, joint_values, proximity):
+        """Check if link group A has vertices within proximity of link group B surface."""
         bvh_b = _build_bvh(links_b, joint_values)
         if bvh_b is None:
             return False
@@ -1731,8 +1749,52 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
                 return True
         return False
 
+    def _compute_contact_mask(links_a, links_b, contact_radius=0.03):
+        """Find sample points of links_a that are close to links_b at rest.
+
+        Returns a set of indices into the _get_sample_points() result.
+        These are "contact zone" vertices (hinge area) that should be
+        EXCLUDED from proximity checks to avoid false positives.
+        """
+        bvh_b = _build_bvh(links_b, rest_q)
+        if bvh_b is None:
+            return set()
+        pts_a = _get_sample_points(links_a, rest_q)
+        mask = set()
+        for i, pt in enumerate(pts_a):
+            loc, norm, idx, dist = bvh_b.find_nearest(pt)
+            if dist is not None and dist < contact_radius:
+                mask.add(i)
+        return mask
+
+    def _check_with_contact_mask(links_a, links_b, joint_values, proximity,
+                                 contact_mask, min_hits=3, debug=False):
+        """Proximity check excluding rest-contact-zone vertices.
+
+        Only checks vertices NOT in the contact mask (i.e., vertices that
+        are far from the surface at rest). If these vertices become close to
+        the surface during animation, it means actual penetration is occurring
+        (not just normal hinge contact).
+        """
+        bvh_b = _build_bvh(links_b, joint_values)
+        if bvh_b is None:
+            return (False, 0) if debug else False
+        pts_a = _get_sample_points(links_a, joint_values)
+        hit_count = 0
+        for i, pt in enumerate(pts_a):
+            if i in contact_mask:
+                continue  # skip hinge-area vertices
+            loc, norm, idx, dist = bvh_b.find_nearest(pt)
+            if dist is not None and dist < proximity:
+                hit_count += 1
+                if not debug and hit_count >= min_hits:
+                    return True
+        if debug:
+            return hit_count >= min_hits, hit_count
+        return hit_count >= min_hits
+
     # ================================================================
-    # Phase 0: Measure rest-state distances → adaptive proximity
+    # Phase 0: Pre-compute active trajectory + rest-state baselines
     # ================================================================
     active_q = {}
     for frame in range(1, num_frames + 1):
@@ -1742,61 +1804,113 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             j = joints_by_name[jn]
             active_q[frame][jn] = compute_trajectory_value(j, traj_type, t)
 
-    # Adaptive proximity for active vs fixed
-    # If parts touch at rest (dist < threshold), skip collision for that pair
-    REST_TOUCH_THRESHOLD = 0.008
-    prox_fixed = None  # None = skip collision
+    # -- Collision detection config per pair --
+    # Two strategies based on rest-state geometry:
+    # - ("proximity", threshold): for non-touching pairs, simple find_nearest
+    # - ("masked", contact_mask, proximity): for touching pairs, proximity check
+    #   that EXCLUDES rest-contact-zone vertices (hinge area)
+
+    # Active vs Fixed
+    fixed_collision_cfg = None  # None only if no fixed links with mesh
     if fixed_links and (active_links & set(mesh_cache.keys())):
         rest_dist = _measure_min_dist(active_links, fixed_links, rest_q)
-        if rest_dist < REST_TOUCH_THRESHOLD:
-            prox_fixed = None  # touching at rest → skip (designed geometry)
-            print(f"    Rest dist (active-fixed): {rest_dist:.5f} (touching, skip collision)")
+        if rest_dist < TOUCH_THRESHOLD:
+            # Touching at rest → compute contact mask and use masked proximity
+            mask = _compute_contact_mask(active_links, fixed_links)
+            n_total = len(_get_sample_points(active_links, rest_q))
+            fixed_collision_cfg = ("masked", mask, 0.02)
+            print(f"    Active-Fixed: touching at rest (dist={rest_dist:.5f}), "
+                  f"masked {len(mask)}/{n_total} contact vertices, prox=0.02")
         else:
-            prox_fixed = min(rest_dist * 0.15, 0.01)
-            print(f"    Rest dist (active-fixed): {rest_dist:.5f}, proximity: {prox_fixed:.5f}")
+            prox = min(rest_dist * 0.15, 0.01)
+            fixed_collision_cfg = ("proximity", prox)
+            print(f"    Active-Fixed: gap={rest_dist:.5f}, proximity={prox:.5f}")
 
-    # Adaptive proximity for active vs each passive group
-    prox_passive = {}
+    # Active vs each passive group
+    passive_collision_cfg = {}
     for pjn, plinks in passive_link_map.items():
-        if plinks & set(mesh_cache.keys()):
-            rest_dist = _measure_min_dist(active_links, plinks, rest_q)
-            if rest_dist < REST_TOUCH_THRESHOLD:
-                # touching at rest → skip collision for this pair
-                print(f"    Rest dist (active-{pjn}): {rest_dist:.5f} (touching, skip)")
-            else:
-                prox_passive[pjn] = min(rest_dist * 0.15, 0.01)
-                print(f"    Rest dist (active-{pjn}): {rest_dist:.5f}, proximity: {prox_passive[pjn]:.5f}")
+        if not (plinks & set(mesh_cache.keys())):
+            continue
+        rest_dist = _measure_min_dist(active_links, plinks, rest_q)
+        if rest_dist < TOUCH_THRESHOLD:
+            mask = _compute_contact_mask(active_links, plinks)
+            n_total = len(_get_sample_points(active_links, rest_q))
+            passive_collision_cfg[pjn] = ("masked", mask, 0.02)
+            print(f"    Active-{pjn}: touching at rest (dist={rest_dist:.5f}), "
+                  f"masked {len(mask)}/{n_total} contact vertices, prox=0.02")
+        else:
+            prox = min(rest_dist * 0.15, 0.01)
+            passive_collision_cfg[pjn] = ("proximity", prox)
+            print(f"    Active-{pjn}: gap={rest_dist:.5f}, proximity={prox:.5f}")
+
+    # -- Unified collision checker --
+    def _has_collision(links_a, links_b, joint_values, cfg):
+        """Check collision using the appropriate strategy for this pair."""
+        mode = cfg[0]
+        if mode == "proximity":
+            return _check_proximity(links_a, links_b, joint_values, cfg[1])
+        else:
+            # masked mode: proximity check excluding contact-zone vertices
+            _, contact_mask, prox = cfg
+            return _check_with_contact_mask(
+                links_a, links_b, joint_values, prox, contact_mask)
 
     # ================================================================
-    # Phase 1: Active trajectory + active-vs-fixed collision → clamp
+    # Phase 1: Active vs Fixed → STOP all motion
+    #
+    # Per-frame scan: mark each frame as safe or collision.
+    # Collision frames get clamped to the nearest safe position.
+    # This correctly handles:
+    #   - Trajectory starting in collision (e.g. lamp lo=-π → arm already
+    #     past the base at frame 1 → clamp to rest q=0)
+    #   - Trajectory entering collision mid-way (e.g. arm reaches base
+    #     at some angle → clamp to that angle)
     # ================================================================
-    frozen_frame = None
-    if fixed_links and prox_fixed is not None and (active_links & set(mesh_cache.keys())):
-        sample_step = max(1, num_frames // 30)
-        for frame in range(1, num_frames + 1, sample_step):
+    if fixed_collision_cfg is not None:
+        # Sample all frames for collision status
+        sample_step = max(1, num_frames // 60)
+        sample_frames_p1 = list(range(1, num_frames + 1, sample_step))
+        if sample_frames_p1[-1] != num_frames:
+            sample_frames_p1.append(num_frames)
+
+        frame_collides = {}  # sampled frame → bool
+        for frame in sample_frames_p1:
             q_test = dict(rest_q)
             q_test.update(active_q[frame])
-            if _check_collision(active_links, fixed_links, q_test, prox_fixed):
-                # Binary search for exact collision frame
-                lo = max(1, frame - sample_step)
-                hi = frame
-                while hi - lo > 1:
-                    mid = (lo + hi) // 2
-                    q_mid = dict(rest_q)
-                    q_mid.update(active_q[mid])
-                    if _check_collision(active_links, fixed_links, q_mid, prox_fixed):
-                        hi = mid
-                    else:
-                        lo = mid
-                frozen_frame = lo
-                safe_q = dict(active_q[frozen_frame])
-                for f in range(frozen_frame + 1, num_frames + 1):
-                    active_q[f] = dict(safe_q)
-                print(f"    Collision: active vs fixed at frame {frozen_frame}/{num_frames}, clamped")
-                break
+            frame_collides[frame] = _has_collision(
+                active_links, fixed_links, q_test, fixed_collision_cfg)
+
+        # Interpolate collision status for non-sampled frames
+        # (conservative: if either neighbor collides, mark as colliding)
+        for frame in range(1, num_frames + 1):
+            if frame in frame_collides:
+                continue
+            prev_s = frame - ((frame - 1) % sample_step)
+            next_s = min(prev_s + sample_step, num_frames)
+            frame_collides[frame] = frame_collides.get(prev_s, False) or \
+                                    frame_collides.get(next_s, False)
+
+        # Clamp: each collision frame gets the q values from the nearest
+        # non-colliding frame; if all frames collide, use rest (q=0)
+        rest_active_q = {jn: 0.0 for jn in active_jnames}
+        last_safe_q = dict(rest_active_q)
+        clamped_count = 0
+
+        for frame in range(1, num_frames + 1):
+            if frame_collides[frame]:
+                active_q[frame] = dict(last_safe_q)
+                clamped_count += 1
+            else:
+                last_safe_q = dict(active_q[frame])
+
+        if clamped_count > 0:
+            print(f"    STOP: active vs fixed collision, "
+                  f"{clamped_count}/{num_frames} frames clamped")
+        else:
+            print(f"    No active-vs-fixed collision detected")
 
     # ================================================================
-    # Phase 2: Active-vs-passive collision → binary search passive angle
+    # Phase 2: Active vs Passive → binary search passive angle per frame
     # ================================================================
     passive_q_raw = {}  # {joint_name: [0.0]*(num_frames+2)} 1-indexed
 
@@ -1804,15 +1918,16 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
         pj = joints_by_name[pjn]
         target = pre_opening.get(pjn, 0.0)
         q_raw = [0.0] * (num_frames + 2)
-        prox = prox_passive.get(pjn, 0.005)
 
-        if abs(target) < 1e-8 or not (plinks & set(mesh_cache.keys())):
+        cfg = passive_collision_cfg.get(pjn)
+        if cfg is None or abs(target) < 1e-8 or not (plinks & set(mesh_cache.keys())):
             passive_q_raw[pjn] = q_raw
             continue
 
         q_current = 0.0
-        # Sample every few frames for speed
-        sample_step = max(1, num_frames // 30)
+        collision_frames = 0
+        # Check every few frames (denser than before for accuracy)
+        sample_step = max(1, num_frames // 60)
         sample_frames = list(range(1, num_frames + 1, sample_step))
         if sample_frames[-1] != num_frames:
             sample_frames.append(num_frames)
@@ -1820,27 +1935,32 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
         for frame in sample_frames:
             q_all = dict(rest_q)
             q_all.update(active_q[frame])
-            # Other passive joints at their current estimate
+            # Include other passive joints at their current estimate
             for other_pjn in passive_q_raw:
                 q_all[other_pjn] = passive_q_raw[other_pjn][frame]
             q_all[pjn] = q_current
 
-            if _check_collision(active_links, plinks, q_all, prox):
-                # Binary search for minimum safe passive angle
+            if _has_collision(active_links, plinks, q_all, cfg):
+                collision_frames += 1
+                # Binary search: find minimum passive angle that clears collision
                 q_lo, q_hi = q_current, target
-                for _ in range(10):
+                for _ in range(12):
                     q_mid = (q_lo + q_hi) / 2.0
                     q_all[pjn] = q_mid
-                    if _check_collision(active_links, plinks, q_all, prox):
+                    if _has_collision(active_links, plinks, q_all, cfg):
                         q_lo = q_mid  # still colliding, need more opening
                     else:
                         q_hi = q_mid  # safe, can try less opening
-                q_safe = q_hi + abs(target) * 0.02  # small clearance
-                q_current = min(q_safe, abs(target)) * (1 if target >= 0 else -1)
+                # Add small clearance, clamp to target
+                q_safe = q_hi + abs(target) * 0.02
+                if target >= 0:
+                    q_current = min(q_safe, target)
+                else:
+                    q_current = max(-q_safe, target)
 
             q_raw[frame] = q_current
 
-        # Interpolate between samples
+        # Interpolate between sample frames
         for i in range(len(sample_frames) - 1):
             f0, f1 = sample_frames[i], sample_frames[i + 1]
             v0, v1 = q_raw[f0], q_raw[f1]
@@ -1849,16 +1969,17 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
                 q_raw[f] = v0 + (v1 - v0) * frac
 
         passive_q_raw[pjn] = q_raw
-        if abs(q_current) > 1e-6:
-            print(f"    Passive {pjn}: opened to {q_current:.4f} (target {target:.4f})")
+        if collision_frames > 0:
+            print(f"    YIELD: {pjn} collided at {collision_frames} samples, "
+                  f"opened to {q_current:.4f} (target {target:.4f})")
 
     # ================================================================
     # Phase 3: Anticipation smoothing for passive joints
     # ================================================================
+    LEAD = min(10, num_frames // 4)
     passive_q_smooth = {}
     for pjn, q_raw in passive_q_raw.items():
         q_s = list(q_raw)
-        LEAD = min(10, num_frames // 4)
 
         # Find jumps and spread backward
         for f in range(2, num_frames + 1):
@@ -1889,7 +2010,7 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             if pjn in passive_q_smooth:
                 q[pjn] = passive_q_smooth[pjn][frame]
             else:
-                # Passive joint with no collision-relevant parts — use simple animation
+                # Passive joint with no collision-relevant parts — use simple ramp
                 target = pre_opening.get(pjn, 0.0)
                 t = (frame - 1) / max(num_frames - 1, 1)
                 q[pjn] = target * 0.5 * (1 - math.cos(math.pi * t)) if abs(target) > 1e-8 else 0.0
@@ -1897,6 +2018,9 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             if jn not in q:
                 q[jn] = 0.0  # fixed joints
         result[frame] = q
+
+    elapsed = _time.time() - t0
+    print(f"  Collision avoidance done ({elapsed:.1f}s)")
 
     return result
 
