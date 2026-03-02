@@ -37,6 +37,73 @@ FFMPEG_BIN = "/usr/local/bin/ffmpeg"
 PHYSXNET_JSON_DIR = "/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson"
 PHYSXMOB_JSON_DIR = "/mnt/data/fulian/dataset/PhysX_mobility/finaljson"
 
+# Material source data paths
+PARTNET_BASE = "/mnt/data/yurh/dataset3D/Partnet"
+SHAPENET_BASE = "/mnt/data/yurh/dataset3D/ShapeNetCore"
+OVERLAP_MAP_PATH = "/mnt/data/yurh/infinipart/physxnet_partnet_overlap.json"
+PBR_TEXTURES_DIR = "/mnt/data/yurh/infinipart/pbr_textures"
+
+# PartNet model_cat -> ShapeNet synset_id mapping
+PARTNET_TO_SYNSET = {
+    "StorageFurniture": "02933112",
+    "Table": "04379243",
+    "Faucet": "03325088",
+    "Chair": "03001627",
+    "Bottle": "02876657",
+    "Laptop": "03642806",
+    "Dishwasher": "03207941",
+    "Lamp": "03636649",
+    "Keyboard": "03085013",
+    "Display": "03211117",
+    "Clock": "03046257",
+    "TrashCan": "02747177",
+    "Microwave": "03761084",
+    "Oven": "04330267",
+    "KitchenPot": "03991062",
+}
+
+# Material keyword -> PBR texture category (checked in order, first match wins)
+MATERIAL_KEYWORD_MAP = [
+    ("stainless", "metal"), ("steel", "metal"), ("iron", "metal"),
+    ("aluminum", "metal"), ("aluminium", "metal"), ("chrome", "metal"),
+    ("copper", "metal"), ("brass", "metal"), ("bronze", "metal"),
+    ("titanium", "metal"), ("gold", "metal"), ("silver", "metal"),
+    ("zinc", "metal"), ("nickel", "metal"), ("metal", "metal"),
+    ("glass", "glass"),
+    ("bamboo", "wood"), ("plywood", "wood"), ("mdf", "wood"),
+    ("oak", "wood"), ("walnut", "wood"), ("laminate", "wood"),
+    ("wood", "wood"), ("bentwood", "wood"),
+    ("ceramic", "ceramic"), ("porcelain", "ceramic"),
+    ("marble", "marble"), ("granite", "stone"), ("stone", "stone"),
+    ("concrete", "concrete"),
+    ("leather", "leather"), ("leatherette", "leather"),
+    ("fabric", "fabric"), ("cotton", "fabric"), ("polyester", "fabric"),
+    ("nylon", "fabric"), ("felt", "fabric"), ("silk", "fabric"),
+    ("mesh", "fabric"), ("canvas", "fabric"), ("foam", "fabric"),
+    ("rubber", "rubber"), ("tpu", "rubber"), ("silicone", "rubber"),
+    ("paper", "paper"), ("cardboard", "paper"), ("cork", "paper"),
+    ("abs", "plastic"), ("polycarbonate", "plastic"),
+    ("polypropylene", "plastic"), ("pvc", "plastic"),
+    ("acrylic", "plastic"), ("resin", "plastic"), ("plastic", "plastic"),
+    ("vinyl", "plastic"), ("fiberglass", "plastic"),
+]
+
+# Fallback PBR values per texture category
+CATEGORY_DEFAULTS = {
+    "wood":     {"metallic": 0.00, "roughness": 0.55, "color": (0.55, 0.35, 0.20)},
+    "metal":    {"metallic": 0.90, "roughness": 0.25, "color": (0.60, 0.60, 0.60)},
+    "plastic":  {"metallic": 0.00, "roughness": 0.40, "color": (0.50, 0.50, 0.50)},
+    "glass":    {"metallic": 0.00, "roughness": 0.05, "color": (0.90, 0.92, 0.95)},
+    "ceramic":  {"metallic": 0.00, "roughness": 0.35, "color": (0.85, 0.82, 0.78)},
+    "marble":   {"metallic": 0.00, "roughness": 0.20, "color": (0.90, 0.88, 0.85)},
+    "stone":    {"metallic": 0.00, "roughness": 0.55, "color": (0.50, 0.48, 0.45)},
+    "concrete": {"metallic": 0.00, "roughness": 0.70, "color": (0.60, 0.58, 0.55)},
+    "leather":  {"metallic": 0.00, "roughness": 0.60, "color": (0.30, 0.18, 0.10)},
+    "fabric":   {"metallic": 0.00, "roughness": 0.80, "color": (0.55, 0.50, 0.45)},
+    "rubber":   {"metallic": 0.00, "roughness": 0.80, "color": (0.15, 0.15, 0.15)},
+    "paper":    {"metallic": 0.00, "roughness": 0.85, "color": (0.90, 0.88, 0.83)},
+}
+
 # PBR material properties: material_name -> (metallic, roughness, color_rgb)
 MATERIAL_PBR = {
     # Metals
@@ -103,7 +170,6 @@ def get_pbr_for_material(material_name):
     """Look up PBR (metallic, roughness, color) for a material name."""
     if material_name in MATERIAL_PBR:
         return MATERIAL_PBR[material_name]
-    # Substring match (case-insensitive)
     mat_lower = material_name.lower()
     for key, props in MATERIAL_PBR.items():
         if key.lower() in mat_lower:
@@ -111,13 +177,394 @@ def get_pbr_for_material(material_name):
     return (0.10, 0.45, (0.60, 0.60, 0.60))
 
 
+def classify_material(material_name):
+    """Classify material name into a PBR texture category.
+    Returns (category_str, is_composite_bool).
+    """
+    mat_lower = material_name.lower()
+    is_composite = any(sep in mat_lower for sep in
+                       [" and ", " with ", " over ", "/", "+",
+                        " or ", "-covered", "-coated"])
+    if is_composite:
+        best_pos, best_cat = len(mat_lower), None
+        for keyword, category in MATERIAL_KEYWORD_MAP:
+            pos = mat_lower.find(keyword)
+            if 0 <= pos < best_pos:
+                best_pos = pos
+                best_cat = category
+        return (best_cat or "plastic"), True
+    for keyword, category in MATERIAL_KEYWORD_MAP:
+        if keyword in mat_lower:
+            return category, False
+    return "plastic", False
+
+
+# ======================================================================
+# Overlap map and ShapeNet lookup (cached)
+# ======================================================================
+
+_overlap_map = None
+
+
+def _load_overlap_map():
+    """Load PhysXNet -> PartNet overlap mapping (cached)."""
+    global _overlap_map
+    if _overlap_map is not None:
+        return _overlap_map
+    if os.path.exists(OVERLAP_MAP_PATH):
+        with open(OVERLAP_MAP_PATH) as f:
+            _overlap_map = json.load(f)
+    else:
+        _overlap_map = {}
+    return _overlap_map
+
+
+def get_shapenet_model_dir(obj_id):
+    """Find ShapeNet model directory for a PhysXNet/PartNet object.
+    Returns path to model dir (containing model_normalized.obj/mtl) or None.
+    """
+    overlap = _load_overlap_map()
+    entry = overlap.get(str(obj_id))
+    if not entry or not entry.get("model_id"):
+        return None
+
+    model_id = entry["model_id"]
+    model_cat = entry.get("model_cat", "")
+    synset_id = PARTNET_TO_SYNSET.get(model_cat)
+    if not synset_id:
+        return None
+
+    model_dir = os.path.join(SHAPENET_BASE, synset_id, model_id, "models")
+    if os.path.isdir(model_dir):
+        return model_dir
+    return None
+
+
+def parse_shapenet_mtl(mtl_path):
+    """Parse ShapeNet MTL file. Returns list of material dicts with Kd colors
+    and optional texture paths.
+    """
+    materials = []
+    current = None
+    mtl_dir = os.path.dirname(mtl_path)
+
+    try:
+        with open(mtl_path) as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("newmtl "):
+                    if current is not None:
+                        materials.append(current)
+                    current = {"name": line[7:], "Kd": None, "map_Kd": None, "d": 1.0}
+                elif current is not None:
+                    if line.startswith("Kd "):
+                        parts = line.split()
+                        if len(parts) >= 4:
+                            current["Kd"] = (float(parts[1]), float(parts[2]), float(parts[3]))
+                    elif line.startswith("map_Kd "):
+                        tex_ref = line[7:].strip()
+                        tex_path = os.path.normpath(os.path.join(mtl_dir, tex_ref))
+                        if os.path.exists(tex_path):
+                            current["map_Kd"] = tex_path
+                    elif line.startswith("d "):
+                        try:
+                            current["d"] = float(line.split()[1])
+                        except (IndexError, ValueError):
+                            pass
+        if current is not None:
+            materials.append(current)
+    except (IOError, OSError):
+        pass
+
+    return materials
+
+
+def get_shapenet_colors(obj_id):
+    """Get colors from ShapeNet model for a PhysXNet overlap object.
+    Returns list of (r, g, b) colors (one per material, excluding transparent)
+    or None if not available.
+    """
+    model_dir = get_shapenet_model_dir(obj_id)
+    if model_dir is None:
+        return None
+
+    mtl_path = os.path.join(model_dir, "model_normalized.mtl")
+    if not os.path.exists(mtl_path):
+        return None
+
+    materials = parse_shapenet_mtl(mtl_path)
+    if not materials:
+        return None
+
+    colors = []
+    for mat in materials:
+        if mat.get("d", 1.0) < 0.3:
+            continue  # skip highly transparent materials
+        if mat.get("map_Kd"):
+            # Compute average color from texture
+            avg = _texture_average_color(mat["map_Kd"])
+            if avg:
+                colors.append(avg)
+                continue
+        if mat.get("Kd"):
+            kd = mat["Kd"]
+            if not (kd[0] < 0.01 and kd[1] < 0.01 and kd[2] < 0.01):
+                colors.append(kd)
+            elif not (kd[0] > 0.99 and kd[1] > 0.99 and kd[2] > 0.99):
+                colors.append(kd)
+
+    return colors if colors else None
+
+
+def _texture_average_color(tex_path):
+    """Compute average RGB color of a texture image. Returns (r, g, b) or None."""
+    try:
+        from PIL import Image
+        import numpy as np
+        img = Image.open(tex_path).convert("RGB")
+        arr = np.array(img, dtype=float) / 255.0
+        return tuple(arr.mean(axis=(0, 1)))
+    except Exception:
+        return None
+
+
+def get_shapenet_textures(obj_id):
+    """Get ShapeNet texture file paths for a PhysXNet overlap object.
+    Returns dict {material_name: texture_path} or None.
+    """
+    model_dir = get_shapenet_model_dir(obj_id)
+    if model_dir is None:
+        return None
+
+    mtl_path = os.path.join(model_dir, "model_normalized.mtl")
+    if not os.path.exists(mtl_path):
+        return None
+
+    materials = parse_shapenet_mtl(mtl_path)
+    textures = {}
+    for mat in materials:
+        if mat.get("map_Kd"):
+            textures[mat["name"]] = mat["map_Kd"]
+
+    return textures if textures else None
+
+
+def get_partnet_colors(obj_id):
+    """Extract colors from PartNet textured_objs MTL files.
+    Returns {part_name: (r, g, b)} or None.
+    """
+    pdir = os.path.join(PARTNET_BASE, str(obj_id))
+    tex_dir = os.path.join(pdir, "textured_objs")
+    if not os.path.isdir(tex_dir):
+        return None
+
+    colors = {}
+    for fn in os.listdir(tex_dir):
+        if not fn.endswith('.mtl'):
+            continue
+        mtl_path = os.path.join(tex_dir, fn)
+        part_name = fn[:-4]
+        try:
+            with open(mtl_path) as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith("Kd "):
+                        vals = line.split()
+                        if len(vals) >= 4:
+                            r, g, b = float(vals[1]), float(vals[2]), float(vals[3])
+                            if part_name not in colors:
+                                colors[part_name] = (r, g, b)
+                    elif line.startswith("map_Kd ") and part_name not in colors:
+                        tex_ref = line.split(None, 1)[1]
+                        tex_path = os.path.join(tex_dir, tex_ref)
+                        if os.path.exists(tex_path):
+                            avg = _texture_average_color(tex_path)
+                            if avg:
+                                colors[part_name] = avg
+        except (IOError, ValueError):
+            pass
+
+    return colors if colors else None
+
+
+# ======================================================================
+# ambientCG PBR texture sets (cached discovery)
+# ======================================================================
+
+_texture_cache = {}
+
+
+def _discover_texture_sets():
+    """Scan pbr_textures/ directory and build cache of available texture sets."""
+    global _texture_cache
+    if _texture_cache:
+        return _texture_cache
+    if not os.path.isdir(PBR_TEXTURES_DIR):
+        return {}
+
+    for category in os.listdir(PBR_TEXTURES_DIR):
+        cat_dir = os.path.join(PBR_TEXTURES_DIR, category)
+        if not os.path.isdir(cat_dir):
+            continue
+        sets = []
+        for tex_id in os.listdir(cat_dir):
+            tex_dir = os.path.join(cat_dir, tex_id)
+            if not os.path.isdir(tex_dir):
+                continue
+            tex_set = {"id": tex_id, "dir": tex_dir}
+            for fn in os.listdir(tex_dir):
+                fn_lower = fn.lower()
+                full = os.path.join(tex_dir, fn)
+                if "_color" in fn_lower and fn_lower.endswith(".jpg"):
+                    tex_set["color"] = full
+                elif "_roughness" in fn_lower and fn_lower.endswith(".jpg"):
+                    tex_set["roughness"] = full
+                elif "_normalgl" in fn_lower and fn_lower.endswith(".jpg"):
+                    tex_set["normal"] = full
+                elif "_metalness" in fn_lower and fn_lower.endswith(".jpg"):
+                    tex_set["metallic"] = full
+            if "color" in tex_set:
+                sets.append(tex_set)
+        if sets:
+            _texture_cache[category] = sets
+
+    return _texture_cache
+
+
+def get_texture_set(category, seed_hash=0):
+    """Get an ambientCG PBR texture set for a category. Returns dict or None."""
+    cache = _discover_texture_sets()
+    sets = cache.get(category, [])
+    if not sets:
+        return None
+    return sets[seed_hash % len(sets)]
+
+
+# ======================================================================
+# Material application (Blender node tree)
+# ======================================================================
+
+def apply_textured_material(obj, base_color, metallic, roughness, category,
+                            tex_set, part_id, factory_name, seed):
+    """Apply PBR material with box-projected ambientCG textures + color tint.
+
+    Creates a proper node tree: TexCoord -> Mapping -> Image Textures -> BSDF.
+    """
+    mat_name = f"pbr_{category}_{part_id}_{factory_name}_{seed}"
+    mat = bpy.data.materials.new(name=mat_name)
+    mat.use_nodes = True
+    nodes = mat.node_tree.nodes
+    nlinks = mat.node_tree.links
+    nodes.clear()
+
+    output = nodes.new("ShaderNodeOutputMaterial")
+    output.location = (800, 0)
+    bsdf = nodes.new("ShaderNodeBsdfPrincipled")
+    bsdf.location = (400, 0)
+    nlinks.new(bsdf.outputs["BSDF"], output.inputs["Surface"])
+
+    # Texture coordinate -> mapping for box projection
+    tex_coord = nodes.new("ShaderNodeTexCoord")
+    tex_coord.location = (-600, 0)
+    mapping = nodes.new("ShaderNodeMapping")
+    mapping.location = (-400, 0)
+    nlinks.new(tex_coord.outputs["Object"], mapping.inputs["Vector"])
+    mapping.inputs["Scale"].default_value = (2.0, 2.0, 2.0)
+
+    # Color texture with base_color tint
+    if "color" in tex_set:
+        color_tex = nodes.new("ShaderNodeTexImage")
+        color_tex.location = (-100, 200)
+        color_tex.projection = "BOX"
+        color_tex.projection_blend = 0.3
+        try:
+            color_tex.image = bpy.data.images.load(tex_set["color"], check_existing=True)
+        except RuntimeError:
+            color_tex.image = None
+        nlinks.new(mapping.outputs["Vector"], color_tex.inputs["Vector"])
+
+        # Mix texture with base color tint (60% texture, 40% tint)
+        mix_color = nodes.new("ShaderNodeMix")
+        mix_color.data_type = 'RGBA'
+        mix_color.location = (200, 200)
+        mix_color.inputs[0].default_value = 0.6
+        mix_color.inputs[6].default_value = (*base_color, 1.0)
+        nlinks.new(color_tex.outputs["Color"], mix_color.inputs[7])
+        nlinks.new(mix_color.outputs[2], bsdf.inputs["Base Color"])
+    else:
+        bsdf.inputs["Base Color"].default_value = (*base_color, 1.0)
+
+    # Roughness texture
+    if "roughness" in tex_set:
+        rough_tex = nodes.new("ShaderNodeTexImage")
+        rough_tex.location = (-100, -100)
+        rough_tex.projection = "BOX"
+        rough_tex.projection_blend = 0.3
+        try:
+            rough_tex.image = bpy.data.images.load(tex_set["roughness"], check_existing=True)
+            rough_tex.image.colorspace_settings.name = "Non-Color"
+        except RuntimeError:
+            rough_tex.image = None
+        nlinks.new(mapping.outputs["Vector"], rough_tex.inputs["Vector"])
+        nlinks.new(rough_tex.outputs["Color"], bsdf.inputs["Roughness"])
+    else:
+        bsdf.inputs["Roughness"].default_value = roughness
+
+    # Normal map
+    if "normal" in tex_set:
+        normal_tex = nodes.new("ShaderNodeTexImage")
+        normal_tex.location = (-100, -400)
+        normal_tex.projection = "BOX"
+        normal_tex.projection_blend = 0.3
+        try:
+            normal_tex.image = bpy.data.images.load(tex_set["normal"], check_existing=True)
+            normal_tex.image.colorspace_settings.name = "Non-Color"
+        except RuntimeError:
+            normal_tex.image = None
+        nlinks.new(mapping.outputs["Vector"], normal_tex.inputs["Vector"])
+        normal_map = nodes.new("ShaderNodeNormalMap")
+        normal_map.location = (200, -400)
+        normal_map.inputs["Strength"].default_value = 0.5
+        nlinks.new(normal_tex.outputs["Color"], normal_map.inputs["Color"])
+        nlinks.new(normal_map.outputs["Normal"], bsdf.inputs["Normal"])
+
+    # Metallic
+    if "metallic" in tex_set:
+        metal_tex = nodes.new("ShaderNodeTexImage")
+        metal_tex.location = (-100, -700)
+        metal_tex.projection = "BOX"
+        metal_tex.projection_blend = 0.3
+        try:
+            metal_tex.image = bpy.data.images.load(tex_set["metallic"], check_existing=True)
+            metal_tex.image.colorspace_settings.name = "Non-Color"
+        except RuntimeError:
+            metal_tex.image = None
+        nlinks.new(mapping.outputs["Vector"], metal_tex.inputs["Vector"])
+        nlinks.new(metal_tex.outputs["Color"], bsdf.inputs["Metallic"])
+    else:
+        bsdf.inputs["Metallic"].default_value = metallic
+
+    # Glass special case
+    if category == "glass":
+        bsdf.inputs["Transmission"].default_value = 0.8
+        bsdf.inputs["IOR"].default_value = 1.45
+        bsdf.inputs["Roughness"].default_value = 0.05
+
+    obj.data.materials.clear()
+    obj.data.materials.append(mat)
+
+
+# ======================================================================
+# Full realistic material pipeline
+# ======================================================================
+
 def load_physx_json(metadata):
     """Load PhysXNet/PhysXMobility JSON for material data. Returns None if N/A."""
     factory = metadata.get("factory", "")
     identifier = metadata.get("identifier", "")
     if "PhysXNet" in factory:
         json_path = os.path.join(PHYSXNET_JSON_DIR, f"{identifier}.json")
-    elif "PhysXMobility" in factory:
+    elif "PhysXMobility" in factory or "PhysXmobility" in factory:
         json_path = os.path.join(PHYSXMOB_JSON_DIR, f"{identifier}.json")
     else:
         return None
@@ -128,14 +575,22 @@ def load_physx_json(metadata):
 
 
 def get_realistic_materials(metadata, links):
-    """Get per-link realistic material properties.
-    Returns {link_name: (metallic, roughness, color_rgb)}.
+    """Get per-link realistic material properties using 3-tier priority:
+    1. ShapeNet textures/colors (for overlap PhysXNet objects)
+    2. PartNet textured_objs colors (for PhysXMobility and overlap objects)
+    3. JSON material name -> classify -> ambientCG PBR texture -> flat PBR fallback
+
+    Returns {link_name: material_info_dict} where material_info_dict has:
+        metallic, roughness, color, category, tex_set, source
     """
     result = {}
     json_data = load_physx_json(metadata)
+    factory = metadata.get("factory", "")
+    identifier = metadata.get("identifier", "")
+    mat_rng = random.Random(hash((factory, identifier)))
 
     if json_data is not None:
-        # PhysXNet/PhysXMobility: use JSON part data
+        # PhysXNet/PhysXMobility: use JSON part data for material names
         parts_info = json_data.get("parts", [])
         label_to_material = {}
         for p in parts_info:
@@ -143,7 +598,6 @@ def get_realistic_materials(metadata, links):
             if label is not None:
                 label_to_material[label] = p.get("material", "Unknown")
 
-        # group_info maps group_idx -> part labels
         group_info = json_data.get("group_info", {})
         group_to_labels = {}
         for gid_str, val in group_info.items():
@@ -156,22 +610,98 @@ def get_realistic_materials(metadata, links):
                 else:
                     group_to_labels[gid] = [x for x in val if isinstance(x, int)]
 
+        # Tier 1: ShapeNet colors (for overlap objects)
+        shapenet_colors = get_shapenet_colors(identifier)
+        shapenet_avg = None
+        if shapenet_colors:
+            r_sum = sum(c[0] for c in shapenet_colors)
+            g_sum = sum(c[1] for c in shapenet_colors)
+            b_sum = sum(c[2] for c in shapenet_colors)
+            n = len(shapenet_colors)
+            shapenet_avg = (r_sum / n, g_sum / n, b_sum / n)
+
+        # Tier 2: PartNet colors (for overlap objects)
+        partnet_colors = get_partnet_colors(identifier)
+        partnet_avg = None
+        if partnet_colors:
+            r_sum = sum(c[0] for c in partnet_colors.values())
+            g_sum = sum(c[1] for c in partnet_colors.values())
+            b_sum = sum(c[2] for c in partnet_colors.values())
+            n = len(partnet_colors)
+            partnet_avg = (r_sum / n, g_sum / n, b_sum / n)
+
+        color_tint = shapenet_avg or partnet_avg
+        source = "shapenet" if shapenet_avg else ("partnet" if partnet_avg else "pbr")
+
         for link_name, link_info in links.items():
             idx = link_info["part_idx"]
             part_labels = group_to_labels.get(idx, [idx])
-            # Use first part with material info
             mat_name = "Unknown"
             for lbl in part_labels:
                 if lbl in label_to_material:
                     mat_name = label_to_material[lbl]
                     break
-            result[link_name] = get_pbr_for_material(mat_name)
+
+            # Get PBR properties from material name
+            metallic, roughness, base_color = get_pbr_for_material(mat_name)
+
+            # Classify for texture selection
+            category, _ = classify_material(mat_name)
+            defaults = CATEGORY_DEFAULTS.get(category, CATEGORY_DEFAULTS["plastic"])
+
+            # Apply color tint from ShapeNet/PartNet
+            if color_tint:
+                base_color = tuple(
+                    0.5 * t + 0.5 * b for t, b in zip(color_tint, base_color)
+                )
+
+            # Per-part variation
+            color = tuple(
+                max(0, min(1, c + mat_rng.uniform(-0.04, 0.04)))
+                for c in base_color
+            )
+            metallic = max(0, min(1, metallic + mat_rng.uniform(-0.03, 0.03)))
+            roughness = max(0, min(1, roughness + mat_rng.uniform(-0.05, 0.05)))
+
+            # Tier 3: ambientCG texture set
+            tex_hash = hash((factory, identifier, idx, category))
+            tex_set = get_texture_set(category, abs(tex_hash))
+
+            result[link_name] = {
+                "metallic": metallic,
+                "roughness": roughness,
+                "color": color,
+                "category": category,
+                "tex_set": tex_set,
+                "source": source,
+            }
+
+        if result:
+            sources = set(v["source"] for v in result.values())
+            print(f"  Materials: {len(result)} parts, source={sources}")
+
     else:
-        # IS factory: use factory-based defaults
-        factory = metadata.get("factory", "").lower()
-        default = IS_FACTORY_DEFAULTS.get(factory, (0.10, 0.45, (0.60, 0.60, 0.60)))
+        # IS factory: use factory-based defaults with texture
+        factory_lower = factory.lower()
+        default = IS_FACTORY_DEFAULTS.get(factory_lower,
+                                           (0.10, 0.45, (0.60, 0.60, 0.60)))
+        # IS objects are mostly metal or wood
+        category = "metal" if default[0] > 0.3 else "wood"
+        tex_set = get_texture_set(category, abs(hash((factory, identifier))))
+
         for link_name in links:
-            result[link_name] = default
+            color = tuple(
+                max(0, min(1, c + mat_rng.uniform(-0.04, 0.04)))
+                for c in default[2]
+            )
+            result[link_name] = {
+                "metallic": default[0],
+                "roughness": default[1],
+                "color": color,
+                "category": category,
+                "tex_set": tex_set,
+                "source": "is_factory",
+            }
 
     return result
 
@@ -1256,11 +1786,24 @@ def main():
                     color = GROUP_COLORS[gi % len(GROUP_COLORS)]
                     assign_material(obj, color, metallic=0.25, roughness=0.5)
             elif color_pass == "realistic":
+                factory = metadata.get("factory", "")
+                identifier = metadata.get("identifier", "")
                 for link_name, obj in parts.items():
-                    metallic, roughness, color = realistic_mats.get(
-                        link_name, (0.10, 0.45, (0.60, 0.60, 0.60)))
-                    assign_material(obj, color, metallic=metallic,
-                                    roughness=roughness)
+                    mat_info = realistic_mats.get(link_name, {})
+                    metallic = mat_info.get("metallic", 0.10)
+                    roughness = mat_info.get("roughness", 0.45)
+                    color = mat_info.get("color", (0.60, 0.60, 0.60))
+                    category = mat_info.get("category", "plastic")
+                    tex_set = mat_info.get("tex_set")
+                    if tex_set and category != "glass":
+                        apply_textured_material(
+                            obj, color, metallic, roughness,
+                            category, tex_set,
+                            links[link_name]["part_idx"],
+                            factory, identifier)
+                    else:
+                        assign_material(obj, color, metallic=metallic,
+                                        roughness=roughness)
             else:  # "part" — binary part0/part1 coloring
                 part0_link_idxs = set()
                 for group in two_coloring.get("part0_groups", []):
