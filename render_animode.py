@@ -33,6 +33,148 @@ from mathutils import Matrix, Vector, Euler
 ENVMAP_DIR = "/mnt/data/yurh/dataset3D/envmap/indoor"
 FFMPEG_BIN = "/usr/local/bin/ffmpeg"
 
+# PhysXNet / PhysXMobility JSON data paths
+PHYSXNET_JSON_DIR = "/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson"
+PHYSXMOB_JSON_DIR = "/mnt/data/fulian/dataset/PhysX_mobility/finaljson"
+
+# PBR material properties: material_name -> (metallic, roughness, color_rgb)
+MATERIAL_PBR = {
+    # Metals
+    "Steel":            (0.95, 0.25, (0.56, 0.57, 0.58)),
+    "Stainless Steel":  (0.95, 0.20, (0.63, 0.64, 0.65)),
+    "Iron":             (0.90, 0.35, (0.50, 0.50, 0.50)),
+    "Cast Iron":        (0.85, 0.45, (0.35, 0.35, 0.35)),
+    "Aluminum":         (0.90, 0.20, (0.77, 0.78, 0.78)),
+    "Copper":           (0.95, 0.25, (0.72, 0.45, 0.20)),
+    "Brass":            (0.90, 0.25, (0.78, 0.67, 0.35)),
+    "Bronze":           (0.85, 0.30, (0.55, 0.35, 0.17)),
+    "Chrome":           (1.00, 0.05, (0.55, 0.56, 0.56)),
+    "Metal":            (0.85, 0.30, (0.60, 0.60, 0.60)),
+    "Metal Alloy":      (0.85, 0.30, (0.58, 0.58, 0.60)),
+    # Plastics
+    "Plastic":          (0.00, 0.40, (0.60, 0.60, 0.60)),
+    "ABS Plastic":      (0.00, 0.35, (0.15, 0.15, 0.15)),
+    "Polycarbonate":    (0.00, 0.20, (0.85, 0.85, 0.85)),
+    "Polypropylene":    (0.00, 0.50, (0.75, 0.75, 0.75)),
+    "PVC":              (0.00, 0.45, (0.70, 0.70, 0.70)),
+    "Nylon":            (0.00, 0.55, (0.80, 0.78, 0.75)),
+    "Acrylic":          (0.00, 0.10, (0.90, 0.90, 0.90)),
+    "Silicone":         (0.00, 0.70, (0.70, 0.68, 0.65)),
+    "Resin":            (0.05, 0.30, (0.80, 0.75, 0.65)),
+    # Glass/Ceramic
+    "Glass":            (0.00, 0.05, (0.90, 0.92, 0.95)),
+    "Tempered Glass":   (0.00, 0.05, (0.88, 0.90, 0.93)),
+    "Ceramic":          (0.00, 0.40, (0.85, 0.82, 0.78)),
+    "Porcelain":        (0.00, 0.15, (0.95, 0.93, 0.90)),
+    # Wood
+    "Wood":             (0.00, 0.55, (0.55, 0.35, 0.20)),
+    "Bamboo":           (0.00, 0.50, (0.70, 0.60, 0.35)),
+    "Plywood":          (0.00, 0.60, (0.65, 0.50, 0.30)),
+    "MDF":              (0.00, 0.65, (0.60, 0.50, 0.35)),
+    "Oak":              (0.00, 0.50, (0.60, 0.40, 0.22)),
+    # Fabric/Leather
+    "Fabric":           (0.00, 0.80, (0.55, 0.50, 0.45)),
+    "Leather":          (0.00, 0.60, (0.30, 0.18, 0.10)),
+    "Foam":             (0.00, 0.85, (0.75, 0.72, 0.68)),
+    # Rubber
+    "Rubber":           (0.00, 0.80, (0.15, 0.15, 0.15)),
+    # Stone/Concrete
+    "Stone":            (0.00, 0.60, (0.55, 0.52, 0.48)),
+    "Marble":           (0.00, 0.20, (0.90, 0.88, 0.85)),
+    "Concrete":         (0.00, 0.70, (0.60, 0.58, 0.55)),
+    # Special
+    "Carbon Fiber":     (0.30, 0.20, (0.15, 0.15, 0.15)),
+    "Paper":            (0.00, 0.85, (0.90, 0.88, 0.83)),
+}
+
+# IS factory default materials (no JSON data available)
+IS_FACTORY_DEFAULTS = {
+    "lamp":         (0.60, 0.30, (0.55, 0.55, 0.55)),  # metal
+    "dishwasher":   (0.80, 0.25, (0.63, 0.64, 0.65)),  # stainless
+    "cabinet":      (0.00, 0.55, (0.55, 0.35, 0.20)),   # wood
+    "drawer":       (0.00, 0.55, (0.55, 0.35, 0.20)),   # wood
+    "oven":         (0.70, 0.30, (0.60, 0.60, 0.60)),   # metal
+    "refrigerator": (0.75, 0.25, (0.63, 0.64, 0.65)),   # stainless
+    "box":          (0.00, 0.55, (0.65, 0.50, 0.30)),    # cardboard
+}
+
+
+def get_pbr_for_material(material_name):
+    """Look up PBR (metallic, roughness, color) for a material name."""
+    if material_name in MATERIAL_PBR:
+        return MATERIAL_PBR[material_name]
+    # Substring match (case-insensitive)
+    mat_lower = material_name.lower()
+    for key, props in MATERIAL_PBR.items():
+        if key.lower() in mat_lower:
+            return props
+    return (0.10, 0.45, (0.60, 0.60, 0.60))
+
+
+def load_physx_json(metadata):
+    """Load PhysXNet/PhysXMobility JSON for material data. Returns None if N/A."""
+    factory = metadata.get("factory", "")
+    identifier = metadata.get("identifier", "")
+    if "PhysXNet" in factory:
+        json_path = os.path.join(PHYSXNET_JSON_DIR, f"{identifier}.json")
+    elif "PhysXMobility" in factory:
+        json_path = os.path.join(PHYSXMOB_JSON_DIR, f"{identifier}.json")
+    else:
+        return None
+    if os.path.exists(json_path):
+        with open(json_path) as f:
+            return json.load(f)
+    return None
+
+
+def get_realistic_materials(metadata, links):
+    """Get per-link realistic material properties.
+    Returns {link_name: (metallic, roughness, color_rgb)}.
+    """
+    result = {}
+    json_data = load_physx_json(metadata)
+
+    if json_data is not None:
+        # PhysXNet/PhysXMobility: use JSON part data
+        parts_info = json_data.get("parts", [])
+        label_to_material = {}
+        for p in parts_info:
+            label = p.get("label")
+            if label is not None:
+                label_to_material[label] = p.get("material", "Unknown")
+
+        # group_info maps group_idx -> part labels
+        group_info = json_data.get("group_info", {})
+        group_to_labels = {}
+        for gid_str, val in group_info.items():
+            gid = int(gid_str)
+            if isinstance(val, list):
+                if (len(val) >= 4 and isinstance(val[-1], str)
+                        and val[-1] in ('A', 'B', 'C', 'D', 'CB')):
+                    labels = val[0] if isinstance(val[0], list) else [val[0]]
+                    group_to_labels[gid] = labels
+                else:
+                    group_to_labels[gid] = [x for x in val if isinstance(x, int)]
+
+        for link_name, link_info in links.items():
+            idx = link_info["part_idx"]
+            part_labels = group_to_labels.get(idx, [idx])
+            # Use first part with material info
+            mat_name = "Unknown"
+            for lbl in part_labels:
+                if lbl in label_to_material:
+                    mat_name = label_to_material[lbl]
+                    break
+            result[link_name] = get_pbr_for_material(mat_name)
+    else:
+        # IS factory: use factory-based defaults
+        factory = metadata.get("factory", "").lower()
+        default = IS_FACTORY_DEFAULTS.get(factory, (0.10, 0.45, (0.60, 0.60, 0.60)))
+        for link_name in links:
+            result[link_name] = default
+
+    return result
+
 # 16 fixed hemisphere views: 4 elevations x 4 azimuths
 _HEMI_ELEVS = [5, 25, 45, 65]
 _HEMI_AZIMS = [-67.5, -22.5, 22.5, 67.5]
@@ -98,10 +240,12 @@ def parse_args():
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--envmap", default=None, help="Path to envmap HDR/EXR")
     parser.add_argument("--skip_existing", action="store_true")
-    parser.add_argument("--color_mode", default="both", choices=["part", "group", "both"],
-                        help="part: binary part0/part1 coloring; "
+    parser.add_argument("--color_mode", default="both",
+                        choices=["realistic", "part", "group", "both"],
+                        help="realistic: per-part PBR materials from source data; "
+                             "part: binary part0/part1 coloring; "
                              "group: each reduced graph node gets unique color; "
-                             "both: render both passes (default)")
+                             "both: realistic + group (default)")
     return parser.parse_args(argv)
 
 
@@ -1066,9 +1210,14 @@ def main():
         # Determine which color passes to render
         two_coloring = split_info.get("two_coloring", {})
         if args.color_mode == "both":
-            color_passes = ["part", "group"]
+            color_passes = ["realistic", "group"]
         else:
             color_passes = [args.color_mode]
+
+        # Pre-load realistic materials (only if needed)
+        realistic_mats = None
+        if any(p == "realistic" for p in color_passes):
+            realistic_mats = get_realistic_materials(metadata, links)
 
         GROUP_COLORS = [
             (0.22, 0.46, 0.72),  # blue
@@ -1086,7 +1235,8 @@ def main():
         ]
 
         for color_pass in color_passes:
-            vid_suffix = "_group" if color_pass == "group" else "_nobg"
+            suffix_map = {"group": "_group", "part": "_part", "realistic": "_nobg"}
+            vid_suffix = suffix_map.get(color_pass, "_nobg")
             print(f"  --- Color pass: {color_pass} (suffix: {vid_suffix}) ---")
 
             # Assign materials for this pass
@@ -1105,7 +1255,13 @@ def main():
                     gi = idx_to_group.get(idx, 0)
                     color = GROUP_COLORS[gi % len(GROUP_COLORS)]
                     assign_material(obj, color, metallic=0.25, roughness=0.5)
-            else:
+            elif color_pass == "realistic":
+                for link_name, obj in parts.items():
+                    metallic, roughness, color = realistic_mats.get(
+                        link_name, (0.10, 0.45, (0.60, 0.60, 0.60)))
+                    assign_material(obj, color, metallic=metallic,
+                                    roughness=roughness)
+            else:  # "part" — binary part0/part1 coloring
                 part0_link_idxs = set()
                 for group in two_coloring.get("part0_groups", []):
                     part0_link_idxs.update(group)
