@@ -805,12 +805,20 @@ def find_objs_dir(scene_dir, factory=None, identifier=None):
     return None
 
 
-def load_meshes(scene_dir, links, factory=None, identifier=None):
+def load_meshes(scene_dir, links, link_world, factory=None, identifier=None):
     """Load per-part OBJ meshes and assemble in world coordinates.
 
     Supports two formats:
     1. Old IM format: objs/{idx}/{idx}.obj + origins.json
     2. New IS URDF format: mesh filenames in URDF visual elements + visual origin offsets
+       + kinematic chain transforms
+
+    Args:
+        scene_dir: directory containing the URDF and mesh files
+        links: parsed link info from parse_urdf()
+        link_world: {link_name: (position_3d, rotation_3x3)} from compute_world_transforms()
+        factory: factory name (optional, for path resolution)
+        identifier: seed/id (optional, for path resolution)
 
     Returns:
         meshes_by_link: {link_name: trimesh.Trimesh} (vertices in world coords)
@@ -824,17 +832,24 @@ def load_meshes(scene_dir, links, factory=None, identifier=None):
     )
 
     if has_urdf_meshes:
-        return _load_meshes_from_urdf(scene_dir, links)
+        return _load_meshes_from_urdf(scene_dir, links, link_world)
 
     # Fallback: load from objs directory (IM format)
     return _load_meshes_from_objs(scene_dir, links, factory, identifier)
 
 
-def _load_meshes_from_urdf(scene_dir, links):
+def _load_meshes_from_urdf(scene_dir, links, link_world):
     """Load meshes referenced in URDF visual elements.
 
     Each link may have multiple visual elements, each with its own OBJ file
-    and origin offset. We concatenate all visuals into one mesh per link.
+    and origin offset. Visual origins are in the link's LOCAL frame. We apply
+    both the visual origin AND the kinematic chain transform (link_world) to
+    place all vertices in the world frame.
+
+    Args:
+        scene_dir: directory containing the URDF and mesh files
+        links: parsed link info from parse_urdf()
+        link_world: {link_name: (position_3d, rotation_3x3)} from compute_world_transforms()
     """
     meshes_by_link = {}
     meshes_by_gidx = {}
@@ -847,6 +862,13 @@ def _load_meshes_from_urdf(scene_dir, links):
         mesh_files = info.get("mesh_files", [])
         if not mesh_files:
             continue
+
+        # Get the link's world transform (position + rotation)
+        if link_name in link_world:
+            link_pos, link_rot = link_world[link_name]
+        else:
+            print(f"  WARNING: No world transform for {link_name}, using identity")
+            link_pos, link_rot = np.zeros(3), np.eye(3)
 
         link_meshes = []
         for filename, vis_xyz in mesh_files:
@@ -861,9 +883,13 @@ def _load_meshes_from_urdf(scene_dir, links):
             try:
                 mesh = trimesh.load(obj_path, force='mesh', process=False)
                 if mesh.vertices.shape[0] > 0:
-                    # Apply visual origin offset
+                    verts = mesh.vertices.copy()
+                    # 1. Apply visual origin offset (local frame)
                     if vis_xyz and any(abs(v) > 1e-10 for v in vis_xyz):
-                        mesh.vertices += np.array(vis_xyz, dtype=mesh.vertices.dtype)
+                        verts += np.array(vis_xyz, dtype=verts.dtype)
+                    # 2. Apply kinematic chain transform (local -> world)
+                    verts = (link_rot @ verts.T).T + link_pos
+                    mesh.vertices = verts
                     link_meshes.append(mesh)
             except Exception as e:
                 print(f"  WARNING: Failed to load {obj_path}: {e}")
@@ -1127,8 +1153,19 @@ def export_split(meshes_by_link, merged_groups, coloring, removed_links,
 
 
 def generate_verify_png(part0, part1, out_dir, title=""):
-    """Generate a verification PNG showing part0 (blue) and part1 (red) from 4 views."""
-    fig = plt.figure(figsize=(16, 4))
+    """Generate a verification PNG showing part0 (blue) and part1 (red) from 4 views.
+
+    Matches the old split_and_visualize.py render_split_visualization() style.
+    """
+    fig = plt.figure(figsize=(20, 10))
+
+    max_faces = 5000
+
+    def subsample_mesh(mesh, max_f):
+        if mesh.faces.shape[0] <= max_f:
+            return mesh.vertices, mesh.faces
+        idx = np.random.choice(mesh.faces.shape[0], max_f, replace=False)
+        return mesh.vertices, mesh.faces[idx]
 
     # Collect all vertices for axis limits
     all_verts = []
@@ -1141,45 +1178,45 @@ def generate_verify_png(part0, part1, out_dir, title=""):
         return
     all_v = np.concatenate(all_verts)
     vmin, vmax = all_v.min(axis=0), all_v.max(axis=0)
-    center = (vmin + vmax) / 2
-    span = (vmax - vmin).max() * 0.6
 
-    view_angles = [(25, 0), (25, 90), (25, 45), (60, 30)]
-    view_names = ["Front", "Side", "3/4 View", "Top-ish"]
+    angles = [(30, 45), (30, 135), (30, 225), (30, 315)]
+    titles = ['Front-Right', 'Front-Left', 'Back-Left', 'Back-Right']
 
-    for vi, (elev, azim) in enumerate(view_angles):
-        ax = fig.add_subplot(1, 4, vi + 1, projection='3d')
+    for idx, (elev, azim) in enumerate(angles):
+        ax = fig.add_subplot(1, 4, idx + 1, projection='3d')
 
-        # Sample faces for plotting (subsample for speed)
-        for mesh, color, alpha, label in [
-            (part0, 'royalblue', 0.4, 'part0'),
-            (part1, 'crimson', 0.6, 'part1'),
-        ]:
-            if len(mesh.vertices) == 0 or len(mesh.faces) == 0:
-                continue
-            faces = mesh.faces
-            verts = mesh.vertices
-            # Subsample if too many faces
-            if len(faces) > 2000:
-                idx = np.random.choice(len(faces), 2000, replace=False)
-                faces = faces[idx]
-            polygons = verts[faces]
-            poly3d = Poly3DCollection(polygons, alpha=alpha, facecolor=color,
-                                       edgecolor=color, linewidth=0.1)
-            ax.add_collection3d(poly3d)
+        # Draw part0 (blue)
+        if len(part0.vertices) > 0 and len(part0.faces) > 0:
+            v0, f0 = subsample_mesh(part0, max_faces)
+            polys0 = v0[f0]
+            pc0 = Poly3DCollection(polys0, alpha=0.6, linewidths=0.1,
+                                    edgecolors='navy')
+            pc0.set_facecolor((0.3, 0.5, 0.85, 0.6))
+            ax.add_collection3d(pc0)
 
-        ax.set_xlim(center[0] - span, center[0] + span)
-        ax.set_ylim(center[1] - span, center[1] + span)
-        ax.set_zlim(center[2] - span, center[2] + span)
+        # Draw part1 (red)
+        if len(part1.vertices) > 0 and len(part1.faces) > 0:
+            v1, f1 = subsample_mesh(part1, max_faces)
+            polys1 = v1[f1]
+            pc1 = Poly3DCollection(polys1, alpha=0.6, linewidths=0.1,
+                                    edgecolors='darkred')
+            pc1.set_facecolor((0.85, 0.3, 0.3, 0.6))
+            ax.add_collection3d(pc1)
+
+        ax.set_xlim(vmin[0], vmax[0])
+        ax.set_ylim(vmin[1], vmax[1])
+        ax.set_zlim(vmin[2], vmax[2])
         ax.view_init(elev=elev, azim=azim)
-        ax.set_title(view_names[vi], fontsize=9)
-        ax.set_xlabel('X', fontsize=7)
-        ax.set_ylabel('Y', fontsize=7)
-        ax.set_zlabel('Z', fontsize=7)
+        ax.set_title(titles[idx], fontsize=10)
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('Z')
 
-    fig.suptitle(f"{title} | Blue=part0, Red=part1", fontsize=11)
+    fig.suptitle(f'{title}  Blue=Body(part0)  Red=Moving(part1)',
+                 fontsize=14, y=0.98)
     plt.tight_layout()
-    plt.savefig(os.path.join(out_dir, "verify.png"), dpi=120)
+    fig.savefig(os.path.join(out_dir, "verify.png"), dpi=150,
+                bbox_inches='tight', pad_inches=0.1)
     plt.close(fig)
 
 
@@ -1212,8 +1249,12 @@ def build_joint_12dim_vector(joint, center, scale):
 # Main Processing
 # ======================================================================
 
-def process_object(factory_name, seed, base_dir, output_dir, force=False):
+def process_object(factory_name, seed, base_dir, output_dir, force=False,
+                    suffix=""):
     """Process a single object: load, normalize, generate animodes, split, export.
+
+    Args:
+        suffix: appended to factory_name in output path (e.g., "_PhysXmobility")
 
     Returns: True if any splits were generated.
     """
@@ -1224,7 +1265,12 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False):
     if not os.path.isdir(scene_dir):
         scene_dir = os.path.join(base_dir, factory_name, identifier)
 
-    out_base = os.path.join(output_dir, factory_name, identifier)
+    # Also try flat path (e.g., PartNet: dataset3D/Partnet/{id}/)
+    if not os.path.isdir(scene_dir):
+        scene_dir = os.path.join(base_dir, identifier)
+
+    output_name = factory_name + suffix
+    out_base = os.path.join(output_dir, output_name, identifier)
 
     # Skip check
     if not force and os.path.exists(os.path.join(out_base, "metadata.json")):
@@ -1238,7 +1284,8 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False):
 
     # Find URDF file (multiple naming conventions)
     urdf_path = None
-    for urdf_name in ["scene.urdf", f"{factory_name}.urdf",
+    for urdf_name in ["scene.urdf", "mobility.urdf",
+                       f"{factory_name}.urdf",
                        f"{factory_name.lower()}.urdf",
                        # IS format: asset_name.urdf (e.g., lamp.urdf)
                        ]:
@@ -1278,8 +1325,8 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False):
         print(f"    {j.name}: {j.jtype}, range={j.motion_range:.4f}, "
               f"{j.parent_link}->{j.child_link}")
 
-    # 2. Load meshes
-    meshes_by_link, meshes_by_gidx = load_meshes(scene_dir, links, factory_name, identifier)
+    # 2. Load meshes (with kinematic chain transforms for IS format)
+    meshes_by_link, meshes_by_gidx = load_meshes(scene_dir, links, link_world, factory_name, identifier)
     if not meshes_by_link:
         print(f"  ERROR: No meshes loaded from {scene_dir}")
         return False
@@ -1414,6 +1461,7 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False):
     center_arr = np.array(center)
     metadata = {
         "factory": factory_name,
+        "output_name": output_name,
         "identifier": identifier,
         "root_link": root_link,
         "normalize": {"center": center, "scale": scale},
@@ -1514,6 +1562,9 @@ def main():
                         help="Force regeneration even if output exists")
     parser.add_argument("--max_seeds", type=int, default=0,
                         help="Max seeds per factory (0=unlimited)")
+    parser.add_argument("--suffix", type=str, default="",
+                        help="Suffix appended to factory name in output "
+                             "(e.g., _PhysXmobility, _PhysXnet)")
     args = parser.parse_args()
 
     if args.all:
@@ -1535,7 +1586,8 @@ def main():
         print(f"Found {len(objects)} objects to process")
         success = 0
         for factory, seed, base in objects:
-            ok = process_object(factory, seed, base, args.output_dir, args.force)
+            ok = process_object(factory, seed, base, args.output_dir, args.force,
+                                suffix=args.suffix)
             if ok:
                 success += 1
 
@@ -1544,7 +1596,7 @@ def main():
 
     elif args.factory and args.seed:
         ok = process_object(args.factory, args.seed, args.base,
-                            args.output_dir, args.force)
+                            args.output_dir, args.force, suffix=args.suffix)
         if not ok:
             sys.exit(1)
     else:
