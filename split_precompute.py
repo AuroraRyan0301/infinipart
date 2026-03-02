@@ -9,7 +9,7 @@ Core algorithm (TOPOLOGY-BASED, following CLAUDE.md):
 1. Parse URDF -> build link/joint graph
 2. Load per-part OBJ meshes, normalize entire object to unit cube FIRST
 3. For each animode:
-   a. Define active joints (basic = 1 joint; senior = random combo, max 10 seniors)
+   a. Define active joints (basic = 1 joint; senior = random combo, max 3 seniors)
    b. Classify remaining joints via BVH collision along active trajectory:
       - Trajectory types: sinusoidal oscillation, one-way sinusoidal, linear, linear oscillation
       - If active part motion hits joint-connected part -> PASSIVE (precompute pre-opening)
@@ -62,7 +62,7 @@ TRAJECTORY_TYPES = [
     "linear_oscillation",
 ]
 
-MAX_SENIOR_ANIMODES = 10
+MAX_SENIOR_ANIMODES = 3
 BVH_COLLISION_THRESHOLD = 0.015  # collision distance in normalized space
 BVH_SURFACE_SAMPLES = 8000
 BVH_TRAJECTORY_STEPS = 10  # number of steps along trajectory for collision detection
@@ -1060,7 +1060,7 @@ def generate_animodes(movable_joints, rng_seed=42):
     """Generate basic and senior animodes.
 
     Basic: one joint per animode.
-    Senior: random combinations of 2+ joints, max 10.
+    Senior: random combinations of 2+ joints, max 3.
     Same-chain combinations are ALLOWED.
 
     Returns:
