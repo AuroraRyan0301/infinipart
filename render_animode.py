@@ -1822,7 +1822,7 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             print(f"    Active-Fixed: touching at rest (dist={rest_dist:.5f}), "
                   f"masked {len(mask)}/{n_total} contact vertices, prox=0.02")
         else:
-            prox = min(rest_dist * 0.15, 0.01)
+            prox = min(rest_dist * 0.20, 0.02)
             fixed_collision_cfg = ("proximity", prox)
             print(f"    Active-Fixed: gap={rest_dist:.5f}, proximity={prox:.5f}")
 
@@ -1839,7 +1839,7 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             print(f"    Active-{pjn}: touching at rest (dist={rest_dist:.5f}), "
                   f"masked {len(mask)}/{n_total} contact vertices, prox=0.02")
         else:
-            prox = min(rest_dist * 0.15, 0.01)
+            prox = min(rest_dist * 0.20, 0.02)
             passive_collision_cfg[pjn] = ("proximity", prox)
             print(f"    Active-{pjn}: gap={rest_dist:.5f}, proximity={prox:.5f}")
 
@@ -1910,17 +1910,75 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             print(f"    No active-vs-fixed collision detected")
 
     # ================================================================
+    # Phase 1.5: Active vs Passive (at max opening) → STOP if passive
+    # joint can't open enough to clear the active trajectory.
+    #
+    # For each passive joint group, check: does the active trajectory
+    # still collide with the passive parts when the passive joint is
+    # at its MAXIMUM opening (pre_opening target)? If so, the rack/arm
+    # must STOP because the door/lid can't open further.
+    # ================================================================
+    for pjn, plinks in passive_link_map.items():
+        cfg = passive_collision_cfg.get(pjn)
+        if cfg is None:
+            continue
+        pj15 = joints_by_name[pjn]
+        phys_max_p15 = pj15.upper if pj15.jtype not in ("continuous", "fixed") else math.pi
+        if abs(phys_max_p15) < 1e-8 or not (plinks & set(mesh_cache.keys())):
+            continue
+
+        # Sample frames: check if active collides with passive at physical max
+        sample_step_p15 = max(1, num_frames // 60)
+        sample_frames_p15 = list(range(1, num_frames + 1, sample_step_p15))
+        if sample_frames_p15[-1] != num_frames:
+            sample_frames_p15.append(num_frames)
+
+        frame_collides_p15 = {}
+        for frame in sample_frames_p15:
+            q_test = dict(rest_q)
+            q_test.update(active_q[frame])
+            q_test[pjn] = phys_max_p15  # passive at physical max opening
+            frame_collides_p15[frame] = _has_collision(
+                active_links, plinks, q_test, cfg)
+
+        # Interpolate (conservative)
+        for frame in range(1, num_frames + 1):
+            if frame in frame_collides_p15:
+                continue
+            prev_s = frame - ((frame - 1) % sample_step_p15)
+            next_s = min(prev_s + sample_step_p15, num_frames)
+            frame_collides_p15[frame] = frame_collides_p15.get(prev_s, False) or \
+                                        frame_collides_p15.get(next_s, False)
+
+        # Clamp active trajectory where passive can't resolve collision
+        rest_active_q = {jn: 0.0 for jn in active_jnames}
+        last_safe_q_p15 = dict(rest_active_q)
+        clamped_p15 = 0
+
+        for frame in range(1, num_frames + 1):
+            if frame_collides_p15[frame]:
+                active_q[frame] = dict(last_safe_q_p15)
+                clamped_p15 += 1
+            else:
+                last_safe_q_p15 = dict(active_q[frame])
+
+        if clamped_p15 > 0:
+            print(f"    STOP (passive maxed): {pjn} at phys_max={phys_max_p15:.4f}, "
+                  f"{clamped_p15}/{num_frames} active frames clamped")
+
+    # ================================================================
     # Phase 2: Active vs Passive → binary search passive angle per frame
     # ================================================================
     passive_q_raw = {}  # {joint_name: [0.0]*(num_frames+2)} 1-indexed
 
     for pjn, plinks in passive_link_map.items():
         pj = joints_by_name[pjn]
-        target = pre_opening.get(pjn, 0.0)
+        # Use physical joint upper limit (not pre_opening) so the door can open as wide as needed
+        phys_max = pj.upper if pj.jtype not in ("continuous", "fixed") else math.pi
         q_raw = [0.0] * (num_frames + 2)
 
         cfg = passive_collision_cfg.get(pjn)
-        if cfg is None or abs(target) < 1e-8 or not (plinks & set(mesh_cache.keys())):
+        if cfg is None or abs(phys_max) < 1e-8 or not (plinks & set(mesh_cache.keys())):
             passive_q_raw[pjn] = q_raw
             continue
 
@@ -1943,7 +2001,7 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             if _has_collision(active_links, plinks, q_all, cfg):
                 collision_frames += 1
                 # Binary search: find minimum passive angle that clears collision
-                q_lo, q_hi = q_current, target
+                q_lo, q_hi = q_current, phys_max
                 for _ in range(12):
                     q_mid = (q_lo + q_hi) / 2.0
                     q_all[pjn] = q_mid
@@ -1951,12 +2009,12 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
                         q_lo = q_mid  # still colliding, need more opening
                     else:
                         q_hi = q_mid  # safe, can try less opening
-                # Add small clearance, clamp to target
-                q_safe = q_hi + abs(target) * 0.02
-                if target >= 0:
-                    q_current = min(q_safe, target)
+                # Add small clearance, clamp to physical max
+                q_safe = q_hi + abs(phys_max) * 0.02
+                if phys_max >= 0:
+                    q_current = min(q_safe, phys_max)
                 else:
-                    q_current = max(-q_safe, target)
+                    q_current = max(-q_safe, phys_max)
 
             q_raw[frame] = q_current
 
@@ -1971,7 +2029,7 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
         passive_q_raw[pjn] = q_raw
         if collision_frames > 0:
             print(f"    YIELD: {pjn} collided at {collision_frames} samples, "
-                  f"opened to {q_current:.4f} (target {target:.4f})")
+                  f"opened to {q_current:.4f} (phys_max {phys_max:.4f})")
 
     # ================================================================
     # Phase 3: Anticipation smoothing for passive joints
