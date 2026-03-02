@@ -589,8 +589,58 @@ def get_realistic_materials(metadata, links):
     identifier = metadata.get("identifier", "")
     mat_rng = random.Random(hash((factory, identifier)))
 
-    if json_data is not None:
-        # PhysXNet/PhysXMobility: use JSON part data for material names
+    # Check if textured_objs exist (PhysXMobility native materials)
+    scene_dir = metadata.get("scene_dir", "")
+    has_textured_objs = os.path.isdir(os.path.join(scene_dir, "textured_objs"))
+
+    if json_data is not None and has_textured_objs:
+        # PhysXMobility: native materials from textured_objs OBJ+MTL
+        # Just provide PBR enhancement params; actual colors come from imports
+        parts_info = json_data.get("parts", [])
+        label_to_material = {}
+        for p in parts_info:
+            label = p.get("label")
+            if label is not None:
+                label_to_material[label] = p.get("material", "Unknown")
+
+        group_info = json_data.get("group_info", {})
+        group_to_labels = {}
+        for gid_str, val in group_info.items():
+            gid = int(gid_str)
+            if isinstance(val, list):
+                if (len(val) >= 4 and isinstance(val[-1], str)
+                        and val[-1] in ('A', 'B', 'C', 'D', 'CB')):
+                    labels = val[0] if isinstance(val[0], list) else [val[0]]
+                    group_to_labels[gid] = labels
+                else:
+                    group_to_labels[gid] = [x for x in val if isinstance(x, int)]
+
+        for link_name, link_info in links.items():
+            idx = link_info["part_idx"]
+            part_labels = group_to_labels.get(idx, [idx])
+            mat_name = "Unknown"
+            for lbl in part_labels:
+                if lbl in label_to_material:
+                    mat_name = label_to_material[lbl]
+                    break
+
+            metallic, roughness, _ = get_pbr_for_material(mat_name)
+            category, _ = classify_material(mat_name)
+
+            result[link_name] = {
+                "metallic": metallic,
+                "roughness": roughness,
+                "color": None,  # use native OBJ colors
+                "category": category,
+                "tex_set": None,
+                "source": "native",
+            }
+
+        if result:
+            print(f"  Materials: {len(result)} parts, source={{'native'}}")
+
+    elif json_data is not None:
+        # PhysXNet: use ShapeNet/PartNet colors + ambientCG textures
         parts_info = json_data.get("parts", [])
         label_to_material = {}
         for p in parts_info:
@@ -1261,10 +1311,30 @@ def assign_material(obj, color, metallic=0.3, roughness=0.5, name=None):
         bsdf.inputs["Metallic"].default_value = metallic
         bsdf.inputs["Roughness"].default_value = roughness
 
-    if obj.data.materials:
-        obj.data.materials[0] = mat
-    else:
-        obj.data.materials.append(mat)
+    obj.data.materials.clear()
+    obj.data.materials.append(mat)
+
+
+def enhance_existing_materials(obj, metallic=0.10, roughness=0.45):
+    """Enhance existing OBJ-imported materials with PBR properties.
+
+    Keeps original Kd colors (Base Color) from the MTL file, only adjusts
+    metallic and roughness. Used for PhysXMobility objects whose textured_objs
+    already have correct per-part colors.
+    """
+    if not obj.data.materials:
+        return
+    for mat in obj.data.materials:
+        if mat is None:
+            continue
+        if not mat.use_nodes:
+            mat.use_nodes = True
+        bsdf = mat.node_tree.nodes.get("Principled BSDF")
+        if bsdf:
+            bsdf.inputs["Metallic"].default_value = metallic
+            bsdf.inputs["Roughness"].default_value = roughness
+            # Fix specular for more realistic look
+            bsdf.inputs["Specular"].default_value = 0.3
 
 
 # ======================================================================
@@ -1790,20 +1860,26 @@ def main():
                 identifier = metadata.get("identifier", "")
                 for link_name, obj in parts.items():
                     mat_info = realistic_mats.get(link_name, {})
+                    source = mat_info.get("source", "pbr")
                     metallic = mat_info.get("metallic", 0.10)
                     roughness = mat_info.get("roughness", 0.45)
-                    color = mat_info.get("color", (0.60, 0.60, 0.60))
-                    category = mat_info.get("category", "plastic")
-                    tex_set = mat_info.get("tex_set")
-                    if tex_set and category != "glass":
-                        apply_textured_material(
-                            obj, color, metallic, roughness,
-                            category, tex_set,
-                            links[link_name]["part_idx"],
-                            factory, identifier)
+
+                    if source == "native":
+                        # PhysXMobility: keep OBJ-imported materials, enhance PBR
+                        enhance_existing_materials(obj, metallic, roughness)
                     else:
-                        assign_material(obj, color, metallic=metallic,
-                                        roughness=roughness)
+                        color = mat_info.get("color", (0.60, 0.60, 0.60))
+                        category = mat_info.get("category", "plastic")
+                        tex_set = mat_info.get("tex_set")
+                        if tex_set and category != "glass":
+                            apply_textured_material(
+                                obj, color, metallic, roughness,
+                                category, tex_set,
+                                links[link_name]["part_idx"],
+                                factory, identifier)
+                        else:
+                            assign_material(obj, color, metallic=metallic,
+                                            roughness=roughness)
             else:  # "part" — binary part0/part1 coloring
                 part0_link_idxs = set()
                 for group in two_coloring.get("part0_groups", []):
