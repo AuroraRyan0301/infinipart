@@ -2101,7 +2101,7 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
     # new_v3: use precomputed q_safe_limits as effective far_q
     # ================================================================
     q_safe_limits = split_info.get("q_safe_limits", {})
-    passive_curves = split_info.get("passive_curves", {})
+    passive_trajectories = split_info.get("passive_trajectories", {})
 
     active_q = {}
     for frame in range(1, num_frames + 1):
@@ -2288,7 +2288,7 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
     # ================================================================
     # Phase 2: Active vs Passive → compute passive angle per frame
     #
-    # new_v3: if passive_curves are precomputed, use them directly.
+    # new_v3: if passive_trajectories are precomputed, use them directly (t-based).
     # Legacy fallback: real-time binary search.
     # ================================================================
     passive_q_raw = {}  # {joint_name: [0.0]*(num_frames+2)} 1-indexed
@@ -2297,24 +2297,22 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
         pj = joints_by_name[pjn]
         q_raw = [0.0] * (num_frames + 2)
 
-        if pjn in passive_curves and passive_curves[pjn] is not None:
-            # new_v3: interpolate precomputed passive_curve
-            # curve = [[q_active, q_passive], ...] sorted by q_active
-            curve = passive_curves[pjn]
-            qa_pts = [pt[0] for pt in curve]
-            qp_pts = [pt[1] for pt in curve]
+        if pjn in passive_trajectories and passive_trajectories[pjn] is not None:
+            # new_v3: interpolate precomputed passive_trajectory (time-based)
+            # traj = [[t, q_passive], ...] where t ∈ [0, 1]
+            traj = passive_trajectories[pjn]
+            t_pts = [pt[0] for pt in traj]
+            qp_pts = [pt[1] for pt in traj]
 
             for frame in range(1, num_frames + 1):
-                # Get q_active for this frame (use first active joint)
-                q_active_frame = active_q[frame].get(active_jnames[0], 0.0) if active_jnames else 0.0
-                # Interpolate passive_curve at q_active_frame
-                q_p = float(_interp1d(qa_pts, qp_pts, q_active_frame))
+                t_frame = (frame - 1) / max(num_frames - 1, 1)
+                q_p = float(_interp1d(t_pts, qp_pts, t_frame))
                 q_raw[frame] = q_p
 
             passive_q_raw[pjn] = q_raw
             max_qp = max(abs(v) for v in q_raw[1:num_frames+1])
-            print(f"    YIELD (precomputed): {pjn} passive_curve "
-                  f"{len(curve)} pts, max_qp={max_qp:.4f}")
+            print(f"    YIELD (precomputed): {pjn} passive_trajectory "
+                  f"{len(traj)} pts, max_qp={max_qp:.4f}")
             continue
 
         # Legacy: real-time binary search

@@ -80,6 +80,11 @@ AXIS_EXCLUSION_RADIUS = 0.05   # normalized space units
 SAFE_LIMIT_STEPS = 30          # q_active scan steps for q_safe_limit
 PASSIVE_CURVE_STEPS = 20       # q_active sample points for passive_curve
 
+# new_v3: prismatic ray-sweep test — minimum ray hits to classify a joint as PASSIVE/blocked
+# Much more reliable than BVH sampling for thin-geometry (wire rack, thin panel) prismatic motion.
+PRISMATIC_SWEEP_MIN_HITS = 3   # ≥3 rays intercepted → real blocker
+PASSIVE_CURVE_MIN_HITS = 5     # absolute hit count for passive_curve (fraction too strict for thin geometry)
+
 
 # ======================================================================
 # URDF Parsing
@@ -497,6 +502,78 @@ def detect_collisions_bvh(active_joints, candidate_joints, meshes_by_link,
     if not real_candidates:
         return set(), {}
 
+    # ---------------------------------------------------------------
+    # Prismatic ray-sweep pre-check
+    # For prismatic active joints: cast rays from rest-state vertices
+    # in the travel direction and detect any candidate mesh they pass
+    # through.  This is geometrically exact and works for thin / wire
+    # geometry that BVH surface-sampling would miss.
+    # ---------------------------------------------------------------
+    prismatic_sweep_hits = set()   # candidates detected by ray sweep
+    prismatic_active = [j for j in active_joints if j.jtype == "prismatic"]
+
+    if prismatic_active:
+        for pa_j in prismatic_active:
+            pa_desc = active_desc_per_joint[pa_j.name]
+            lo_pa = pa_j.lower
+            hi_pa = pa_j.upper
+            far_q_pa = hi_pa if abs(hi_pa) >= abs(lo_pa) else lo_pa
+            if abs(far_q_pa) < 1e-8:
+                continue
+
+            axis_pa = pa_j.axis_dir_world.copy()
+            n_pa = np.linalg.norm(axis_pa)
+            if n_pa < 1e-8:
+                continue
+            axis_pa = axis_pa / n_pa
+            travel_sign = 1.0 if far_q_pa >= 0 else -1.0
+            ray_dir = axis_pa * travel_sign  # unit direction in world/normalized space
+            travel_dist = abs(far_q_pa) * scale  # total travel in normalized space
+
+            # Collect active-part vertices at rest (normalized)
+            center_arr = np.array(center)
+            rest_verts_list = []
+            for link_name in pa_desc:
+                if link_name not in meshes_by_link:
+                    continue
+                mesh = meshes_by_link[link_name]
+                if len(mesh.vertices) == 0:
+                    continue
+                step = max(1, len(mesh.vertices) // 600)
+                rest_verts_list.append(mesh.vertices[::step])
+
+            if not rest_verts_list:
+                continue
+            rest_verts = np.vstack(rest_verts_list)
+            ray_dirs_arr = np.tile(ray_dir, (len(rest_verts), 1))
+
+            for cand_j in real_candidates:
+                if cand_j in prismatic_sweep_hits:
+                    continue
+                cand_desc = get_descendants(cand_j)
+                cand_only = cand_desc - all_active_descendants
+                cand_meshes = [meshes_by_link[l] for l in cand_only
+                               if l in meshes_by_link and len(meshes_by_link[l].faces) > 0]
+                if not cand_meshes:
+                    continue
+                try:
+                    cand_combined = trimesh.util.concatenate(cand_meshes)
+                    locs, idx_ray, _ = cand_combined.ray.intersects_location(
+                        rest_verts, ray_dirs_arr, multiple_hits=False)
+                    if len(locs) == 0:
+                        continue
+                    # Count hits within the actual travel distance
+                    hits = sum(
+                        1 for k, loc in enumerate(locs)
+                        if np.linalg.norm(loc - rest_verts[idx_ray[k]]) <= travel_dist + BVH_COLLISION_THRESHOLD
+                    )
+                    if hits >= PRISMATIC_SWEEP_MIN_HITS:
+                        print(f"    [ray-sweep] {pa_j.name} sweeps through "
+                              f"{cand_j.name} ({hits} ray hits) → PASSIVE")
+                        prismatic_sweep_hits.add(cand_j)
+                except Exception:
+                    pass
+
     # Build animated surface samples at multiple trajectory points
     animated_samples_all = []
     for active_j in active_joints:
@@ -559,7 +636,8 @@ def detect_collisions_bvh(active_joints, candidate_joints, meshes_by_link,
             except Exception:
                 pass
 
-        if collision_found:
+        # Prismatic ray-sweep or BVH surface-sample detection
+        if collision_found or cand_j in prismatic_sweep_hits:
             collided_joints.add(cand_j)
             # Compute pre-opening: small fraction of range to avoid initial collision
             pre_opening = cand_j.motion_range * 0.1
@@ -742,27 +820,42 @@ def compute_q_safe_limit(active_joint, static_links, meshes_by_link,
     return far_q
 
 
-def compute_passive_curve(active_joint, passive_joint, active_links,
-                          meshes_by_link, children_map, center, scale,
-                          active_far_q=None, n_steps=PASSIVE_CURVE_STEPS):
-    """Compute passive joint opening schedule as a function of active joint angle.
+PASSIVE_PROX_THRESHOLD = 0.05   # vertex proximity threshold in normalized space
 
-    For each q_active in [0, active_far_q], binary search for the minimum
-    q_passive that prevents collision between active and passive parts.
 
-    Args:
-        active_joint: URDFJoint (active)
-        passive_joint: URDFJoint (passive, must open to clear collision)
-        active_links: set of link names that move with active_joint
-        meshes_by_link: {link_name: trimesh} normalized
-        children_map: kinematic tree
-        center, scale: normalization params
-        active_far_q: max q for active joint (uses joint limit if None)
-        n_steps: number of q_active sample points
+def _traj_q_at_t(joint, traj_type, t, far_q):
+    """Compute joint position at normalized time t ∈ [0,1] for given trajectory type."""
+    lo = joint.lower if joint.jtype != "continuous" else 0.0
+    rng = abs(far_q - lo)
+    if traj_type == "sinusoidal_oscillation":
+        return lo + rng * 0.5 * (1.0 - np.cos(2.0 * np.pi * t))
+    elif traj_type == "one_way_sinusoidal":
+        return lo + rng * 0.5 * (1.0 - np.cos(np.pi * t))
+    elif traj_type == "linear":
+        return lo + rng * t
+    elif traj_type == "linear_oscillation":
+        return lo + rng * (2.0 * t if t < 0.5 else 2.0 * (1.0 - t))
+    return lo + rng * t
+
+
+def compute_passive_trajectory(active_joint, passive_joint, active_links,
+                                meshes_by_link, children_map, center, scale,
+                                traj_type, active_far_q=None,
+                                n_steps=PASSIVE_CURVE_STEPS):
+    """Compute a smooth, time-based passive joint trajectory.
+
+    Algorithm:
+    1. For each t ∈ [0,1]: compute active position, binary-search minimum
+       q_passive using VERTEX PROXIMITY (not AABB) to get an accurate minimum curve.
+    2. Fit a smooth speed-adjusted sinusoidal profile via binary search on
+       "speed" so the door opens just fast enough while looking natural.
+
+    Vertex proximity (KDTree, threshold PASSIVE_PROX_THRESHOLD) is accurate
+    for revolute passive joints against any active geometry (including wire
+    meshes), unlike AABB which massively overestimates for rotated panels.
 
     Returns:
-        curve: list of [q_active, q_passive] pairs (sorted by q_active)
-               or None if no collision found along the curve
+        list of [t, q_passive] pairs or None if no passive motion needed.
     """
     from scipy.spatial import cKDTree
 
@@ -771,7 +864,6 @@ def compute_passive_curve(active_joint, passive_joint, active_links,
         hi = active_joint.upper if active_joint.jtype != "continuous" else 2 * np.pi
         active_far_q = hi if abs(hi) >= abs(lo) else lo
 
-    # Passive joint range
     p_lo = passive_joint.lower if passive_joint.jtype != "continuous" else 0.0
     p_hi = passive_joint.upper if passive_joint.jtype != "continuous" else np.pi
     p_far_q = p_hi if abs(p_hi) >= abs(p_lo) else p_lo
@@ -792,95 +884,141 @@ def compute_passive_curve(active_joint, passive_joint, active_links,
         return desc
 
     passive_desc = get_descendants(passive_joint)
-    # Passive-only links: passive descendants not already in active links
     passive_only = passive_desc - active_links
-
     if not passive_only:
         return None
 
-    q_active_pts = np.linspace(0.0, active_far_q, n_steps + 1)
-    curve = []
-    found_any_collision = False
+    t_pts = np.linspace(0.0, 1.0, n_steps + 1)
 
-    for q_a in q_active_pts:
-        # Transform active-link surfaces to q_active
+    # --- Step 1: precompute active vertices at each time step ---
+    active_verts_at_t = []
+    for t in t_pts:
+        q_a = _traj_q_at_t(active_joint, traj_type, t, active_far_q)
         T_a = compute_joint_transform(active_joint, q_a, center, scale)
         R_a, t_a = T_a[:3, :3], T_a[:3, 3]
-
-        active_samps_list = []
-        for link_name in active_links:
-            if link_name not in meshes_by_link:
+        vl = []
+        for ln in active_links:
+            if ln not in meshes_by_link:
                 continue
-            mesh = meshes_by_link[link_name]
-            if len(mesh.faces) == 0:
+            m = meshes_by_link[ln]
+            if len(m.vertices) == 0:
                 continue
-            n_samp = min(BVH_SURFACE_SAMPLES // 2, max(len(mesh.faces), 200))
-            try:
-                samps, _ = trimesh.sample.sample_surface(mesh, n_samp)
-                active_samps_list.append((R_a @ samps.T).T + t_a)
-            except Exception:
-                continue
+            vl.append((R_a @ m.vertices.T).T + t_a)
+        active_verts_at_t.append(np.vstack(vl) if vl else None)
 
-        if not active_samps_list:
-            curve.append([float(q_a), 0.0])
-            continue
+    # Build base passive mesh (combined, in rest position)
+    passive_meshes = []
+    for ln in passive_only:
+        if ln in meshes_by_link and len(meshes_by_link[ln].vertices) > 0:
+            passive_meshes.append(meshes_by_link[ln])
+    if not passive_meshes:
+        return None
+    import trimesh as _trimesh
+    if len(passive_meshes) == 1:
+        passive_base_mesh = passive_meshes[0].copy()
+    else:
+        passive_base_mesh = _trimesh.util.concatenate(passive_meshes)
 
-        active_pts = np.vstack(active_samps_list)
-        active_tree = cKDTree(active_pts)
+    # Pre-build the proximity query (caches BVH) for the passive mesh at rest.
+    # We inverse-transform active verts into the passive rest frame for each query
+    # instead of rebuilding BVH on every call.
+    _pq = _trimesh.proximity.ProximityQuery(passive_base_mesh)
+    _T_p_cache = {}
 
-        def _check_passive_collision(q_p):
-            """Check if passive at q_p still collides with active at q_a."""
+    def _surface_collision(active_verts, q_p):
+        """True if any active vertex is within PASSIVE_PROX_THRESHOLD of the passive mesh surface at q_p."""
+        # Inverse-transform active_verts into passive rest frame
+        if q_p not in _T_p_cache:
             T_p = compute_joint_transform(passive_joint, q_p, center, scale)
-            R_p, t_p = T_p[:3, :3], T_p[:3, 3]
-            for link_name in passive_only:
-                if link_name not in meshes_by_link:
-                    continue
-                mesh = meshes_by_link[link_name]
-                if len(mesh.faces) == 0:
-                    continue
-                n_samp = min(BVH_SURFACE_SAMPLES // 2, max(len(mesh.faces), 200))
-                try:
-                    samps, _ = trimesh.sample.sample_surface(mesh, n_samp)
-                    moved = (R_p @ samps.T).T + t_p
-                    dists, _ = active_tree.query(moved)
-                    n_hit = int(np.sum(dists < BVH_COLLISION_THRESHOLD))
-                    frac = n_hit / max(len(dists), 1)
-                    if dists.min() < BVH_COLLISION_THRESHOLD and frac >= BVH_COLLISION_MIN_FRAC:
-                        return True
-                except Exception:
-                    pass
-            return False
+            _T_p_cache[q_p] = np.linalg.inv(T_p)
+        T_p_inv = _T_p_cache[q_p]
+        av_local = (T_p_inv[:3, :3] @ active_verts.T).T + T_p_inv[:3, 3]
+        _, dists, _ = _pq.on_surface(av_local)
+        return bool(dists.min() < PASSIVE_PROX_THRESHOLD)
 
-        # Check if there's a collision at q_passive=0 (passive fully closed)
-        if not _check_passive_collision(0.0):
-            curve.append([float(q_a), 0.0])
+    is_oscillating = traj_type in ("sinusoidal_oscillation", "linear_oscillation")
+    lo_a = active_joint.lower if active_joint.jtype != "continuous" else 0.0
+
+    min_curve = []   # minimum q_passive at each t
+    found_any = False
+    for i, t in enumerate(t_pts):
+        av = active_verts_at_t[i]
+        if av is None:
+            min_curve.append(0.0)
             continue
-
-        found_any_collision = True
-        # Binary search for minimum q_passive that clears collision
-        # Direction: open toward p_far_q
-        if not _check_passive_collision(p_far_q):
-            # Fully open clears it — binary search
-            q_lo_bs, q_hi_bs = 0.0, float(p_far_q)
+        # Skip resting state (q_a ≈ lo_a): resting contacts are handled by
+        # pre_opening_angles, not by passive_trajectory.
+        q_a = _traj_q_at_t(active_joint, traj_type, t, active_far_q)
+        if abs(q_a - lo_a) < 1e-6:
+            min_curve.append(0.0)
+            continue
+        if not _surface_collision(av, 0.0):
+            min_curve.append(0.0)
+            continue
+        found_any = True
+        if not _surface_collision(av, float(p_far_q)):
+            q_lo, q_hi = 0.0, float(p_far_q)
             for _ in range(12):
-                q_mid = (q_lo_bs + q_hi_bs) / 2.0
-                if _check_passive_collision(q_mid):
-                    q_lo_bs = q_mid  # still colliding, need more opening
+                q_mid = (q_lo + q_hi) / 2.0
+                if _surface_collision(av, q_mid):
+                    q_lo = q_mid
                 else:
-                    q_hi_bs = q_mid  # safe, try less
-            # Add 2% clearance, clamped to physical max
-            q_passive = q_hi_bs + abs(p_far_q) * 0.02
-            q_passive = min(q_passive, abs(p_far_q)) * np.sign(p_far_q) if p_far_q != 0 else 0.0
+                    q_hi = q_mid
+            # +2% clearance
+            q_min = min(q_hi * 1.02, abs(p_far_q)) * (1.0 if p_far_q >= 0 else -1.0)
         else:
-            # Even fully open doesn't clear — use full range (render should STOP or warn)
-            q_passive = float(p_far_q)
+            q_min = float(p_far_q)
+        min_curve.append(float(q_min))
 
-        curve.append([float(q_a), float(q_passive)])
+    if not found_any:
+        return None
 
-    if not found_any_collision:
-        return None  # No collision along full trajectory, passive_curve not needed
+    q_final = float(max(min_curve))
+    if q_final < 1e-6:
+        return None
 
-    return curve
+    # --- Step 3: fit smooth speed-adjusted sinusoidal profile ---
+    def smooth_profile(t, speed):
+        """Sinusoidal profile from 0 → q_final (→ 0 for oscillation)."""
+        if is_oscillating:
+            tau = 2.0 * t if t <= 0.5 else 2.0 * (1.0 - t)
+        else:
+            tau = t
+        progress = min(tau * speed, 1.0)
+        return q_final * 0.5 * (1.0 - np.cos(np.pi * progress))
+
+    def no_collision_at_speed(speed):
+        for i, t in enumerate(t_pts):
+            av = active_verts_at_t[i]
+            if av is None:
+                continue
+            q_p = smooth_profile(t, speed)
+            if _surface_collision(av, q_p):
+                return False
+        return True
+
+    PASSIVE_MAX_SPEED = 10.0  # above this → structural/shared-edge case, fall back to legacy
+
+    if no_collision_at_speed(1.0):
+        opt_speed = 1.0
+    else:
+        sp_lo, sp_hi = 1.0, PASSIVE_MAX_SPEED
+        for _ in range(20):
+            sp_mid = (sp_lo + sp_hi) / 2.0
+            if no_collision_at_speed(sp_mid):
+                sp_hi = sp_mid
+            else:
+                sp_lo = sp_mid
+        if not no_collision_at_speed(sp_hi):
+            # Even at max speed, collision persists → structural case (shared edge, fold geometry)
+            # Fall back to legacy BVH handling for this joint.
+            return None
+        opt_speed = min(sp_hi * 1.05, PASSIVE_MAX_SPEED)
+
+    traj = [[float(t), float(smooth_profile(t, opt_speed))] for t in t_pts]
+    print(f"    passive_traj[{passive_joint.name}]: speed={opt_speed:.2f}x, "
+          f"q_final={q_final:.3f} rad ({q_final*57.3:.1f} deg), {len(traj)} pts")
+    return traj
 
 
 # ======================================================================
@@ -892,8 +1030,8 @@ def classify_joints_for_animode(all_movable_joints, active_joint_names,
                                 center, scale, traj_type):
     """Classify all joints as active/passive/fixed for a given animode.
 
-    new_v3: also computes q_safe_limits (for active joints) and passive_curves
-    (for passive joints) using axis-exclusion-filtered BVH scanning.
+    new_v3: also computes q_safe_limits (for active joints) and passive_trajectories
+    (for passive joints) using vertex-proximity-based smooth speed fitting.
 
     Args:
         all_movable_joints: list of all movable URDFJoint
@@ -908,8 +1046,8 @@ def classify_joints_for_animode(all_movable_joints, active_joint_names,
         passive: list of URDFJoint
         fixed: list of URDFJoint
         pre_opening_angles: dict {joint_name: float}
-        q_safe_limits: dict {joint_name: float}  -- max safe q for active joints
-        passive_curves: dict {joint_name: list}   -- [(q_active, q_passive), ...] for passive joints
+        q_safe_limits: dict {joint_name: float}      -- max safe q for active joints
+        passive_trajectories: dict {joint_name: list} -- [[t, q_passive], ...] time-based
     """
     def get_descendants(joint):
         desc = set()
@@ -966,24 +1104,24 @@ def classify_joints_for_animode(all_movable_joints, active_joint_names,
                                   children_map, center, scale)
         q_safe_limits[aj.name] = float(ql)
 
-    # Compute passive_curve for each passive joint
-    # Use q_safe_limit as the effective active range for the curve
-    passive_curves = {}
+    # Compute passive_trajectory for each passive joint (time-based, smooth profile)
+    # Use q_safe_limit as the effective active range
+    passive_trajectories = {}
     for pj in passive:
         if not active:
             continue
-        # For each passive joint, compute curve against the FIRST active joint
+        # For each passive joint, compute trajectory against the FIRST active joint
         # (most animodes have 1 active joint; senior may have 2-3)
         aj = active[0]
         active_links_set = get_descendants(aj)
         safe_q = q_safe_limits.get(aj.name)
-        curve = compute_passive_curve(
+        traj = compute_passive_trajectory(
             aj, pj, active_links_set, meshes_by_link,
-            children_map, center, scale, active_far_q=safe_q)
-        if curve is not None:
-            passive_curves[pj.name] = curve
+            children_map, center, scale, traj_type, active_far_q=safe_q)
+        if traj is not None:
+            passive_trajectories[pj.name] = traj
 
-    return active, passive, fixed, pre_opening_angles, q_safe_limits, passive_curves
+    return active, passive, fixed, pre_opening_angles, q_safe_limits, passive_trajectories
 
 
 def build_reduced_graph(links, joints, root_link, fixed_joints, movable_joints):
@@ -2077,8 +2215,8 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
         print(f"\n  --- {animode_name} (traj={traj_type}) ---")
         print(f"    Active joints: {sorted(active_joint_names)}")
 
-        # 6a. Classify joints (new_v3: also returns q_safe_limits, passive_curves)
-        active, passive, fixed, pre_opening, q_safe_limits, passive_curves = \
+        # 6a. Classify joints (new_v3: also returns q_safe_limits, passive_trajectories)
+        active, passive, fixed, pre_opening, q_safe_limits, passive_trajectories = \
             classify_joints_for_animode(
                 movable_joints, active_joint_names,
                 meshes_by_link, parent_map, children_map,
@@ -2091,8 +2229,8 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
             lo_j = next((j.lower for j in active if j.name == jn), None)
             hi_j = next((j.upper for j in active if j.name == jn), None)
             print(f"    q_safe_limit[{jn}] = {ql:.4f} (full range [{lo_j:.4f}, {hi_j:.4f}])")
-        for jn, curve in passive_curves.items():
-            print(f"    passive_curve[{jn}]: {len(curve)} points")
+        for jn, traj in passive_trajectories.items():
+            print(f"    passive_trajectory[{jn}]: {len(traj)} points")
 
         # 6b. Build reduced graph
         # Fixed joints for graph building = classified-fixed movable joints
@@ -2171,8 +2309,8 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
                 },
                 "is_bipartite": is_bipartite,
                 "pre_opening_angles": pre_opening,
-                "q_safe_limits": q_safe_limits,    # new_v3
-                "passive_curves": passive_curves,   # new_v3
+                "q_safe_limits": q_safe_limits,           # new_v3
+                "passive_trajectories": passive_trajectories,  # new_v3: [[t, q_p], ...]
                 "joint_12dim_vectors": joint_vectors,
                 "n_reduced_nodes": len(merged_groups),
                 "n_reduced_edges": len(reduced_edges),
