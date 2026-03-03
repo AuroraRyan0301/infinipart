@@ -36,6 +36,7 @@ Usage:
 import argparse
 import itertools
 import json
+import math
 import os
 import random
 import re
@@ -1119,6 +1120,144 @@ def generate_animodes(movable_joints, rng_seed=42):
 
 
 # ======================================================================
+# Custom Lid Animodes
+# ======================================================================
+
+LID_KEYWORDS = frozenset({"lid", "cap", "cover", "top", "plug", "stopper"})
+
+
+def detect_lid_joints(joints, scene_dir):
+    """Detect prismatic joints whose child link represents a lid/cap/cover.
+
+    Checks (in priority order):
+    1. PartNet semantics.txt: 'link_N  motion_type  semantic_label'
+    2. URDF link/joint names containing lid keywords
+
+    Returns: list of (joint, label_str) pairs (only prismatic joints).
+    """
+    sem_map = {}
+
+    # PartNet semantics.txt
+    sem_file = os.path.join(scene_dir, "semantics.txt")
+    if os.path.exists(sem_file):
+        with open(sem_file) as f:
+            for line in f:
+                parts_line = line.strip().split()
+                if len(parts_line) >= 3:
+                    sem_map[parts_line[0]] = parts_line[2].lower()
+
+    # Fallback: check link and joint name strings
+    for joint in joints:
+        if joint.child_link not in sem_map:
+            for kw in LID_KEYWORDS:
+                if kw in joint.child_link.lower() or kw in joint.name.lower():
+                    sem_map[joint.child_link] = kw
+                    break
+
+    lid_joints = []
+    for joint in joints:
+        # Only prismatic joints make sense for separation/flip (revolute = door)
+        if joint.jtype != "prismatic":
+            continue
+        label = sem_map.get(joint.child_link, "")
+        if any(kw in label for kw in LID_KEYWORDS):
+            lid_joints.append((joint, label))
+
+    return lid_joints
+
+
+def _get_lid_link_group(root_link_name, children_map):
+    """BFS to get root_link_name and all its kinematic descendants."""
+    group = set()
+    queue = [root_link_name]
+    while queue:
+        lnk = queue.pop(0)
+        if lnk in group:
+            continue
+        group.add(lnk)
+        for child, _ in children_map.get(lnk, []):
+            queue.append(child)
+    return group
+
+
+def compute_custom_lid_params(lid_joint, lid_links, meshes_by_link, scale):
+    """Compute lift_dist, lift_axis, flip_axis for a lid joint.
+
+    All distances are in URDF space (meters).
+    """
+    lift_axis = np.array(lid_joint.axis_dir_world, dtype=float)
+    lift_axis /= (np.linalg.norm(lift_axis) + 1e-12)
+
+    # Lid extent along lift axis in normalized space
+    lid_verts = [meshes_by_link[lnk].vertices
+                 for lnk in lid_links if lnk in meshes_by_link]
+
+    if lid_verts:
+        all_v = np.concatenate(lid_verts, axis=0)
+        proj = all_v @ lift_axis
+        lid_extent_norm = proj.max() - proj.min()
+        lid_extent_urdf = lid_extent_norm / scale
+        # Lift 2× lid height in URDF space, at least 3× joint upper limit
+        lift_dist = max(lid_extent_urdf * 2.0,
+                        lid_joint.upper * 3.0 if lid_joint.upper > 0 else 0.05)
+    else:
+        lift_dist = max(lid_joint.upper * 3.0 if lid_joint.upper > 0 else 0.05,
+                        0.05)
+
+    # Flip axis: perpendicular to lift direction in the XY plane
+    world_up = np.array([0.0, 0.0, 1.0])
+    if abs(np.dot(lift_axis, world_up)) > 0.9:
+        flip_axis = np.array([1.0, 0.0, 0.0])   # lift is vertical → flip around X
+    else:
+        flip_axis = np.cross(lift_axis, world_up)
+        flip_axis /= (np.linalg.norm(flip_axis) + 1e-12)
+
+    return {
+        "lid_joint":       lid_joint.name,
+        "lid_links":       sorted(lid_links),
+        "lift_axis":       lift_axis.tolist(),
+        "lift_dist":       float(lift_dist),   # URDF metres
+        "flip_axis":       flip_axis.tolist(),
+        "flip_start_frac": 0.5,               # flip begins at 50% of anim
+        "flip_angle":      math.pi,            # 180° reveal
+    }
+
+
+def generate_custom_lid_animodes(movable_joints, scene_dir, meshes_by_link,
+                                  children_map, scale):
+    """Generate custom_N_separation and custom_N_flip animodes for lid joints.
+
+    Returns:
+        animodes:    list of (name, {joint_name}, traj_type)
+        params_map:  {animode_name: custom_params_dict}
+    """
+    animodes = []
+    params_map = {}
+
+    lid_joints = detect_lid_joints(movable_joints, scene_dir)
+    if not lid_joints:
+        return animodes, params_map
+
+    for i, (lid_joint, label) in enumerate(lid_joints):
+        lid_links = _get_lid_link_group(lid_joint.child_link, children_map)
+        params = compute_custom_lid_params(lid_joint, lid_links, meshes_by_link, scale)
+
+        sep_name  = f"custom_{i * 2}_separation"
+        flip_name = f"custom_{i * 2 + 1}_flip"
+
+        animodes.append((sep_name,  {lid_joint.name}, "lid_separation"))
+        animodes.append((flip_name, {lid_joint.name}, "lid_flip"))
+        params_map[sep_name]  = params
+        params_map[flip_name] = params
+
+        print(f"  Custom lid animodes for {lid_joint.name} (label='{label}'): "
+              f"lift_dist={params['lift_dist']:.4f}m, "
+              f"flip_axis={[round(v,2) for v in params['flip_axis']]}")
+
+    return animodes, params_map
+
+
+# ======================================================================
 # Export: OBJ + Verify PNG + Metadata
 # ======================================================================
 
@@ -1514,6 +1653,13 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
           f"({sum(1 for n, _, _ in animodes if n.startswith('basic'))} basic, "
           f"{sum(1 for n, _, _ in animodes if n.startswith('senior'))} senior)")
 
+    # 5b. Custom lid animodes (separation + flip)
+    custom_animodes, custom_params_map = generate_custom_lid_animodes(
+        movable_joints, scene_dir, meshes_by_link, children_map, scale)
+    if custom_animodes:
+        animodes.extend(custom_animodes)
+        print(f"  + {len(custom_animodes)} custom lid animodes")
+
     # 6. Process each animode
     n_exported = 0
     all_splits_info = {}
@@ -1613,6 +1759,10 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
                 "n_reduced_nodes": len(merged_groups),
                 "n_reduced_edges": len(reduced_edges),
             }
+
+            # Merge custom lid params into split info if applicable
+            if animode_name in custom_params_map:
+                all_splits_info[animode_name]["custom_lid_params"] = custom_params_map[animode_name]
 
     # 7. Write metadata
     center_arr = np.array(center)

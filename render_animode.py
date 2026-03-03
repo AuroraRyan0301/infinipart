@@ -1058,6 +1058,30 @@ def compute_frame_joint_values(joints_by_name, split_info, t):
     pre_opening = split_info.get("pre_opening_angles", {})
 
     values = {}
+
+    # Custom lid trajectories: active joint value is the lift displacement (URDF metres)
+    if traj_type in ("lid_separation", "lid_flip"):
+        custom_params = split_info.get("custom_lid_params", {})
+        lift_dist = custom_params.get("lift_dist", 0.1)
+        flip_start_frac = custom_params.get("flip_start_frac", 0.5)
+        for jname, cls in classification.items():
+            joint = joints_by_name.get(jname)
+            if joint is None:
+                continue
+            if cls == "active":
+                if traj_type == "lid_separation":
+                    # Smooth one-way lift: 0 → lift_dist over full duration
+                    q = lift_dist * 0.5 * (1 - math.cos(math.pi * t))
+                else:  # lid_flip: lift completes at flip_start_frac, then hold
+                    lift_t = min(t / max(flip_start_frac, 1e-6), 1.0)
+                    q = lift_dist * 0.5 * (1 - math.cos(math.pi * lift_t))
+                values[jname] = q
+            elif cls == "passive":
+                values[jname] = pre_opening.get(jname, 0.0)
+            else:
+                values[jname] = 0.0
+        return values
+
     for jname, cls in classification.items():
         joint = joints_by_name.get(jname)
         if joint is None:
@@ -1632,6 +1656,14 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
     pre_opening = split_info.get("pre_opening_angles", {})
     traj_type = split_info["trajectory_type"]
 
+    # Custom lid animodes: lid separates/flies off — no collision detection needed
+    if traj_type in ("lid_separation", "lid_flip"):
+        result = {}
+        for frame in range(1, num_frames + 1):
+            t = (frame - 1) / max(num_frames - 1, 1)
+            result[frame] = compute_frame_joint_values(joints_by_name, split_info, t)
+        return result
+
     active_jnames = [jn for jn, cls in classification.items() if cls == "active"]
     passive_jnames = [jn for jn, cls in classification.items() if cls == "passive"]
 
@@ -2135,8 +2167,30 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
         joints_by_name, split_info, num_frames,
         center, scale)
 
+    # Precompute lid_flip params (rotation about lid centroid after flip_start_frac)
+    traj_type = split_info["trajectory_type"]
+    lid_flip_links = set()
+    flip_start_frac = 0.5
+    flip_angle_total = math.pi
+    flip_axis_vec = Vector((1.0, 0.0, 0.0))
+    lid_rest_centroids = {}
+    if traj_type == "lid_flip":
+        custom_params = split_info.get("custom_lid_params", {})
+        lid_flip_links = set(custom_params.get("lid_links", []))
+        flip_start_frac = custom_params.get("flip_start_frac", 0.5)
+        flip_angle_total = custom_params.get("flip_angle", math.pi)
+        flip_axis_vec = Vector(custom_params.get("flip_axis", [1.0, 0.0, 0.0])).normalized()
+        # Compute rest centroid for each lid link in normalized object space
+        for lname in lid_flip_links:
+            obj = parts.get(lname)
+            if obj and obj.data.vertices:
+                verts = [v.co.copy() for v in obj.data.vertices]
+                centroid = sum(verts, Vector()) / len(verts)
+                lid_rest_centroids[lname] = centroid
+
     for frame in range(1, num_frames + 1):
         joint_values = frame_joint_values[frame]
+        t_norm = (frame - 1) / max(num_frames - 1, 1)
 
         T_frame_world = forward_kinematics(joints, children_map, root_link, joint_values)
         T_frame_norm = {k: S @ v @ S_inv for k, v in T_frame_world.items()}
@@ -2146,6 +2200,19 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
                 continue
 
             delta = T_frame_norm[link_name] @ T_rest_norm_inv[link_name]
+
+            # lid_flip: apply extra 180° rotation to lid links in second half
+            if traj_type == "lid_flip" and link_name in lid_flip_links and t_norm > flip_start_frac:
+                flip_t = (t_norm - flip_start_frac) / max(1.0 - flip_start_frac, 1e-6)
+                current_angle = flip_angle_total * 0.5 * (1 - math.cos(math.pi * flip_t))
+                # Rotate about lid centroid in lifted position
+                c_rest = lid_rest_centroids.get(link_name, Vector((0.0, 0.0, 0.0)))
+                c_lifted = delta @ c_rest
+                R_flip = Matrix.Rotation(current_angle, 4, flip_axis_vec)
+                T_to_c = mat_translate(-c_lifted.x, -c_lifted.y, -c_lifted.z)
+                T_from_c = mat_translate(c_lifted.x, c_lifted.y, c_lifted.z)
+                delta = T_from_c @ R_flip @ T_to_c @ delta
+
             obj.matrix_world = delta
             obj.keyframe_insert(data_path="location", frame=frame)
             obj.keyframe_insert(data_path="rotation_euler", frame=frame)
