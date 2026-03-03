@@ -1214,26 +1214,64 @@ def compute_joint_local_transform(joint, q_value):
 # Trajectory Generation
 # ======================================================================
 
-def compute_trajectory_value(joint, traj_type, t):
-    """Compute joint parameter q at normalized time t in [0, 1]."""
+def compute_trajectory_value(joint, traj_type, t, q_safe_limit=None):
+    """Compute joint parameter q at normalized time t in [0, 1].
+
+    All trajectories start from q=0 (the URDF natural/assembly position) and
+    animate toward the farther extreme from zero.  This guarantees the video
+    always begins in the physically correct resting state regardless of whether
+    the joint range is [0, hi], [lo, 0] (e.g. bag handle), or [-x, +x].
+
+    new_v3: if q_safe_limit is provided, it is used as far_q (overrides joint limits).
+    This allows precomputed safe limits to cap the trajectory without render-time STOP.
+    """
     lo = joint.lower if joint.jtype != "continuous" else 0.0
     hi = joint.upper if joint.jtype != "continuous" else 2 * math.pi
-    mrange = hi - lo
+
+    # Farther extreme from the natural position (q=0)
+    far_q = hi if abs(hi) >= abs(lo) else lo
+
+    # new_v3: use precomputed safe limit if available
+    if q_safe_limit is not None:
+        far_q = q_safe_limit
 
     if traj_type == "sinusoidal_oscillation":
-        q = lo + mrange * 0.5 * (1 - math.cos(2 * math.pi * t))
+        # 0 → far_q → 0  (smooth loop, starts and ends at natural)
+        q = far_q * 0.5 * (1 - math.cos(2 * math.pi * t))
     elif traj_type == "one_way_sinusoidal":
-        q = lo + mrange * 0.5 * (1 - math.cos(math.pi * t))
+        # 0 → far_q  (one-way, starts at natural)
+        q = far_q * 0.5 * (1 - math.cos(math.pi * t))
     elif traj_type == "linear":
-        q = lo + mrange * t
+        # 0 → far_q
+        q = far_q * t
     elif traj_type == "linear_oscillation":
+        # 0 → far_q → 0
         if t < 0.5:
-            q = lo + mrange * (2 * t)
+            q = far_q * (2 * t)
         else:
-            q = lo + mrange * (2 * (1 - t))
+            q = far_q * (2 * (1 - t))
     else:
-        q = lo + mrange * t
+        q = far_q * t  # fallback
     return q
+
+
+# ======================================================================
+# Utility
+# ======================================================================
+
+def _interp1d(x_pts, y_pts, x):
+    """Simple 1D linear interpolation (numpy-free, works inside Blender)."""
+    if len(x_pts) == 0:
+        return 0.0
+    if x <= x_pts[0]:
+        return y_pts[0]
+    if x >= x_pts[-1]:
+        return y_pts[-1]
+    for i in range(len(x_pts) - 1):
+        if x_pts[i] <= x <= x_pts[i + 1]:
+            t = (x - x_pts[i]) / (x_pts[i + 1] - x_pts[i] + 1e-12)
+            return y_pts[i] + t * (y_pts[i + 1] - y_pts[i])
+    return y_pts[-1]
 
 
 # ======================================================================
@@ -2060,14 +2098,19 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
 
     # ================================================================
     # Phase 0: Pre-compute active trajectory + rest-state baselines
+    # new_v3: use precomputed q_safe_limits as effective far_q
     # ================================================================
+    q_safe_limits = split_info.get("q_safe_limits", {})
+    passive_curves = split_info.get("passive_curves", {})
+
     active_q = {}
     for frame in range(1, num_frames + 1):
         t = (frame - 1) / max(num_frames - 1, 1)
         active_q[frame] = {}
         for jn in active_jnames:
             j = joints_by_name[jn]
-            active_q[frame][jn] = compute_trajectory_value(j, traj_type, t)
+            ql = q_safe_limits.get(jn)  # None if not precomputed
+            active_q[frame][jn] = compute_trajectory_value(j, traj_type, t, q_safe_limit=ql)
 
     # -- Collision detection config per pair --
     # Two strategies based on rest-state geometry:
@@ -2123,15 +2166,15 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
     # ================================================================
     # Phase 1: Active vs Fixed → STOP all motion
     #
-    # Per-frame scan: mark each frame as safe or collision.
-    # Collision frames get clamped to the nearest safe position.
-    # This correctly handles:
-    #   - Trajectory starting in collision (e.g. lamp lo=-π → arm already
-    #     past the base at frame 1 → clamp to rest q=0)
-    #   - Trajectory entering collision mid-way (e.g. arm reaches base
-    #     at some angle → clamp to that angle)
+    # new_v3: if q_safe_limits are precomputed, q_safe_limit is already applied
+    # as far_q in the active trajectory (Phase 0). Skip real-time STOP.
+    # Legacy fallback: per-frame scan if no precomputed data.
     # ================================================================
-    if fixed_collision_cfg is not None:
+    if q_safe_limits:
+        print(f"    Phase 1: using precomputed q_safe_limits, skipping real-time STOP")
+        for jn, ql in q_safe_limits.items():
+            print(f"      {jn}: q_safe_limit={ql:.4f}")
+    elif fixed_collision_cfg is not None:
         # Sample all frames for collision status
         sample_step = max(1, num_frames // 60)
         sample_frames_p1 = list(range(1, num_frames + 1, sample_step))
@@ -2155,22 +2198,33 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
             frame_collides[frame] = frame_collides.get(prev_s, False) or \
                                     frame_collides.get(next_s, False)
 
-        # Clamp: each collision frame gets the q values from the nearest
-        # non-colliding frame; if all frames collide, use rest (q=0)
+        # Clamp: find the first collision frame, then smoothly return to q=0
+        # for all remaining frames so the animation loops cleanly.
         rest_active_q = {jn: 0.0 for jn in active_jnames}
         last_safe_q = dict(rest_active_q)
+        first_clamp = None
         clamped_count = 0
 
         for frame in range(1, num_frames + 1):
             if frame_collides[frame]:
-                active_q[frame] = dict(last_safe_q)
+                if first_clamp is None:
+                    first_clamp = frame  # first collision frame
+                    q_stop = dict(last_safe_q)  # q just before collision
                 clamped_count += 1
             else:
-                last_safe_q = dict(active_q[frame])
+                if first_clamp is None:
+                    last_safe_q = dict(active_q[frame])
 
         if clamped_count > 0:
-            print(f"    STOP: active vs fixed collision, "
-                  f"{clamped_count}/{num_frames} frames clamped")
+            # Override clamped frames with smooth linear return q_stop → 0
+            # so the animation ends at q=0 and loops without a jump.
+            n_clamped = num_frames - first_clamp + 1
+            for i, frame in enumerate(range(first_clamp, num_frames + 1)):
+                alpha = (i + 1) / (n_clamped + 1)  # 0 < alpha ≤ 1
+                active_q[frame] = {jn: q_stop[jn] * (1.0 - alpha)
+                                   for jn in active_jnames}
+            print(f"    STOP: active vs fixed collision at frame {first_clamp}, "
+                  f"smooth return for {n_clamped}/{num_frames} frames")
         else:
             print(f"    No active-vs-fixed collision detected")
 
@@ -2232,15 +2286,39 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
                   f"{clamped_p15}/{num_frames} active frames clamped")
 
     # ================================================================
-    # Phase 2: Active vs Passive → binary search passive angle per frame
+    # Phase 2: Active vs Passive → compute passive angle per frame
+    #
+    # new_v3: if passive_curves are precomputed, use them directly.
+    # Legacy fallback: real-time binary search.
     # ================================================================
     passive_q_raw = {}  # {joint_name: [0.0]*(num_frames+2)} 1-indexed
 
     for pjn, plinks in passive_link_map.items():
         pj = joints_by_name[pjn]
-        # Use physical joint upper limit (not pre_opening) so the door can open as wide as needed
-        phys_max = pj.upper if pj.jtype not in ("continuous", "fixed") else math.pi
         q_raw = [0.0] * (num_frames + 2)
+
+        if pjn in passive_curves and passive_curves[pjn] is not None:
+            # new_v3: interpolate precomputed passive_curve
+            # curve = [[q_active, q_passive], ...] sorted by q_active
+            curve = passive_curves[pjn]
+            qa_pts = [pt[0] for pt in curve]
+            qp_pts = [pt[1] for pt in curve]
+
+            for frame in range(1, num_frames + 1):
+                # Get q_active for this frame (use first active joint)
+                q_active_frame = active_q[frame].get(active_jnames[0], 0.0) if active_jnames else 0.0
+                # Interpolate passive_curve at q_active_frame
+                q_p = float(_interp1d(qa_pts, qp_pts, q_active_frame))
+                q_raw[frame] = q_p
+
+            passive_q_raw[pjn] = q_raw
+            max_qp = max(abs(v) for v in q_raw[1:num_frames+1])
+            print(f"    YIELD (precomputed): {pjn} passive_curve "
+                  f"{len(curve)} pts, max_qp={max_qp:.4f}")
+            continue
+
+        # Legacy: real-time binary search
+        phys_max = pj.upper if pj.jtype not in ("continuous", "fixed") else math.pi
 
         cfg = passive_collision_cfg.get(pjn)
         if cfg is None or abs(phys_max) < 1e-8 or not (plinks & set(mesh_cache.keys())):
@@ -2543,8 +2621,17 @@ def main():
         print("ERROR: metadata.json missing urdf_path/scene_dir. Re-run precompute.")
         sys.exit(1)
 
+    metadata_dir = os.path.dirname(os.path.realpath(args.metadata))
     urdf_path = metadata["urdf_path"]
     scene_dir = metadata["scene_dir"]
+    # Resolve relative paths (stored relative to metadata.json location, portable across machines)
+    if not os.path.isabs(urdf_path):
+        urdf_path = os.path.normpath(os.path.join(metadata_dir, urdf_path))
+    if not os.path.isabs(scene_dir):
+        scene_dir = os.path.normpath(os.path.join(metadata_dir, scene_dir))
+    # Propagate resolved paths back so helper functions (e.g. get_realistic_materials) see them
+    metadata["urdf_path"] = urdf_path
+    metadata["scene_dir"] = scene_dir
     center = metadata["normalize"]["center"]
     scale = metadata["normalize"]["scale"]
 
