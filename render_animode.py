@@ -23,6 +23,7 @@ import sys
 import xml.etree.ElementTree as ET
 from collections import defaultdict, deque
 
+import numpy as np
 import bpy
 from mathutils import Matrix, Vector, Euler
 
@@ -32,6 +33,14 @@ from mathutils import Matrix, Vector, Euler
 
 ENVMAP_DIR = "/mnt/data/yurh/dataset3D/envmap/indoor"
 FFMPEG_BIN = "/usr/local/bin/ffmpeg"
+
+# Static-skip detection
+PROBE_RESOLUTION   = 64    # probe render resolution (px)
+PROBE_SAMPLE_COUNT = 1     # Cycles samples for probe (deterministic w/ fixed seed)
+PROBE_FRAME_COUNT  = 4     # probe frames per view (evenly spaced)
+STATIC_SKIP_M1_FILE    = "static_skip_method1.json"   # joint-value check record
+STATIC_SKIP_PROBE_FILE = "static_skip_probe.json"     # probe render check record
+PROBE_SAVE_VIEW_KEYS   = ["hemi_00", "hemi_05", "hemi_11"]  # 3 views saved for inspection
 
 # PhysXNet / PhysXMobility JSON data paths
 PHYSXNET_JSON_DIR = "/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson"
@@ -943,6 +952,220 @@ def build_kinematic_tree(joints):
         parent_map[j.child_link] = (j.parent_link, j)
         children_map[j.parent_link].append((j.child_link, j))
     return parent_map, children_map
+
+
+# ======================================================================
+# Static-Skip Detection
+# ======================================================================
+
+def _read_skip_file(meta_dir, filename):
+    path = os.path.join(meta_dir, filename)
+    if os.path.exists(path):
+        try:
+            with open(path) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return {}
+
+
+def is_recorded_static(meta_dir, animode_name):
+    """Return True if animode was previously recorded as static (skip rendering)."""
+    for fname in (STATIC_SKIP_M1_FILE, STATIC_SKIP_PROBE_FILE):
+        if animode_name in _read_skip_file(meta_dir, fname):
+            return True
+    return False
+
+
+def check_static_method1(frame_joint_values):
+    """Return True if all frames have identical joint values.
+
+    Happens when BVH collision system fully STOPs the active motion
+    at frame 1 (e.g., joint blocked by fixed geometry at rest pose).
+    """
+    if len(frame_joint_values) < 2:
+        return False
+    frame1 = frame_joint_values[1]
+    for f in range(2, max(frame_joint_values) + 1):
+        fvals = frame_joint_values.get(f, {})
+        for jn, v1 in frame1.items():
+            if abs(fvals.get(jn, v1) - v1) > 1e-4:
+                return False
+    return True
+
+
+def _record_skip(meta_dir, filename, animode_name, entry):
+    data = _read_skip_file(meta_dir, filename)
+    data[animode_name] = entry
+    with open(os.path.join(meta_dir, filename), "w") as f:
+        json.dump(data, f, indent=2)
+
+
+def record_static_skip_method1(meta_dir, animode_name):
+    _record_skip(meta_dir, STATIC_SKIP_M1_FILE, animode_name,
+                 {"reason": "joint_values_identical_across_all_frames"})
+    print(f"  [STATIC-M1] {animode_name}: joint values identical → skip")
+
+
+def record_static_skip_probe(meta_dir, animode_name, saved_views):
+    """saved_views: {view_name: [frame_path, ...]}"""
+    _record_skip(meta_dir, STATIC_SKIP_PROBE_FILE, animode_name,
+                 {"reason": "all_hemi_views_probe_static",
+                  "saved_views": saved_views})
+    print(f"  [STATIC-PROBE] {animode_name}: all hemi probe frames identical → skip")
+
+
+def _render_frame_to_file(scene, frame_idx, out_path):
+    """Render a single frame to out_path (write_still=True).
+
+    Uses scene.render.filepath; Blender writes PNG directly (no frame padding
+    when filepath has no # characters and write_still=True is used for a
+    single frame rather than animation).
+    """
+    scene.frame_current = frame_idx
+    scene.render.filepath = out_path
+    bpy.ops.render.render(write_still=True)
+    return os.path.exists(out_path)
+
+
+def _file_md5(path):
+    import hashlib
+    with open(path, "rb") as f:
+        return hashlib.md5(f.read()).hexdigest()
+
+
+def check_animode_static_probe(scene, num_frames, meta_dir, animode_name,
+                               cam_center, cam_distance):
+    """Probe-render PROBE_FRAME_COUNT evenly-spaced frames per hemi view.
+
+    With use_animated_seed=False and seed=0, Cycles renders are byte-identical
+    for frames with the same geometry.  If all frames in every hemi view have
+    the same MD5 → animode is visually static.
+
+    Returns:
+        is_static (bool)
+        saved_views (dict): {view_name: [frame_paths]} for 3 inspection views
+                            (populated only when is_static=True)
+    """
+    import tempfile, shutil
+
+    # Evenly-spaced probe frame indices (1-based, inclusive of first and last)
+    probe_frames = []
+    for i in range(PROBE_FRAME_COUNT):
+        idx = 1 + int(round(i * (num_frames - 1) / max(PROBE_FRAME_COUNT - 1, 1)))
+        idx = max(1, min(num_frames, idx))
+        if idx not in probe_frames:
+            probe_frames.append(idx)
+    probe_frames = sorted(probe_frames)
+
+    # Temp directory for probe PNGs (always cleaned up unless static & inspecting)
+    tmp_dir = tempfile.mkdtemp(prefix="infinipart_probe_")
+
+    # Save / restore render settings
+    saved = {
+        "res_x":       scene.render.resolution_x,
+        "res_y":       scene.render.resolution_y,
+        "samples":     scene.cycles.samples,
+        "denoising":   scene.cycles.use_denoising,
+        "anim_seed":   scene.cycles.use_animated_seed,
+        "seed":        scene.cycles.seed,
+        "filepath":    scene.render.filepath,
+        "camera":      scene.camera,
+        "frame_start": scene.frame_start,
+        "frame_end":   scene.frame_end,
+    }
+
+    scene.render.resolution_x      = PROBE_RESOLUTION
+    scene.render.resolution_y      = PROBE_RESOLUTION
+    scene.cycles.samples           = PROBE_SAMPLE_COUNT
+    scene.cycles.use_denoising     = False
+    scene.cycles.use_animated_seed = False   # same seed every frame → static = same bytes
+    scene.cycles.seed              = 0
+
+    # Single reusable probe camera (repositioned per view)
+    cam_data = bpy.data.cameras.new("_probe_cam_data")
+    cam_data.lens_unit = "FOV"
+    cam_data.angle = math.radians(60)
+    cam_obj = bpy.data.objects.new("_probe_cam", cam_data)
+    bpy.context.scene.collection.objects.link(cam_obj)
+    scene.camera = cam_obj
+
+    all_static = True
+    # {view_name: [tmp_file_paths]} for inspection views (kept only if static)
+    inspection_files = {}
+
+    try:
+        for vi, (view_name, (elev, azim)) in enumerate(HEMI_VIEWS.items()):
+            # Position probe camera
+            er = math.radians(elev)
+            ar = math.radians(azim)
+            cx, cy, cz = cam_center
+            x = cam_distance * math.cos(er) * math.cos(ar)
+            y = cam_distance * math.cos(er) * math.sin(ar)
+            z = cam_distance * math.sin(er)
+            cam_obj.location = (x, y, z)
+            direction = Vector((cx - x, cy - y, cz - z))
+            cam_obj.rotation_euler = direction.to_track_quat("-Z", "Y").to_euler()
+
+            # Render probe frames to temp files
+            hashes = []
+            view_files = []
+            ok = True
+            for fidx in probe_frames:
+                p = os.path.join(tmp_dir, f"v{vi:02d}_f{fidx:04d}.png")
+                if not _render_frame_to_file(scene, fidx, p):
+                    ok = False
+                    break
+                hashes.append(_file_md5(p))
+                view_files.append((fidx, p))
+
+            if not ok:
+                all_static = False
+                break
+
+            # All hashes identical → this view is static
+            if len(set(hashes)) != 1:
+                all_static = False
+                break
+
+            # Keep files for inspection views (in memory reference only)
+            if view_name in PROBE_SAVE_VIEW_KEYS:
+                inspection_files[view_name] = view_files
+
+        print(f"  [Probe] {'STATIC' if all_static else 'HAS MOTION'} "
+              f"({len(HEMI_VIEWS)} hemi views × {len(probe_frames)} frames @ "
+              f"{PROBE_RESOLUTION}px, {PROBE_SAMPLE_COUNT} spp)")
+
+    finally:
+        # Restore render settings unconditionally
+        scene.render.resolution_x      = saved["res_x"]
+        scene.render.resolution_y      = saved["res_y"]
+        scene.cycles.samples           = saved["samples"]
+        scene.cycles.use_denoising     = saved["denoising"]
+        scene.cycles.use_animated_seed = saved["anim_seed"]
+        scene.cycles.seed              = saved["seed"]
+        scene.render.filepath          = saved["filepath"]
+        scene.frame_start              = saved["frame_start"]
+        scene.frame_end                = saved["frame_end"]
+        scene.camera                   = saved["camera"]
+        bpy.data.objects.remove(cam_obj, do_unlink=True)
+        bpy.data.cameras.remove(cam_data, do_unlink=True)
+
+    # If static: copy inspection frames to permanent location; cleanup tmp
+    saved_views = {}
+    if all_static and inspection_files:
+        probe_dir = os.path.join(meta_dir, animode_name, "probe")
+        os.makedirs(probe_dir, exist_ok=True)
+        for vname, file_list in inspection_files.items():
+            paths = []
+            for fidx, tmp_path in file_list:
+                dst = os.path.join(probe_dir, f"{vname}_f{fidx:04d}.png")
+                shutil.copy2(tmp_path, dst)
+                paths.append(dst)
+            saved_views[vname] = paths
+
+    shutil.rmtree(tmp_dir, ignore_errors=True)
+    return all_static, saved_views
 
 
 # ======================================================================
@@ -2127,7 +2350,8 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
 
 def animate_scene_normalized(parts, joints, children_map, root_link,
                              joints_by_name, split_info, num_frames,
-                             center, scale):
+                             center, scale,
+                             precomputed_frame_joint_values=None):
     """Animate using normalized-space FK with per-frame collision avoidance.
 
     Compute FK in URDF space, then convert to normalized space for delta.
@@ -2136,6 +2360,9 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
     For a 4x4 transform T in world space, the normalized version is:
       T_norm = S @ T @ S_inv
     where S = scale_matrix(scale) @ translate(-center)
+
+    If precomputed_frame_joint_values is provided (dict {frame: {jname: q}}),
+    the collision avoidance step is skipped (values already computed).
     """
     # Build S and S_inv as 4x4 matrices
     cx, cy, cz = center
@@ -2161,11 +2388,14 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
     T_rest_norm = {k: S @ v @ S_inv for k, v in T_rest_world.items()}
     T_rest_norm_inv = {k: v.inverted() for k, v in T_rest_norm.items()}
 
-    # Compute collision-safe joint values per frame
-    frame_joint_values = compute_collision_safe_animation(
-        parts, joints, children_map, root_link,
-        joints_by_name, split_info, num_frames,
-        center, scale)
+    # Compute collision-safe joint values per frame (or use precomputed)
+    if precomputed_frame_joint_values is not None:
+        frame_joint_values = precomputed_frame_joint_values
+    else:
+        frame_joint_values = compute_collision_safe_animation(
+            parts, joints, children_map, root_link,
+            joints_by_name, split_info, num_frames,
+            center, scale)
 
     # Precompute lid_flip params (rotation about lid centroid after flip_start_frac)
     traj_type = split_info["trajectory_type"]
@@ -2363,6 +2593,11 @@ def main():
         split_info = all_splits[animode_name]
         animode_dir = os.path.join(meta_dir, animode_name)
 
+        # Fast-path: previously recorded as static → skip without any setup
+        if is_recorded_static(meta_dir, animode_name):
+            print(f"  SKIP (recorded static): {animode_name}")
+            continue
+
         # Set up Blender scene
         clear_scene()
         setup_render_engine()
@@ -2381,14 +2616,33 @@ def main():
         # Normalize
         normalize_parts(parts, center, scale)
 
-        # Animate (same for all color modes — do once)
+        # Compute collision-safe animation first (needed for static checks)
+        frame_joint_values = compute_collision_safe_animation(
+            parts, joints, children_map, root_link,
+            joints_by_name, split_info, num_frames, center, scale)
+
+        # --- Static check Method 1: joint values identical across all frames ---
+        if check_static_method1(frame_joint_values):
+            record_static_skip_method1(meta_dir, animode_name)
+            continue
+
+        # Apply animation keyframes (pass precomputed values — no double computation)
         animate_scene_normalized(parts, joints, children_map, root_link,
                                  joints_by_name, split_info, num_frames,
-                                 center, scale)
+                                 center, scale,
+                                 precomputed_frame_joint_values=frame_joint_values)
 
         # Camera setup
         cam_center = [0.0, 0.0, 0.0]
         cam_distance = 3.6  # ~2.0 * 1.8
+
+        # --- Static check Method 2: probe-render 4 frames per hemi view ---
+        is_probe_static, probe_saved = check_animode_static_probe(
+            bpy.context.scene, num_frames, meta_dir, animode_name,
+            cam_center, cam_distance)
+        if is_probe_static:
+            record_static_skip_probe(meta_dir, animode_name, probe_saved)
+            continue
 
         # Determine which color passes to render
         two_coloring = split_info.get("two_coloring", {})
