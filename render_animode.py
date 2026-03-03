@@ -1248,6 +1248,16 @@ def load_parts_urdf_format(scene_dir, links, joints, root_link):
             bpy.context.view_layer.objects.active = link_objs[0]
             bpy.ops.object.join()
             result = bpy.context.active_object
+
+            # Remove coplanar/duplicate geometry that causes Z-fighting.
+            # Some PartNet objects have tiny degenerate quads coplanar with
+            # the main surface; after join they create overlapping faces in
+            # the same mesh, causing random per-sample flickering in Cycles.
+            bpy.ops.object.mode_set(mode='EDIT')
+            bpy.ops.mesh.select_all(action='SELECT')
+            bpy.ops.mesh.remove_doubles(threshold=0.0001)
+            bpy.ops.mesh.delete_loose()
+            bpy.ops.object.mode_set(mode='OBJECT')
         else:
             result = link_objs[0]
 
