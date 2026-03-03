@@ -1122,9 +1122,155 @@ def generate_animodes(movable_joints, rng_seed=42):
 # Export: OBJ + Verify PNG + Metadata
 # ======================================================================
 
+def _clean_mesh(mesh):
+    """PartPacker-style per-mesh cleanup: remove duplicate vertices, degenerate/duplicate faces, fix normals."""
+    mesh.merge_vertices(merge_tex=True, merge_norm=True)
+    mesh.update_faces(mesh.unique_faces() & mesh.nondegenerate_faces())
+    mesh.fix_normals()
+    return mesh
+
+
+def _is_single_layer_plane(mesh, coplane_thresh=0.01):
+    """Check if mesh is just a single-layer plane (all face normals nearly parallel)."""
+    if mesh.is_watertight:
+        return False
+    if len(mesh.faces) == 0:
+        return False
+    fn = mesh.face_normals
+    diff = np.linalg.norm(np.abs(fn) - np.abs(fn[0]), axis=1)
+    return diff.max() < coplane_thresh
+
+
+def _stitch_open_mesh(mesh):
+    """Try to close open boundary loops (PartPacker-style conservative stitch).
+
+    Only stitches boundaries that form a coplanar & convex polygon.
+    Returns the mesh (modified in-place).
+    """
+    if mesh.is_watertight or len(mesh.faces) == 0:
+        return mesh
+
+    # Bail early on single-layer planes (can't be stitched meaningfully)
+    if _is_single_layer_plane(mesh):
+        return mesh
+
+    try:
+        from trimesh.path.exchange.misc import faces_to_path
+        faces = np.arange(len(mesh.faces))
+        boundaries = [
+            e.points for e in faces_to_path(mesh, faces)["entities"]
+            if len(e.points) > 3 and e.points[0] == e.points[-1]
+        ]
+    except Exception:
+        return mesh
+
+    vertices = mesh.vertices
+    edges_face = mesh.edges_face
+    tree_edge = mesh.edges_sorted_tree
+    normals = mesh.face_normals
+    fans = []
+
+    for vert_indices in boundaries:
+        verts = vertices[vert_indices]
+        # Only stitch coplanar convex boundaries (safe approximation)
+        if len(verts) < 3:
+            continue
+        # Coplanarity check: all normals of fan-triangles should be parallel
+        v0, v1 = verts[1] - verts[0], verts[2] - verts[0]
+        ref_n = np.cross(v0, v1)
+        ref_n_norm = np.linalg.norm(ref_n)
+        if ref_n_norm < 1e-10:
+            continue
+        ref_n = ref_n / ref_n_norm
+        coplanar = True
+        for i in range(2, len(verts) - 2):
+            va, vb = verts[i] - verts[0], verts[i + 1] - verts[0]
+            n = np.cross(va, vb)
+            n_norm = np.linalg.norm(n)
+            if n_norm < 1e-10:
+                continue
+            if np.linalg.norm(np.abs(n / n_norm) - np.abs(ref_n)) > 0.1:
+                coplanar = False
+                break
+        if not coplanar:
+            continue
+
+        fan = np.column_stack((
+            np.ones(len(vert_indices) - 3, dtype=int) * vert_indices[0],
+            vert_indices[1:-2],
+            vert_indices[2:-1],
+        ))
+
+        # Flip fan if needed to match adjacent face orientation
+        e = fan[:min(10, len(fan)), 1:].copy()
+        e.sort(axis=1)
+        try:
+            query = tree_edge.query_ball_point(e, r=1e-10)
+            edge_index = np.concatenate(query) if query else []
+            if len(edge_index) > 0:
+                original = normals[edges_face[edge_index]]
+                check, valid = trimesh.triangles.normals(vertices[fan[:3]])
+                if valid.any():
+                    if np.dot(original, check[0]).mean() < 0:
+                        fan = np.fliplr(fan)
+        except Exception:
+            pass
+
+        fans.append(fan)
+
+    if fans:
+        mesh.faces = np.concatenate([mesh.faces, np.vstack(fans)])
+
+    return mesh
+
+
+def _clean_and_stitch(part_meshes):
+    """Per-mesh clean, concatenate, then stitch open boundaries on the result.
+
+    Follows PartPacker bipartite_contraction.py pipeline:
+      1. Per-component: merge_vertices + update_faces + fix_normals
+      2. Concatenate all components
+      3. Final clean pass
+      4. Stitch open boundary loops (conservative, coplanar-only)
+    """
+    if not part_meshes:
+        return trimesh.Trimesh()
+
+    # Step 1: clean each component individually
+    cleaned = []
+    for m in part_meshes:
+        mc = m.copy()
+        mc.visual = trimesh.visual.ColorVisuals()
+        _clean_mesh(mc)
+        if len(mc.faces) > 0:
+            cleaned.append(mc)
+
+    if not cleaned:
+        return trimesh.Trimesh()
+
+    # Step 2: concatenate
+    result = trimesh.util.concatenate(cleaned) if len(cleaned) > 1 else cleaned[0]
+
+    # Step 3: final clean on concatenated mesh
+    _clean_mesh(result)
+
+    # Step 4: stitch open boundaries
+    _stitch_open_mesh(result)
+
+    # Final normals pass after stitching
+    result.fix_normals()
+
+    return result
+
+
 def export_split(meshes_by_link, merged_groups, coloring, removed_links,
                  out_dir, animode_name):
     """Export part0.obj, part1.obj, and verify.png for one animode split.
+
+    Applies PartPacker-style mesh cleaning to each part before export:
+    - Per-component: merge_vertices + update_faces(unique & nondegenerate) + fix_normals
+    - Concatenate components
+    - Stitch open boundary loops (conservative: coplanar-convex only)
 
     Returns: True if successful.
     """
@@ -1138,7 +1284,6 @@ def export_split(meshes_by_link, merged_groups, coloring, removed_links,
         for link_name in group:
             if link_name in removed_links:
                 continue
-            # Find mesh by link name
             if link_name not in meshes_by_link:
                 continue
             mesh = meshes_by_link[link_name]
@@ -1151,17 +1296,9 @@ def export_split(meshes_by_link, merged_groups, coloring, removed_links,
         print(f"  WARNING: Empty part1 for {animode_name}")
         return False
 
-    # Concatenate meshes
-    if part0_meshes:
-        part0 = trimesh.util.concatenate(part0_meshes) if len(part0_meshes) > 1 else part0_meshes[0].copy()
-    else:
-        part0 = trimesh.Trimesh()
-
-    part1 = trimesh.util.concatenate(part1_meshes) if len(part1_meshes) > 1 else part1_meshes[0].copy()
-
-    # Strip visual data for clean export
-    part0.visual = trimesh.visual.ColorVisuals()
-    part1.visual = trimesh.visual.ColorVisuals()
+    # Clean + stitch each part (PartPacker-style)
+    part0 = _clean_and_stitch(part0_meshes)
+    part1 = _clean_and_stitch(part1_meshes)
 
     part0.export(os.path.join(out_dir, "part0.obj"))
     part1.export(os.path.join(out_dir, "part1.obj"))
