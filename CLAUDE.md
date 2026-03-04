@@ -109,9 +109,23 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 - Passive joint pre-opening angles
 
 ## Data Sources
-- **IS factories** (from this repo): 18 procedural factories in `infinigen/assets/sim_objects/mapping.py`
-- **PhysX factories**: pre-generated in `outputs/` directory
-- **PartNet**: NOT used as mesh asset source, but PhysX may reference PartNet materials/mappings — that's fine
+
+| Source | Count | Mesh Origin | Material System |
+|---|---|---|---|
+| **IS factories** | 18 types (procedural, unlimited seeds) | Blender geometry nodes | Infinigen procedural shaders (metal.BrushedMetal, plastic.Plastic, etc.) → **fully baked** to PBR textures (diffuse + roughness + metallic + normal) on URDF export. Render uses baked materials as-is. |
+| **PhysXNet** | 32,041 objects | PartNet `partseg/` OBJ (plain geometry, no MTL) | ShapeNet `model_normalized.mtl` textures/colors (via overlap map, 1081 overlap entries); fallback to ambientCG PBR textures when ShapeNet unavailable |
+| **PhysXMobility** | 2,024 objects | PartNet `partseg/` OBJ + MTL (with Kd colors) | Native `textured_objs/` OBJ+MTL colors (albedo only); render enhances with metallic/roughness defaults |
+
+- IS factories: `infinigen/assets/sim_objects/mapping.py` (18 types: dishwasher, lamp, cabinet, drawer, oven, refrigerator, box, door, toaster, faucet, plier, window, pepper_grinder, trash, door_handle, stovetop, soap_dispenser, microwave)
+- PhysXNet JSON: `/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson/`
+- PhysXNet URDF: `/mnt/data/fulian/dataset/PhysXNet/version_1/urdf/`
+- PhysXMobility JSON: `/mnt/data/fulian/dataset/PhysX_mobility/finaljson/`
+- PhysXMobility URDF: `/mnt/data/fulian/dataset/PhysX_mobility/urdf/`
+- ShapeNet: `/mnt/data/yurh/dataset3D/ShapeNetCore` (material/texture reference only)
+- PartNet: `/mnt/data/yurh/dataset3D/Partnet` (mesh geometry for PhysX; `textured_objs/` colors for PhysXMobility)
+- PhysXNet-PartNet overlap map: `/mnt/data/yurh/infinipart/physxnet_partnet_overlap.json` (1081 entries)
+- ambientCG PBR textures: `/mnt/data/yurh/infinipart/pbr_textures`
+- Envmap HDR: `/mnt/data/yurh/dataset3D/envmap/indoor`
 - **NO MORE**: IM (Infinite-Mobility) repo and Sapien mesh assets have been removed
 
 ## Reference Code (read-only, has bugs but useful)
@@ -162,9 +176,14 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 4. **编码**：视频 → V-JEPA2 特征（网络输入）；dual volume OBJ → PartPacker VAE → `[B, 8192, 64]` latent（GT）
 5. **训练**：网络学习 V-JEPA2 特征 → dual volume latent
 
+## 数据来源详情
+- **IS 工厂**（18 类，程序化无限种子）：mesh 由 Blender 几何节点生成，材质由 Infinigen 程序化 shader（metal.BrushedMetal 等）生成后 **完整 bake 为 PBR 贴图**（diffuse+roughness+metallic+normal），渲染时**直接用 baked 材质，不做任何修改**
+- **PhysXNet**（32,041）：mesh 来自 PartNet partseg/ OBJ（纯几何无 MTL），材质从 ShapeNet MTL/纹理获取（通过 overlap map），ShapeNet 不可用时回退 ambientCG PBR
+- **PhysXMobility**（2,024）：mesh 来自 PartNet partseg/ OBJ+MTL（自带 Kd 颜色，仅 albedo），渲染时保留原生颜色并补充 metallic/roughness 默认值
+
 ## 绝对禁止
 - **不要用 IM（Infinite-Mobility）的任何东西**：repo 已删除，路径不存在
-- **不要用 Sapien/PartNet 的 mesh 资产**：已移除。但 PhysX 可能引用 PartNet 的材质/映射，这是允许的
+- **不要用 Sapien/PartNet 的 mesh 资产**：已移除。但 PhysX 引用 PartNet 的 mesh 几何和材质/映射是正常的
 - 只用 IS 原生工厂 + PhysX 工厂
 
 ## Animode 命名规则

@@ -163,16 +163,6 @@ MATERIAL_PBR = {
     "Paper":            (0.00, 0.85, (0.90, 0.88, 0.83)),
 }
 
-# IS factory default materials (no JSON data available)
-IS_FACTORY_DEFAULTS = {
-    "lamp":         (0.60, 0.30, (0.55, 0.55, 0.55)),  # metal
-    "dishwasher":   (0.80, 0.25, (0.63, 0.64, 0.65)),  # stainless
-    "cabinet":      (0.00, 0.55, (0.55, 0.35, 0.20)),   # wood
-    "drawer":       (0.00, 0.55, (0.55, 0.35, 0.20)),   # wood
-    "oven":         (0.70, 0.30, (0.60, 0.60, 0.60)),   # metal
-    "refrigerator": (0.75, 0.25, (0.63, 0.64, 0.65)),   # stainless
-    "box":          (0.00, 0.55, (0.65, 0.50, 0.30)),    # cardboard
-}
 
 
 def get_pbr_for_material(material_name):
@@ -740,26 +730,12 @@ def get_realistic_materials(metadata, links):
             print(f"  Materials: {len(result)} parts, source={sources}")
 
     else:
-        # IS factory: use factory-based defaults with texture
-        factory_lower = factory.lower()
-        default = IS_FACTORY_DEFAULTS.get(factory_lower,
-                                           (0.10, 0.45, (0.60, 0.60, 0.60)))
-        # IS objects are mostly metal or wood
-        category = "metal" if default[0] > 0.3 else "wood"
-        tex_set = get_texture_set(category, abs(hash((factory, identifier))))
-
+        # IS factory: OBJs exported with fully baked Infinigen procedural shaders
+        # (diffuse + roughness + metallic + normal textures via export.bake_object).
+        # All PBR channels are already baked — do NOT touch materials at all.
         for link_name in links:
-            color = tuple(
-                max(0, min(1, c + mat_rng.uniform(-0.04, 0.04)))
-                for c in default[2]
-            )
             result[link_name] = {
-                "metallic": default[0],
-                "roughness": default[1],
-                "color": color,
-                "category": category,
-                "tex_set": tex_set,
-                "source": "is_factory",
+                "source": "is_baked",
             }
 
     return result
@@ -1614,9 +1590,9 @@ def assign_material(obj, color, metallic=0.3, roughness=0.5, name=None):
 def enhance_existing_materials(obj, metallic=0.10, roughness=0.45):
     """Enhance existing OBJ-imported materials with PBR properties.
 
-    Keeps original Kd colors (Base Color) from the MTL file, only adjusts
-    metallic and roughness. Used for PhysXMobility objects whose textured_objs
-    already have correct per-part colors.
+    Keeps original colors/textures from the MTL/baked textures, only adjusts
+    metallic and roughness on UNCONNECTED inputs (so baked texture maps are
+    preserved). Used for PhysXMobility and IS factory objects.
     """
     if not obj.data.materials:
         return
@@ -1627,10 +1603,14 @@ def enhance_existing_materials(obj, metallic=0.10, roughness=0.45):
             mat.use_nodes = True
         bsdf = mat.node_tree.nodes.get("Principled BSDF")
         if bsdf:
-            bsdf.inputs["Metallic"].default_value = metallic
-            bsdf.inputs["Roughness"].default_value = roughness
-            # Fix specular for more realistic look
-            bsdf.inputs["Specular"].default_value = 0.3
+            # Only set default_value on inputs that have NO incoming link
+            # (baked textures are connected via image nodes — don't override)
+            if not bsdf.inputs["Metallic"].links:
+                bsdf.inputs["Metallic"].default_value = metallic
+            if not bsdf.inputs["Roughness"].links:
+                bsdf.inputs["Roughness"].default_value = roughness
+            if not bsdf.inputs["Specular"].links:
+                bsdf.inputs["Specular"].default_value = 0.3
 
 
 # ======================================================================
@@ -2786,8 +2766,11 @@ def main():
                     metallic = mat_info.get("metallic", 0.10)
                     roughness = mat_info.get("roughness", 0.45)
 
-                    if source == "native":
-                        # PhysXMobility: keep OBJ-imported materials, enhance PBR
+                    if source == "is_baked":
+                        # IS factory: fully baked PBR — don't touch
+                        pass
+                    elif source == "native":
+                        # PhysXMobility: has Kd colors but no roughness/metallic maps
                         enhance_existing_materials(obj, metallic, roughness)
                     else:
                         color = mat_info.get("color", (0.60, 0.60, 0.60))
