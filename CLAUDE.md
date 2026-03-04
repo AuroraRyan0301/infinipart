@@ -113,8 +113,8 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 | Source | Count | Mesh Origin | Material System |
 |---|---|---|---|
 | **IS factories** | 18 types (procedural, unlimited seeds) | Blender geometry nodes | Infinigen procedural shaders (metal.BrushedMetal, plastic.Plastic, etc.) → **fully baked** to PBR textures (diffuse + roughness + metallic + normal) on URDF export. Render uses baked materials as-is. |
-| **PhysXNet** | 32,041 objects | PartNet `partseg/` OBJ (plain geometry, no MTL) | ShapeNet `model_normalized.mtl` textures/colors (via overlap map, 1081 overlap entries); fallback to ambientCG PBR textures when ShapeNet unavailable |
-| **PhysXMobility** | 2,024 objects | PartNet `partseg/` OBJ + MTL (with Kd colors) | Native `textured_objs/` OBJ+MTL colors (albedo only); render enhances with metallic/roughness defaults |
+| **PhysXNet** | 32,041 objects | Own `partseg/{id}/objs/{N}.obj` (plain geometry, no MTL) | ShapeNet `model_normalized.mtl` textures/colors (via overlap map, 1081 entries); fallback to ambientCG PBR when ShapeNet unavailable |
+| **PhysXMobility** | 2,024 objects | Own `partseg/{id}/objs/original-{N}.obj` + MTL (with Kd colors) | Native OBJ+MTL colors (albedo only); render enhances with metallic/roughness defaults |
 
 - IS factories: `infinigen/assets/sim_objects/mapping.py` (18 types: dishwasher, lamp, cabinet, drawer, oven, refrigerator, box, door, toaster, faucet, plier, window, pepper_grinder, trash, door_handle, stovetop, soap_dispenser, microwave)
 - PhysXNet JSON: `/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson/`
@@ -122,7 +122,7 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 - PhysXMobility JSON: `/mnt/data/fulian/dataset/PhysX_mobility/finaljson/`
 - PhysXMobility URDF: `/mnt/data/fulian/dataset/PhysX_mobility/urdf/`
 - ShapeNet: `/mnt/data/yurh/dataset3D/ShapeNetCore` (material/texture reference only)
-- PartNet: `/mnt/data/yurh/dataset3D/Partnet` (mesh geometry for PhysX; `textured_objs/` colors for PhysXMobility)
+- PartNet: `/mnt/data/yurh/dataset3D/Partnet` (NOT used for geometry; only `textured_objs/` MTL colors as PhysXNet Tier 2 color fallback)
 - PhysXNet-PartNet overlap map: `/mnt/data/yurh/infinipart/physxnet_partnet_overlap.json` (1081 entries)
 - ambientCG PBR textures: `/mnt/data/yurh/infinipart/pbr_textures`
 - Envmap HDR: `/mnt/data/yurh/dataset3D/envmap/indoor`
@@ -178,8 +178,8 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 
 ## 数据来源详情
 - **IS 工厂**（18 类，程序化无限种子）：mesh 由 Blender 几何节点生成，材质由 Infinigen 程序化 shader（metal.BrushedMetal 等）生成后 **完整 bake 为 PBR 贴图**（diffuse+roughness+metallic+normal），渲染时**直接用 baked 材质，不做任何修改**
-- **PhysXNet**（32,041）：mesh 来自 PartNet partseg/ OBJ（纯几何无 MTL），材质从 ShapeNet MTL/纹理获取（通过 overlap map），ShapeNet 不可用时回退 ambientCG PBR
-- **PhysXMobility**（2,024）：mesh 来自 PartNet partseg/ OBJ+MTL（自带 Kd 颜色，仅 albedo），渲染时保留原生颜色并补充 metallic/roughness 默认值
+- **PhysXNet**（32,041）：mesh 在自己的 `partseg/{id}/objs/` 目录（纯几何无 MTL），材质从 ShapeNet MTL/纹理获取（通过 overlap map），ShapeNet 不可用时回退 ambientCG PBR
+- **PhysXMobility**（2,024）：mesh 在自己的 `partseg/{id}/objs/` 目录 + MTL（自带 Kd 颜色，仅 albedo），渲染时保留原生颜色并补充 metallic/roughness 默认值
 
 ## 绝对禁止
 - **不要用 IM（Infinite-Mobility）的任何东西**：repo 已删除，路径不存在
