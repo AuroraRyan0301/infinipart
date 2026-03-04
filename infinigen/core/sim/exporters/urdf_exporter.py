@@ -218,12 +218,57 @@ class URDFBuilder(SimBuilder):
 
         # calculate the absolute joint position
         if len(joint_nodes) > 1:
-            raise NotImplementedError(
-                "Multi jointed bodies not supported yet in URDF exporter."
-            )
+            # Compound joint: multiple joints between the same parent-child pair.
+            # URDF requires each child link to have exactly one parent joint,
+            # so we insert virtual intermediate links to form a chain:
+            #   parent --[joint0]--> virtual_0 --[joint1]--> ... --[jointN]--> real_link
+            for i, joint_node in enumerate(joint_nodes):
+                is_last = (i == len(joint_nodes) - 1)
+                child_link_for_joint = link_name if is_last else f"link_{self.link_count}"
 
-        if len(joint_nodes) > 0:
-            # add any joint connecting the current link to its parent link
+                if not is_last:
+                    # Create a virtual intermediate link (no geometry)
+                    virtual_link = create_element("link", name=child_link_for_joint)
+                    self.urdf.append(virtual_link)
+                    self.link_count += 1
+
+                joint_name = self.metadata[joint_node.idn]["joint label"]
+                unique_joint_idx = self.joint_freq[joint_name]
+                unique_joint_name = f"{joint_name}_{self.joint_freq[joint_name]}"
+                self.joint_freq[joint_name] += 1
+
+                coord_frame = R = exputils.get_coord_frame(
+                    self.blend_obj, joint_node.idn, unique_joint_idx, aabb_center
+                )
+
+                poschild, axis, range_min, range_max = exputils.get_joint_properties(
+                    self.blend_obj, joint_node.idn
+                )
+                abs_joint_pos = aabb_center + R @ poschild
+
+                joint_properties = jointdyna.get_joint_properties(
+                    joint_name, joint_params
+                )
+
+                self._create_joint(
+                    name=unique_joint_name,
+                    joint_type=joint_node.joint_type,
+                    origin=abs_joint_pos - pos_offset,
+                    parent_link=parent_link,
+                    child_link=child_link_for_joint,
+                    min_range=range_min,
+                    max_range=range_max,
+                    axis=coord_frame @ axis,
+                    damping=joint_properties["damping"],
+                    friction=joint_properties["friction"],
+                )
+                pos_offset = abs_joint_pos
+                parent_link = child_link_for_joint
+
+                self.exclude_links.add((parent_link, child_link_for_joint))
+
+        elif len(joint_nodes) == 1:
+            # Single joint: standard case
             joint_node = joint_nodes[0]
 
             joint_name = self.metadata[joint_node.idn]["joint label"]
