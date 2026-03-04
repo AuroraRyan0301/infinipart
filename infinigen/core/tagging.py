@@ -513,7 +513,7 @@ def extract_vertex_mask(
 
         # select vertices based on the mask
         for vert in obj.data.vertices:
-            vert.select = vertex_mask[vert.index]
+            vert.select = bool(vertex_mask[vert.index])
         if nonempty and len([v for v in obj.data.vertices if v.select]) == 0:
             raise ValueError(
                 f"extract_vertex_mask({obj.name=}, {nonempty=}) failed to select vertices"

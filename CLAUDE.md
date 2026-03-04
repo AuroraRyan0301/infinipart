@@ -134,7 +134,7 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 
 ## Environment
 - Conda env: `infinigen-sim` (has infinigen installed from this repo)
-- Blender: `/mnt/data/yurh/blender-3.6.0-linux-x64/blender`
+- Blender: `/mnt/data/yurh/blender-4.2.18-linux-x64/blender`
 - GPU: 4x L20X (143GB each)
 
 ---

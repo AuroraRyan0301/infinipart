@@ -168,7 +168,7 @@ def clean_name(name: str):
 def is_2d(obj: bpy.types.Object):
     """Check if an asset is very thin or 2D."""
     verts = np.array([obj.matrix_world @ v.co for v in obj.data.vertices])
-    spread = verts.ptp(axis=0)  # max - min per axis
+    spread = verts.max(axis=0) - verts.min(axis=0)  # max - min per axis
     return np.any(spread < 1e-4)
 
 

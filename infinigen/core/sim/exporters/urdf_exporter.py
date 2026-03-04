@@ -167,7 +167,7 @@ class URDFBuilder(SimBuilder):
                     list(triangle.vertices) for triangle in mesh.data.loop_triangles
                 ],
             )
-            t.mass_properties["density"] = mass / t.volume
+            t.density = mat_physics["density"]
             I_tensor = t.moment_inertia
             I_tensor = np.clip(I_tensor, a_min=0, a_max=None)
             inertial.append(mass)

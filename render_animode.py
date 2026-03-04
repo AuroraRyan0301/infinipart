@@ -6,7 +6,7 @@ Reads metadata.json from precompute pipeline, loads URDF + OBJs,
 applies forward kinematics per frame, renders 32 camera views.
 
 Run with:
-  CUDA_VISIBLE_DEVICES=2 /mnt/data/yurh/blender-3.6.0-linux-x64/blender \
+  CUDA_VISIBLE_DEVICES=2 /mnt/data/yurh/blender-4.2.18-linux-x64/blender \
       --background --python render_animode.py -- \
       --metadata ./output/dishwasher/1001/metadata.json \
       --animode basic_0 --views hemi --resolution 512 --duration 4
@@ -1570,6 +1570,12 @@ def normalize_parts(parts, center, scale):
 # Materials
 # ======================================================================
 
+def _specular_key(bsdf):
+    """Return the Specular input name (changed in Blender 4.0+)."""
+    if "Specular IOR Level" in bsdf.inputs:
+        return "Specular IOR Level"
+    return "Specular"
+
 def assign_material(obj, color, metallic=0.3, roughness=0.5, name=None):
     """Assign a simple PBR material to an object."""
     mat_name = name or f"mat_{obj.name}"
@@ -1581,7 +1587,7 @@ def assign_material(obj, color, metallic=0.3, roughness=0.5, name=None):
         bsdf.inputs["Base Color"].default_value = (*color, 1.0)
         bsdf.inputs["Metallic"].default_value = metallic
         bsdf.inputs["Roughness"].default_value = roughness
-        bsdf.inputs["Specular"].default_value = 0.0 if roughness >= 1.0 else 0.5
+        bsdf.inputs[_specular_key(bsdf)].default_value = 0.0 if roughness >= 1.0 else 0.5
 
     obj.data.materials.clear()
     obj.data.materials.append(mat)
@@ -1609,8 +1615,9 @@ def enhance_existing_materials(obj, metallic=0.10, roughness=0.45):
                 bsdf.inputs["Metallic"].default_value = metallic
             if not bsdf.inputs["Roughness"].links:
                 bsdf.inputs["Roughness"].default_value = roughness
-            if not bsdf.inputs["Specular"].links:
-                bsdf.inputs["Specular"].default_value = 0.3
+            spec_key = _specular_key(bsdf)
+            if not bsdf.inputs[spec_key].links:
+                bsdf.inputs[spec_key].default_value = 0.3
 
 
 # ======================================================================
