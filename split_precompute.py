@@ -1672,19 +1672,63 @@ def generate_animodes(movable_joints, rng_seed=42):
 
 LID_KEYWORDS = frozenset({"lid", "cap", "cover", "top", "plug", "stopper"})
 
+# PhysX finaljson base directories (for semantic label lookup)
+_PHYSX_FINALJSON_BASES = {
+    "PhysXMobility": "/mnt/data/fulian/dataset/PhysX_mobility/finaljson",
+    "PhysXNet":      "/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson",
+}
 
-def detect_lid_joints(joints, scene_dir):
+
+def _load_physx_finaljson_semantics(scene_dir):
+    """Try to load part semantic labels from PhysX finaljson.
+
+    Returns: {link_name: label_str} e.g. {"l_0": "lid", "l_1": "base body"}
+    Maps group label (finaljson "label" field) to URDF link name "l_{label}".
+    """
+    sem_map = {}
+    # scene_dir is like outputs/PhysXMobility/100015 or outputs/PhysXNet/10040
+    parts = scene_dir.rstrip("/").split("/")
+    if len(parts) < 2:
+        return sem_map
+    factory_name = parts[-2]
+    object_id = parts[-1]
+
+    base = _PHYSX_FINALJSON_BASES.get(factory_name)
+    if not base:
+        return sem_map
+
+    json_path = os.path.join(base, f"{object_id}.json")
+    if not os.path.exists(json_path):
+        return sem_map
+
+    try:
+        with open(json_path) as f:
+            data = json.load(f)
+        for part in data.get("parts", []):
+            label_idx = part.get("label")
+            name = part.get("name", "")
+            if label_idx is not None and name:
+                link_name = f"l_{label_idx}"
+                sem_map[link_name] = name.lower()
+    except Exception as e:
+        print(f"  Warning: failed to read finaljson {json_path}: {e}")
+
+    return sem_map
+
+
+def detect_lid_joints(joints, scene_dir, children_map=None):
     """Detect prismatic joints whose child link represents a lid/cap/cover.
 
     Checks (in priority order):
     1. PartNet semantics.txt: 'link_N  motion_type  semantic_label'
-    2. URDF link/joint names containing lid keywords
+    2. PhysX finaljson: part "name" field (e.g. "Lid", "Cover")
+    3. URDF link/joint names containing lid keywords
 
     Returns: list of (joint, label_str) pairs (only prismatic joints).
     """
     sem_map = {}
 
-    # PartNet semantics.txt
+    # 1. PartNet semantics.txt
     sem_file = os.path.join(scene_dir, "semantics.txt")
     if os.path.exists(sem_file):
         with open(sem_file) as f:
@@ -1693,7 +1737,13 @@ def detect_lid_joints(joints, scene_dir):
                 if len(parts_line) >= 3:
                     sem_map[parts_line[0]] = parts_line[2].lower()
 
-    # Fallback: check link and joint name strings
+    # 2. PhysX finaljson semantic labels
+    physx_sem = _load_physx_finaljson_semantics(scene_dir)
+    for link_name, label in physx_sem.items():
+        if link_name not in sem_map:
+            sem_map[link_name] = label
+
+    # 3. Fallback: check link and joint name strings
     for joint in joints:
         if joint.child_link not in sem_map:
             for kw in LID_KEYWORDS:
@@ -1701,14 +1751,37 @@ def detect_lid_joints(joints, scene_dir):
                     sem_map[joint.child_link] = kw
                     break
 
+    # Build helper: for each joint, collect all descendant link names
+    def _get_descendant_links(link_name):
+        """BFS to get all descendant links including link_name itself."""
+        if not children_map:
+            return {link_name}
+        visited = set()
+        queue = [link_name]
+        while queue:
+            lnk = queue.pop(0)
+            if lnk in visited:
+                continue
+            visited.add(lnk)
+            for child, _ in children_map.get(lnk, []):
+                queue.append(child)
+        return visited
+
     lid_joints = []
     for joint in joints:
         # Only prismatic joints make sense for separation/flip (revolute = door)
         if joint.jtype != "prismatic":
             continue
-        label = sem_map.get(joint.child_link, "")
-        if any(kw in label for kw in LID_KEYWORDS):
-            lid_joints.append((joint, label))
+        # Check direct child link AND all descendants (for abstract intermediate links)
+        desc_links = _get_descendant_links(joint.child_link)
+        matched_label = ""
+        for lnk in desc_links:
+            label = sem_map.get(lnk, "")
+            if any(kw in label for kw in LID_KEYWORDS):
+                matched_label = label
+                break
+        if matched_label:
+            lid_joints.append((joint, matched_label))
 
     return lid_joints
 
@@ -1781,7 +1854,7 @@ def generate_custom_lid_animodes(movable_joints, scene_dir, meshes_by_link,
     animodes = []
     params_map = {}
 
-    lid_joints = detect_lid_joints(movable_joints, scene_dir)
+    lid_joints = detect_lid_joints(movable_joints, scene_dir, children_map)
     if not lid_joints:
         return animodes, params_map
 
