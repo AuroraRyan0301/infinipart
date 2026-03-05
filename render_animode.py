@@ -69,6 +69,11 @@ PARTNET_TO_SYNSET = {
     "Microwave": "03761084",
     "Oven": "04330267",
     "KitchenPot": "03991062",
+    "Refrigerator": "04074963",
+    "Scissors": "04225987",
+    "Door": "03691459",
+    "Box": "02801938",
+    "Kettle": "03991062",
 }
 
 # Material keyword -> PBR texture category (checked in order, first match wins)
@@ -233,7 +238,17 @@ def get_shapenet_model_dir(obj_id):
     if not synset_id:
         return None
 
-    model_dir = os.path.join(SHAPENET_BASE, synset_id, model_id, "models")
+    synset_dir = os.path.join(SHAPENET_BASE, synset_id)
+    if not os.path.isdir(synset_dir):
+        # Auto-extract zip if available
+        zip_path = synset_dir + ".zip"
+        if os.path.exists(zip_path):
+            import zipfile
+            print(f"  Auto-extracting {zip_path} ...")
+            with zipfile.ZipFile(zip_path, 'r') as zf:
+                zf.extractall(SHAPENET_BASE)
+
+    model_dir = os.path.join(synset_dir, model_id, "models")
     if os.path.isdir(model_dir):
         return model_dir
     return None
