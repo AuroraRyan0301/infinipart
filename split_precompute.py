@@ -1082,6 +1082,48 @@ def classify_joints_for_animode(all_movable_joints, active_joint_names,
         active, candidates, meshes_by_link,
         parent_map, children_map, center, scale, traj_type)
 
+    # --- Verification step: confirm each passive candidate truly blocks active ---
+    # detect_collisions_bvh lacks REST_CONTACT_MARGIN filtering, so touching-at-rest
+    # parts (e.g. box flaps) get false positives. Verify each passive candidate by
+    # running compute_q_safe_limit of the active joint against ONLY that candidate's
+    # parts. If active reaches its trajectory range → candidate is NOT truly passive.
+    if passive_set:
+        all_active_desc = set()
+        for aj in active:
+            all_active_desc.update(get_descendants(aj))
+
+        verified_passive = set()
+        for cand_j in list(passive_set):
+            cand_desc = get_descendants(cand_j)
+            cand_only = cand_desc - all_active_desc
+            if not cand_only:
+                continue
+            # Check each active joint against this candidate's parts
+            is_truly_blocking = False
+            for aj in active:
+                lo_aj = aj.lower if aj.jtype != "continuous" else 0.0
+                hi_aj = aj.upper if aj.jtype != "continuous" else 2 * np.pi
+                far_q_aj = hi_aj if abs(hi_aj) >= abs(lo_aj) else lo_aj
+                # Use the same cap as generate_trajectory for consistency
+                traj_range = far_q_aj
+                if aj.jtype in ("revolute", "continuous") and abs(far_q_aj) >= np.pi:
+                    traj_range = far_q_aj * 0.25
+                ql = compute_q_safe_limit(aj, cand_only, meshes_by_link,
+                                          children_map, center, scale,
+                                          n_steps=max(SAFE_LIMIT_STEPS // 2, 20))
+                # If q_safe_limit doesn't reach the trajectory range, it truly blocks
+                if abs(ql) < abs(traj_range) - 1e-4:
+                    is_truly_blocking = True
+                    break
+            if is_truly_blocking:
+                verified_passive.add(cand_j)
+            else:
+                print(f"    [verify] {cand_j.name} NOT truly passive "
+                      f"(active reaches full traj range) → reclassify FIXED")
+                if cand_j.name in pre_opening_angles:
+                    del pre_opening_angles[cand_j.name]
+        passive_set = verified_passive
+
     passive = [j for j in candidates if j in passive_set]
     fixed = [j for j in candidates if j not in passive_set]
 
