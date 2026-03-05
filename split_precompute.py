@@ -1537,6 +1537,49 @@ def _load_meshes_from_objs(scene_dir, links, factory=None, identifier=None):
     return meshes_by_link, meshes_by_gidx
 
 
+def _physx_upright_rotation():
+    """Rotation matrix for PhysX datasets: Y-up → Z-up, then face front.
+
+    PhysX (PhysXNet + PhysXMobility) meshes use Y-up convention.
+    1. Rotate -90° around X: (x,y,z) → (x, -z, y)    [Y-up → Z-up]
+    2. Rotate -90° around Z: (x,y,z) → (y, -x, z)     [front → camera]
+    Combined: (x,y,z) → (-z, -x, y)
+    """
+    # Rx(-90) @ Rz(-90) combined
+    R = np.array([
+        [ 0,  0, -1],
+        [-1,  0,  0],
+        [ 0,  1,  0],
+    ], dtype=float)
+    return R
+
+
+def apply_upright_rotation(meshes_dict, joints, factory_name):
+    """Apply coordinate system rotation for PhysX datasets (Y-up → Z-up + front).
+
+    Modifies mesh vertices and joint axes IN-PLACE.  Must be called BEFORE normalize.
+    """
+    if "PhysX" not in factory_name:
+        return
+
+    R = _physx_upright_rotation()
+    print(f"  Applying PhysX upright rotation (Y-up → Z-up + front)")
+
+    # Rotate all mesh vertices
+    for mesh in meshes_dict.values():
+        mesh.vertices = (R @ mesh.vertices.T).T
+
+    # Rotate joint world axes
+    for joint in joints:
+        if joint.axis_origin_world is not None:
+            joint.axis_origin_world = R @ joint.axis_origin_world
+        if joint.axis_dir_world is not None:
+            joint.axis_dir_world = R @ joint.axis_dir_world
+            nd = np.linalg.norm(joint.axis_dir_world)
+            if nd > 1e-8:
+                joint.axis_dir_world = joint.axis_dir_world / nd
+
+
 def normalize_meshes_inplace(meshes_dict, bound=0.95):
     """Box-normalize all meshes jointly to [-bound, bound].
 
@@ -2252,6 +2295,9 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
         return False
 
     print(f"  Loaded {len(meshes_by_link)} mesh parts")
+
+    # 2b. Apply coordinate system rotation for PhysX datasets (Y-up → Z-up)
+    apply_upright_rotation(meshes_by_gidx, joints, factory_name)
 
     # 3. Normalize FIRST
     center, scale = normalize_meshes_inplace(meshes_by_gidx, bound=0.95)

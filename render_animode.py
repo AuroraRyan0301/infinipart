@@ -1579,6 +1579,57 @@ def load_scene_parts(metadata, links, joints, root_link):
 # Normalization
 # ======================================================================
 
+def _physx_upright_matrix():
+    """Rotation matrix for PhysX datasets: Y-up → Z-up + front facing.
+    Combined: (x,y,z) → (-z, -x, y)
+    """
+    from mathutils import Matrix
+    return Matrix([
+        [ 0,  0, -1, 0],
+        [-1,  0,  0, 0],
+        [ 0,  1,  0, 0],
+        [ 0,  0,  0, 1],
+    ])
+
+
+def apply_upright_rotation_blender(parts, factory_name):
+    """Apply PhysX coordinate rotation to Blender objects (before normalize)."""
+    if "PhysX" not in factory_name:
+        return
+    R = _physx_upright_matrix()
+    for link_name, obj in parts.items():
+        mesh = obj.data
+        for vert in mesh.vertices:
+            v = R @ Vector((*vert.co, 1.0))
+            vert.co = v.xyz
+        mesh.update()
+
+
+def build_normalize_matrices(center, scale, factory_name=""):
+    """Build S, S_inv 4x4 matrices for normalized-space FK.
+
+    For PhysX datasets, S incorporates the upright rotation (Y-up→Z-up):
+      S_R = S_plain @ R,  S_R_inv = R_inv @ S_inv_plain
+    so that  S_R @ T_world @ S_R_inv  = S @ R @ T @ R^-1 @ S^-1
+    """
+    cx, cy, cz = center
+    S = Matrix.Identity(4)
+    S[0][0] = scale; S[1][1] = scale; S[2][2] = scale
+    S[0][3] = -cx * scale; S[1][3] = -cy * scale; S[2][3] = -cz * scale
+
+    S_inv = Matrix.Identity(4)
+    S_inv[0][0] = 1.0/scale; S_inv[1][1] = 1.0/scale; S_inv[2][2] = 1.0/scale
+    S_inv[0][3] = cx; S_inv[1][3] = cy; S_inv[2][3] = cz
+
+    if "PhysX" in factory_name:
+        R = _physx_upright_matrix()
+        R_inv = R.inverted()
+        S = S @ R
+        S_inv = R_inv @ S_inv
+
+    return S, S_inv
+
+
 def normalize_parts(parts, center, scale):
     """Apply precompute normalization to all loaded parts."""
     center_v = Vector(center)
@@ -2092,7 +2143,7 @@ def _get_link_descendants(start_link, children_map):
 
 def compute_collision_safe_animation(parts, joints, children_map, root_link,
                                      joints_by_name, split_info, num_frames,
-                                     center, scale):
+                                     center, scale, factory_name=""):
     """Compute per-frame joint values with BVH collision avoidance.
 
     CLAUDE.md spec (Render Simulation Phase):
@@ -2139,14 +2190,8 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
     print(f"    Active joints: {active_jnames}")
     print(f"    Passive joints: {passive_jnames}")
 
-    # -- Normalization matrices --
-    cx, cy, cz = center
-    S = Matrix.Identity(4)
-    S[0][0] = scale; S[1][1] = scale; S[2][2] = scale
-    S[0][3] = -cx * scale; S[1][3] = -cy * scale; S[2][3] = -cz * scale
-    S_inv = Matrix.Identity(4)
-    S_inv[0][0] = 1.0 / scale; S_inv[1][1] = 1.0 / scale; S_inv[2][2] = 1.0 / scale
-    S_inv[0][3] = cx; S_inv[1][3] = cy; S_inv[2][3] = cz
+    # -- Normalization matrices (includes PhysX upright rotation if applicable) --
+    S, S_inv = build_normalize_matrices(center, scale, factory_name)
 
     # Rest FK in normalized space
     rest_q = {j.name: 0.0 for j in joints}
@@ -2626,7 +2671,8 @@ def compute_collision_safe_animation(parts, joints, children_map, root_link,
 def animate_scene_normalized(parts, joints, children_map, root_link,
                              joints_by_name, split_info, num_frames,
                              center, scale,
-                             precomputed_frame_joint_values=None):
+                             precomputed_frame_joint_values=None,
+                             factory_name=""):
     """Animate using normalized-space FK with per-frame collision avoidance.
 
     Compute FK in URDF space, then convert to normalized space for delta.
@@ -2635,27 +2681,12 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
     For a 4x4 transform T in world space, the normalized version is:
       T_norm = S @ T @ S_inv
     where S = scale_matrix(scale) @ translate(-center)
+    For PhysX datasets, S also includes the upright rotation (Y-up→Z-up).
 
     If precomputed_frame_joint_values is provided (dict {frame: {jname: q}}),
     the collision avoidance step is skipped (values already computed).
     """
-    # Build S and S_inv as 4x4 matrices
-    cx, cy, cz = center
-    S = Matrix.Identity(4)
-    S[0][0] = scale
-    S[1][1] = scale
-    S[2][2] = scale
-    S[0][3] = -cx * scale
-    S[1][3] = -cy * scale
-    S[2][3] = -cz * scale
-
-    S_inv = Matrix.Identity(4)
-    S_inv[0][0] = 1.0 / scale
-    S_inv[1][1] = 1.0 / scale
-    S_inv[2][2] = 1.0 / scale
-    S_inv[0][3] = cx
-    S_inv[1][3] = cy
-    S_inv[2][3] = cz
+    S, S_inv = build_normalize_matrices(center, scale, factory_name)
 
     # Rest transforms in normalized space
     rest_values = {j.name: 0.0 for j in joints}
@@ -2670,7 +2701,7 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
         frame_joint_values = compute_collision_safe_animation(
             parts, joints, children_map, root_link,
             joints_by_name, split_info, num_frames,
-            center, scale)
+            center, scale, factory_name=factory_name)
 
     # Precompute lid_flip params (rotation about lid centroid after flip_start_frac)
     traj_type = split_info["trajectory_type"]
@@ -2897,13 +2928,18 @@ def main():
 
         print(f"  Loaded {len(parts)} parts: {sorted(parts.keys())}")
 
+        # Apply PhysX coordinate rotation (Y-up → Z-up) before normalize
+        apply_upright_rotation_blender(parts, metadata.get("factory", ""))
+
         # Normalize
         normalize_parts(parts, center, scale)
 
         # Compute collision-safe animation first (needed for static checks)
+        factory = metadata.get("factory", "")
         frame_joint_values = compute_collision_safe_animation(
             parts, joints, children_map, root_link,
-            joints_by_name, split_info, num_frames, center, scale)
+            joints_by_name, split_info, num_frames, center, scale,
+            factory_name=factory)
 
         # --- Static check Method 1: joint values identical across all frames ---
         if check_static_method1(frame_joint_values):
@@ -2914,7 +2950,8 @@ def main():
         animate_scene_normalized(parts, joints, children_map, root_link,
                                  joints_by_name, split_info, num_frames,
                                  center, scale,
-                                 precomputed_frame_joint_values=frame_joint_values)
+                                 precomputed_frame_joint_values=frame_joint_values,
+                                 factory_name=factory)
 
         # Camera setup
         cam_center = [0.0, 0.0, 0.0]
