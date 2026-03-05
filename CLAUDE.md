@@ -242,3 +242,73 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 ### 参考代码（只读，有 bug 但有用）
 - 老版本：`/mnt/data/yurh/infinipart/` — 有 split_precompute.py 等。**注意**：很多 URDF 划分和零件连接有错，但动画逻辑有一些正确
 - PartPacker：`/mnt/data/yurh/PartPacker/` — part 划分处理参考
+
+---
+
+## Pipeline 脚本架构
+
+### 核心脚本（按执行顺序）
+
+| 步骤 | 脚本 | 说明 |
+|------|------|------|
+| 0 | `setup_physxnet_scene.py` | **仅 PhysX**：把扁平 PhysXNet/PhysXMobility 数据转成 pipeline 目录格式 |
+| 1 | `scripts/spawn_asset.py` | **仅 IS**：通过 Blender 生成铰接物体（URDF + baked PBR OBJs） |
+| 2 | `split_precompute.py` | 对每个物体做拓扑划分：关节分类 → 合并 fixed → 二着色 → 导出 part0/part1.obj + verify.png + metadata.json |
+| 3 | `render_animode.py` | Blender Cycles 渲染每个 animode 的运动视频（多视角、多颜色模式） |
+| 4 | `render_batch.py` | 多 GPU 批量渲染调度器 |
+
+### 三类数据源的处理流程
+
+**IS Factory（18 类，程序化生成）：**
+```bash
+# Step 1: Spawn (Blender)
+CUDA_VISIBLE_DEVICES=0 /mnt/data/yurh/blender-4.2.18-linux-x64/blender --background --python-expr "
+import sys; sys.path.insert(0, '/mnt/cpfs/yurh/Infinigen-Sim')
+sys.argv = ['spawn_asset', '-n', 'lamp', '-s', '0', '-exp', 'urdf', '-dir', './sim_exports']
+exec(open('/mnt/cpfs/yurh/Infinigen-Sim/scripts/spawn_asset.py').read())
+"
+# Step 2: Precompute
+python split_precompute.py --factory lamp --seed 0 --base ./sim_exports/urdf --output_dir ./precompute_output --force
+# Step 3: Render
+CUDA_VISIBLE_DEVICES=0 /mnt/data/yurh/blender-4.2.18-linux-x64/blender --background --python render_animode.py -- \
+  --metadata ./precompute_output/lamp/0/metadata.json --animode all --views hemi_05 --color_mode realistic --bg_mode both
+```
+- Spawn 输出：`sim_exports/urdf/{name}/{seed}/{name}.urdf` + `assets/` (baked PBR OBJs)
+- Precompute 输出：`precompute_output/{name}/{seed}/{animode}/part0.obj + part1.obj + verify.png` + `metadata.json`
+- Render 输出：`precompute_output/{name}/{seed}/{animode}/{view}_{suffix}.mp4`
+
+**PhysXNet（32,041 个，已有数据）：**
+```bash
+# Step 0: Setup scene (转换目录格式)
+python setup_physxnet_scene.py --id 10000 --factory PhysXNet --source physxnet
+# Step 2: Precompute
+python split_precompute.py --factory PhysXNet --seed 10000 --output_dir ./precompute_output --suffix _PhysXnet --force
+# Step 3: Render (同上)
+```
+- Setup 输出：`outputs/PhysXNet/{id}/scene.urdf` + `objs/`
+- URDF 源：`/mnt/data/fulian/dataset/PhysXNet/version_1/urdf/{id}.urdf`
+- Mesh 源：`/mnt/data/fulian/dataset/PhysXNet/version_1/partseg/{id}/objs/*.obj`
+
+**PhysXMobility（2,024 个，已有数据）：**
+```bash
+# Step 0: Setup scene
+python setup_physxnet_scene.py --id 100015 --factory PhysXMobility --source physx_mobility
+# Step 2-3: 同 PhysXNet
+```
+- URDF 源：`/mnt/data/fulian/dataset/PhysX_mobility/urdf/{id}.urdf`
+- Mesh 源：`/mnt/data/fulian/dataset/PhysX_mobility/partseg/{id}/objs/original-*.obj` (带 MTL)
+
+### render_animode.py 参数
+- `--metadata`: metadata.json 路径（必须）
+- `--animode`: animode 名或 `all`（默认 all）
+- `--views`: 视角列表，如 `hemi_05 orbit_0`（默认 hemi = 全部16个半球视角）
+- `--color_mode`: `realistic` / `part` / `group` / `both`（both = realistic + group）
+- `--bg_mode`: `nobg` / `withbg` / `both`（nobg = 透明背景，withbg = envmap 背景）
+- `--resolution`: 分辨率（默认 512）
+- `--samples`: Cycles 采样数（默认 32）
+- `--skip_existing`: 跳过已有视频
+
+### 材质系统
+- **IS factory** (`is_baked`)：Infinigen shader bake 的 PBR 贴图（DIFFUSE/ROUGHNESS/METAL/NORMAL）。导入后自动修正暗色金属 diffuse（Bright/Contrast 提亮）
+- **PhysXMobility** (`native`)：OBJ+MTL 自带 Kd 颜色，渲染时补充 metallic/roughness 默认值
+- **PhysXNet** (`shapenet_mtl` / `ambientcg`)：无材质几何体，通过 ShapeNet overlap map 或 ambientCG PBR 贴图赋材质
