@@ -811,6 +811,11 @@ def parse_args():
                              "part: binary part0/part1 coloring; "
                              "group: each reduced graph node gets unique color; "
                              "both: realistic + group (default)")
+    parser.add_argument("--bg_mode", default="nobg",
+                        choices=["nobg", "withbg", "both"],
+                        help="nobg: transparent background (default); "
+                             "withbg: envmap visible as background; "
+                             "both: render both nobg and withbg")
     return parser.parse_args(argv)
 
 
@@ -1363,11 +1368,12 @@ def import_obj(filepath, name=None):
     """Import an OBJ file and return the imported object."""
     before = set(bpy.data.objects.keys())
 
-    # Use legacy importer for Blender 3.x
+    # Prefer new importer (Blender 4.x) — correctly wires PBR maps from MTL;
+    # fall back to legacy importer for Blender 3.x
     try:
-        bpy.ops.import_scene.obj(filepath=filepath, axis_forward='-Y', axis_up='Z')
-    except Exception:
         bpy.ops.wm.obj_import(filepath=filepath, forward_axis='NEGATIVE_Y', up_axis='Z')
+    except Exception:
+        bpy.ops.import_scene.obj(filepath=filepath, axis_forward='-Y', axis_up='Z')
 
     after = set(bpy.data.objects.keys())
     new_names = after - before
@@ -1593,6 +1599,148 @@ def assign_material(obj, color, metallic=0.3, roughness=0.5, name=None):
     obj.data.materials.append(mat)
 
 
+def _is_metallic_material(img_nodes, mat_name=""):
+    """Check if material is metallic via METAL map or material name."""
+    # Check material name for common metal keywords
+    name_lower = mat_name.lower()
+    if any(kw in name_lower for kw in ('metal', 'steel', 'chrome', 'iron', 'brass',
+                                        'copper', 'galvanized', 'aluminum', 'aluminium')):
+        return True
+    if 'metallic' not in img_nodes:
+        return False
+    img = img_nodes['metallic'].image
+    if img is None:
+        return False
+    # Sample pixels; use a lower threshold (0.3) since UV-unmapped black
+    # background areas dilute the average
+    pixels = img.pixels[:]
+    if len(pixels) == 0:
+        return False
+    step = max(1, len(pixels) // (4 * 64))
+    samples = [pixels[i * 4] for i in range(0, len(pixels) // 4, step)]
+    avg_metallic = sum(samples) / len(samples) if samples else 0
+    return avg_metallic > 0.3
+
+
+def _is_dark_diffuse(bsdf):
+    """Check if the diffuse texture connected to Base Color is too dark."""
+    bc_input = bsdf.inputs['Base Color']
+    if bc_input.links:
+        # There's a texture connected; sample it
+        from_node = bc_input.links[0].from_node
+        if from_node.type == 'TEX_IMAGE' and from_node.image:
+            img = from_node.image
+            pixels = img.pixels[:]
+            if len(pixels) == 0:
+                return False
+            step = max(1, len(pixels) // (4 * 64))
+            # Average luminance of sampled pixels
+            lum_sum = 0
+            count = 0
+            for i in range(0, len(pixels) // 4, step):
+                r, g, b = pixels[i*4], pixels[i*4+1], pixels[i*4+2]
+                lum_sum += 0.299 * r + 0.587 * g + 0.114 * b
+                count += 1
+            avg_lum = lum_sum / count if count else 0
+            return avg_lum < 0.25
+    else:
+        # No texture, check default value
+        val = bc_input.default_value
+        lum = 0.299 * val[0] + 0.587 * val[1] + 0.114 * val[2]
+        return lum < 0.25
+    return False
+
+
+def fix_is_baked_materials(obj):
+    """Fix IS factory baked PBR materials after OBJ import.
+
+    The IS factory bake pipeline often produces:
+    - Very dark DIFFUSE for metallic materials (galvanized_metal etc.)
+    - Near-white ROUGHNESS (=1.0, fully rough) for metals
+    Both together make metals appear pitch-black.
+
+    This function:
+    1. Wires any missing PBR maps (fallback for legacy importer)
+    2. For metallic materials with dark diffuse: brightens base color via
+       Bright/Contrast node so metal reflections are visible
+    3. For metallic materials: clamps roughness to a lower range via
+       a Math node so metals have proper sheen
+    """
+    if not obj.data.materials:
+        return
+    for mat in obj.data.materials:
+        if mat is None or not mat.use_nodes:
+            continue
+        tree = mat.node_tree
+        bsdf = tree.nodes.get("Principled BSDF")
+        if not bsdf:
+            continue
+
+        # Collect all Image Texture nodes by filename suffix
+        img_nodes = {}
+        diffuse_node = None
+        for node in tree.nodes:
+            if node.type == 'TEX_IMAGE' and node.image:
+                name = node.image.name.upper()
+                if '_METAL' in name:
+                    img_nodes['metallic'] = node
+                elif '_ROUGHNESS' in name:
+                    img_nodes['roughness'] = node
+                elif '_NORMAL' in name:
+                    img_nodes['normal'] = node
+                elif '_DIFFUSE' in name:
+                    diffuse_node = node
+
+        # Fix colorspace: data textures must be Non-Color (OBJ importer sets sRGB)
+        for key in ('metallic', 'roughness', 'normal'):
+            if key in img_nodes:
+                img_nodes[key].image.colorspace_settings.name = 'Non-Color'
+
+        # Wire missing PBR maps (for legacy importer fallback)
+        if 'metallic' in img_nodes and not bsdf.inputs['Metallic'].links:
+            tree.links.new(img_nodes['metallic'].outputs['Color'], bsdf.inputs['Metallic'])
+
+        if 'roughness' in img_nodes and not bsdf.inputs['Roughness'].links:
+            tree.links.new(img_nodes['roughness'].outputs['Color'], bsdf.inputs['Roughness'])
+
+        if 'normal' in img_nodes and not bsdf.inputs['Normal'].links:
+            normal_map = tree.nodes.new('ShaderNodeNormalMap')
+            normal_map.location = (img_nodes['normal'].location[0] + 300,
+                                   img_nodes['normal'].location[1])
+            tree.links.new(img_nodes['normal'].outputs['Color'], normal_map.inputs['Color'])
+            tree.links.new(normal_map.outputs['Normal'], bsdf.inputs['Normal'])
+
+        spec_key = _specular_key(bsdf)
+        if not bsdf.inputs[spec_key].links:
+            bsdf.inputs[spec_key].default_value = 0.5
+
+        # --- Fix dark metallic materials ---
+        is_metal = _is_metallic_material(img_nodes, mat.name)
+        if is_metal:
+            # Fix 1: Brighten dark diffuse for metallic materials
+            # In PBR, metallic=1 means base color = reflection color.
+            # Dark base color + metallic = black object. Real metals (chrome,
+            # stainless steel) have bright base colors (0.6-0.9).
+            if _is_dark_diffuse(bsdf):
+                bc_input = bsdf.inputs['Base Color']
+                if bc_input.links:
+                    # Insert Bright/Contrast node between diffuse tex and BSDF
+                    old_link = bc_input.links[0]
+                    from_socket = old_link.from_socket
+                    tree.links.remove(old_link)
+
+                    bc_node = tree.nodes.new('ShaderNodeBrightContrast')
+                    bc_node.location = (bsdf.location[0] - 200, bsdf.location[1])
+                    bc_node.inputs['Bright'].default_value = 0.55
+                    bc_node.inputs['Contrast'].default_value = 0.3
+                    tree.links.new(from_socket, bc_node.inputs['Color'])
+                    tree.links.new(bc_node.outputs['Color'], bsdf.inputs['Base Color'])
+                else:
+                    # No texture, just override with a reasonable metal color
+                    bsdf.inputs['Base Color'].default_value = (0.7, 0.7, 0.7, 1.0)
+
+
+
 def enhance_existing_materials(obj, metallic=0.10, roughness=0.45):
     """Enhance existing OBJ-imported materials with PBR properties.
 
@@ -1752,6 +1900,52 @@ def setup_render_settings(resolution, fps, num_frames, samples):
         scene.view_settings.look = 'None'
     scene.view_settings.exposure = 0.0
     scene.view_settings.gamma = 1.0
+
+
+def setup_compositor_dual_output(bg_dir):
+    """Set up compositor to output both nobg and withbg in a single render pass.
+
+    nobg RGBA goes through the Composite node (scene.render.filepath).
+    withbg composites the Environment pass behind the transparent render
+    via Alpha Over, output through a File Output node to bg_dir.
+    """
+    scene = bpy.context.scene
+    scene.render.film_transparent = True
+    bpy.context.view_layer.use_pass_environment = True
+
+    scene.use_nodes = True
+    tree = scene.node_tree
+    for n in tree.nodes:
+        tree.nodes.remove(n)
+
+    rl = tree.nodes.new('CompositorNodeRLayers')
+    rl.location = (0, 0)
+
+    # Composite node -> nobg output
+    composite = tree.nodes.new('CompositorNodeComposite')
+    composite.location = (600, 0)
+    tree.links.new(rl.outputs['Image'], composite.inputs['Image'])
+
+    # Alpha Over: env background + transparent foreground
+    alpha_over = tree.nodes.new('CompositorNodeAlphaOver')
+    alpha_over.location = (300, 200)
+    tree.links.new(rl.outputs['Env'], alpha_over.inputs[1])
+    tree.links.new(rl.outputs['Image'], alpha_over.inputs[2])
+
+    # File Output node -> withbg output
+    bg_out = tree.nodes.new('CompositorNodeOutputFile')
+    bg_out.base_path = bg_dir
+    bg_out.format.file_format = 'PNG'
+    bg_out.format.color_mode = 'RGBA'
+    bg_out.file_slots[0].path = "frame_"
+    bg_out.location = (600, 200)
+    tree.links.new(alpha_over.outputs['Image'], bg_out.inputs[0])
+
+
+def cleanup_compositor():
+    """Reset compositor to default state."""
+    bpy.context.scene.use_nodes = False
+    bpy.context.view_layer.use_pass_environment = False
 
 
 def setup_envmap(envmap_path, strength=1.0):
@@ -2774,8 +2968,8 @@ def main():
                     roughness = mat_info.get("roughness", 0.45)
 
                     if source == "is_baked":
-                        # IS factory: fully baked PBR — don't touch
-                        pass
+                        # IS factory: baked PBR textures — wire METAL/ROUGHNESS/NORMAL maps
+                        fix_is_baked_materials(obj)
                     elif source == "native":
                         # PhysXMobility: has Kd colors but no roughness/metallic maps
                         enhance_existing_materials(obj, metallic, roughness)
@@ -2808,50 +3002,108 @@ def main():
                     else:
                         assign_material(obj, (0.6, 0.6, 0.6), metallic=0.0, roughness=1.0)
 
+            # Determine bg modes for this color pass
+            # Only realistic pass supports withbg; group/part always nobg
+            if color_pass == "realistic":
+                if args.bg_mode == "both":
+                    render_nobg, render_withbg = True, True
+                elif args.bg_mode == "withbg":
+                    render_nobg, render_withbg = False, True
+                else:
+                    render_nobg, render_withbg = True, False
+            else:
+                render_nobg, render_withbg = True, False
+
             # Render static views
             for view_name, (elev, azim) in sorted(static_views.items()):
-                mp4_path = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-                if args.skip_existing and os.path.exists(mp4_path):
+                nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
+                withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
+
+                skip_nobg = not render_nobg or (args.skip_existing and os.path.exists(nobg_mp4))
+                skip_withbg = not render_withbg or (args.skip_existing and os.path.exists(withbg_mp4))
+                if skip_nobg and skip_withbg:
                     print(f"  SKIP {view_name}{vid_suffix} (exists)")
                     continue
 
-                frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-                os.makedirs(frame_dir, exist_ok=True)
+                nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
+                withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
+
+                if render_nobg and render_withbg:
+                    os.makedirs(nobg_frame_dir, exist_ok=True)
+                    os.makedirs(withbg_frame_dir, exist_ok=True)
+                    setup_compositor_dual_output(withbg_frame_dir)
+                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
+                elif render_withbg:
+                    os.makedirs(withbg_frame_dir, exist_ok=True)
+                    bpy.context.scene.render.film_transparent = False
+                    bpy.context.scene.use_nodes = False
+                    bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
+                else:
+                    os.makedirs(nobg_frame_dir, exist_ok=True)
+                    bpy.context.scene.render.film_transparent = True
+                    bpy.context.scene.use_nodes = False
+                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
 
                 cam = create_camera(view_name, cam_center, cam_distance, elev, azim)
                 bpy.context.scene.camera = cam
-                bpy.context.scene.render.filepath = os.path.join(frame_dir, "frame_")
                 bpy.ops.render.render(animation=True)
 
-                ok = frames_to_video(frame_dir, mp4_path, args.fps)
-                if ok:
-                    print(f"  {view_name}{vid_suffix}: OK")
-                else:
-                    print(f"  {view_name}{vid_suffix}: FAIL (ffmpeg)")
+                if render_nobg and render_withbg:
+                    cleanup_compositor()
+
+                if render_nobg and not skip_nobg:
+                    ok = frames_to_video(nobg_frame_dir, nobg_mp4, args.fps)
+                    print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
+                if render_withbg and not skip_withbg:
+                    ok = frames_to_video(withbg_frame_dir, withbg_mp4, args.fps)
+                    print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
 
                 remove_camera(cam)
 
             # Render moving views
             for view_name, (se, sa, ee, ea) in sorted(moving_views.items()):
-                mp4_path = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-                if args.skip_existing and os.path.exists(mp4_path):
+                nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
+                withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
+
+                skip_nobg = not render_nobg or (args.skip_existing and os.path.exists(nobg_mp4))
+                skip_withbg = not render_withbg or (args.skip_existing and os.path.exists(withbg_mp4))
+                if skip_nobg and skip_withbg:
                     print(f"  SKIP {view_name}{vid_suffix} (exists)")
                     continue
 
-                frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-                os.makedirs(frame_dir, exist_ok=True)
+                nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
+                withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
+
+                if render_nobg and render_withbg:
+                    os.makedirs(nobg_frame_dir, exist_ok=True)
+                    os.makedirs(withbg_frame_dir, exist_ok=True)
+                    setup_compositor_dual_output(withbg_frame_dir)
+                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
+                elif render_withbg:
+                    os.makedirs(withbg_frame_dir, exist_ok=True)
+                    bpy.context.scene.render.film_transparent = False
+                    bpy.context.scene.use_nodes = False
+                    bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
+                else:
+                    os.makedirs(nobg_frame_dir, exist_ok=True)
+                    bpy.context.scene.render.film_transparent = True
+                    bpy.context.scene.use_nodes = False
+                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
 
                 cam = create_animated_camera(view_name, cam_center, cam_distance,
                                              se, sa, ee, ea, num_frames)
                 bpy.context.scene.camera = cam
-                bpy.context.scene.render.filepath = os.path.join(frame_dir, "frame_")
                 bpy.ops.render.render(animation=True)
 
-                ok = frames_to_video(frame_dir, mp4_path, args.fps)
-                if ok:
-                    print(f"  {view_name}{vid_suffix}: OK")
-                else:
-                    print(f"  {view_name}{vid_suffix}: FAIL (ffmpeg)")
+                if render_nobg and render_withbg:
+                    cleanup_compositor()
+
+                if render_nobg and not skip_nobg:
+                    ok = frames_to_video(nobg_frame_dir, nobg_mp4, args.fps)
+                    print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
+                if render_withbg and not skip_withbg:
+                    ok = frames_to_video(withbg_frame_dir, withbg_mp4, args.fps)
+                    print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
 
                 remove_camera(cam)
 
