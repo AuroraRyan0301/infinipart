@@ -601,7 +601,10 @@ def get_realistic_materials(metadata, links):
     json_data = load_physx_json(metadata)
     factory = metadata.get("factory", "")
     identifier = metadata.get("identifier", "")
-    mat_rng = random.Random(hash((factory, identifier)))
+    # Use hashlib for deterministic seed across processes (Python hash() is randomized)
+    import hashlib
+    _det_seed = int(hashlib.md5(f"{factory}_{identifier}".encode()).hexdigest(), 16) % (2**31)
+    mat_rng = random.Random(_det_seed)
 
     # Check if textured_objs exist (PhysXMobility native materials)
     scene_dir = metadata.get("scene_dir", "")
@@ -728,7 +731,7 @@ def get_realistic_materials(metadata, links):
             roughness = max(0, min(1, roughness + mat_rng.uniform(-0.05, 0.05)))
 
             # Tier 3: ambientCG texture set
-            tex_hash = hash((factory, identifier, idx, category))
+            tex_hash = int(hashlib.md5(f"{factory}_{identifier}_{idx}_{category}".encode()).hexdigest(), 16)
             tex_set = get_texture_set(category, abs(tex_hash))
 
             result[link_name] = {
