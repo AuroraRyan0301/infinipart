@@ -1541,15 +1541,14 @@ def _physx_upright_rotation():
     """Rotation matrix for PhysX datasets: Y-up → Z-up, then face front.
 
     PhysX (PhysXNet + PhysXMobility) meshes use Y-up convention.
-    1. Rotate -90° around X: (x,y,z) → (x, -z, y)    [Y-up → Z-up]
-    2. Rotate -90° around Z: (x,y,z) → (y, -x, z)     [front → camera]
-    Combined: (x,y,z) → (-z, -x, y)
+    1. Rotate +90° around X: (x,y,z) → (x, -z, y)    [Y-up → Z-up]
+    2. Rotate +90° around Z: (x,y,z) → (-y, x, z)     [front → camera]
+    Combined: Rz(+90) @ Rx(+90) → (x,y,z) → (z, x, y)
     """
-    # Rx(-90) @ Rz(-90) combined
     R = np.array([
-        [ 0,  0, -1],
-        [-1,  0,  0],
-        [ 0,  1,  0],
+        [0, 0, 1],
+        [1, 0, 0],
+        [0, 1, 0],
     ], dtype=float)
     return R
 

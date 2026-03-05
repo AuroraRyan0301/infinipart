@@ -1581,14 +1581,14 @@ def load_scene_parts(metadata, links, joints, root_link):
 
 def _physx_upright_matrix():
     """Rotation matrix for PhysX datasets: Y-up → Z-up + front facing.
-    Combined: (x,y,z) → (-z, -x, y)
+    Combined: Rz(+90) @ Rx(+90) → (x,y,z) → (z, x, y)
     """
     from mathutils import Matrix
     return Matrix([
-        [ 0,  0, -1, 0],
-        [-1,  0,  0, 0],
-        [ 0,  1,  0, 0],
-        [ 0,  0,  0, 1],
+        [0, 0, 1, 0],
+        [1, 0, 0, 0],
+        [0, 1, 0, 0],
+        [0, 0, 0, 1],
     ])
 
 
