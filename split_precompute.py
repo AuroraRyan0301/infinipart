@@ -2046,9 +2046,13 @@ def generate_verify_png(part0, part1, out_dir, title=""):
             pc1.set_facecolor((0.85, 0.3, 0.3, 0.6))
             ax.add_collection3d(pc1)
 
+        # Use actual bbox proportions (with a minimum to avoid degenerate axes)
+        ranges = vmax - vmin
+        ranges = np.maximum(ranges, ranges.max() * 0.05)  # min 5% of max dim
         ax.set_xlim(vmin[0], vmax[0])
         ax.set_ylim(vmin[1], vmax[1])
         ax.set_zlim(vmin[2], vmax[2])
+        ax.set_box_aspect(ranges.tolist())
         ax.view_init(elev=elev, azim=azim)
         ax.set_title(titles[idx], fontsize=10)
         ax.set_xlabel('X')
