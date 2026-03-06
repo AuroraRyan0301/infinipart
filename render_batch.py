@@ -16,7 +16,7 @@ import subprocess
 import sys
 from multiprocessing import Pool
 
-BLENDER = "/mnt/data/yurh/blender-3.6.0-linux-x64/blender"
+BLENDER = os.environ.get("BLENDER_BIN", "/mnt/data/yurh/blender-4.2.18-linux-x64/blender")
 RENDER_SCRIPT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "render_animode.py")
 
 
