@@ -1708,12 +1708,16 @@ def filter_joints_by_motion(movable_joints, meshes_by_link, parent_map, children
 # Animode Generation
 # ======================================================================
 
-def generate_animodes(movable_joints, rng_seed=42):
+def generate_animodes(movable_joints, rng_seed=42, max_basic=0, max_senior=0):
     """Generate basic and senior animodes.
 
     Basic: one joint per animode.
-    Senior: random combinations of 2+ joints, max 3.
+    Senior: random combinations of 2+ joints, max MAX_SENIOR_ANIMODES.
     Same-chain combinations are ALLOWED.
+
+    Args:
+        max_basic: cap on basic animodes (0=unlimited, randomly sampled if capped)
+        max_senior: override MAX_SENIOR_ANIMODES (0=use default)
 
     Returns:
         animodes: list of (name, set_of_joint_names, trajectory_type)
@@ -1726,10 +1730,17 @@ def generate_animodes(movable_joints, rng_seed=42):
 
     joint_names = [j.name for j in movable_joints]
 
-    # Basic animodes: one joint each
+    # Basic animodes: one joint each (optionally capped)
+    basic_list = []
     for i, j in enumerate(movable_joints):
         traj = rng.choice(TRAJECTORY_TYPES)
-        animodes.append((f"basic_{i}", {j.name}, traj))
+        basic_list.append((f"basic_{i}", {j.name}, traj))
+
+    if max_basic > 0 and len(basic_list) > max_basic:
+        rng.shuffle(basic_list)
+        basic_list = sorted(basic_list[:max_basic], key=lambda x: x[0])
+
+    animodes.extend(basic_list)
 
     # Senior animodes: combinations of 2+ joints
     if len(movable_joints) >= 2:
@@ -1739,9 +1750,10 @@ def generate_animodes(movable_joints, rng_seed=42):
             for combo in itertools.combinations(joint_names, r):
                 all_combos.append(set(combo))
 
-        # Randomly sample up to MAX_SENIOR_ANIMODES
+        # Randomly sample up to max_senior (or MAX_SENIOR_ANIMODES)
+        effective_max = max_senior if max_senior > 0 else MAX_SENIOR_ANIMODES
         rng.shuffle(all_combos)
-        n_seniors = min(MAX_SENIOR_ANIMODES, len(all_combos))
+        n_seniors = min(effective_max, len(all_combos))
 
         for i in range(n_seniors):
             traj = rng.choice(TRAJECTORY_TYPES)
@@ -2254,7 +2266,7 @@ def build_joint_12dim_vector(joint, center, scale):
 # ======================================================================
 
 def process_object(factory_name, seed, base_dir, output_dir, force=False,
-                    suffix=""):
+                    suffix="", max_basic=0, max_senior=0):
     """Process a single object: load, normalize, generate animodes, split, export.
 
     Args:
@@ -2359,7 +2371,8 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
 
     # 5. Generate animodes
     rng_seed = hash((factory_name, seed)) % (2**31)
-    animodes = generate_animodes(movable_joints, rng_seed)
+    animodes = generate_animodes(movable_joints, rng_seed,
+                                  max_basic=max_basic, max_senior=max_senior)
     print(f"  Generated {len(animodes)} animodes "
           f"({sum(1 for n, _, _ in animodes if n.startswith('basic'))} basic, "
           f"{sum(1 for n, _, _ in animodes if n.startswith('senior'))} senior)")
@@ -2591,6 +2604,10 @@ def main():
                         help="Force regeneration even if output exists")
     parser.add_argument("--max_seeds", type=int, default=0,
                         help="Max seeds per factory (0=unlimited)")
+    parser.add_argument("--max_basic", type=int, default=0,
+                        help="Max basic animodes per object (0=unlimited)")
+    parser.add_argument("--max_senior", type=int, default=0,
+                        help="Max senior animodes per object (0=use default 3)")
     parser.add_argument("--suffix", type=str, default="",
                         help="Suffix appended to factory name in output "
                              "(e.g., _PhysXmobility, _PhysXnet)")
@@ -2616,7 +2633,8 @@ def main():
         success = 0
         for factory, seed, base in objects:
             ok = process_object(factory, seed, base, args.output_dir, args.force,
-                                suffix=args.suffix)
+                                suffix=args.suffix,
+                                max_basic=args.max_basic, max_senior=args.max_senior)
             if ok:
                 success += 1
 
@@ -2625,7 +2643,8 @@ def main():
 
     elif args.factory and args.seed:
         ok = process_object(args.factory, args.seed, args.base,
-                            args.output_dir, args.force, suffix=args.suffix)
+                            args.output_dir, args.force, suffix=args.suffix,
+                            max_basic=args.max_basic, max_senior=args.max_senior)
         if not ok:
             sys.exit(1)
     else:
