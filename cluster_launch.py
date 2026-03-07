@@ -1,67 +1,98 @@
 #!/usr/bin/env python3
 """
-Cluster launch script for 100-node 4090 cluster.
+Cluster launch script for multi-node GPU cluster (e.g., 100x 8-GPU 4090 nodes).
 
-Each node has 1x RTX 4090, identified by environment variable NODE_RANK (0..N-1)
-and TOTAL_NODES. All nodes share a common filesystem (CPFS).
+Each node has N GPUs. The script runs ONE process per node, and dispatches
+render jobs across all local GPUs via multiprocessing.
 
 Pipeline:
-  Phase 1: setup_physxnet_scene.py (CPU only, fast) — single node
-  Phase 2: split_precompute.py (CPU only, per-object) — distributed across nodes
-  Phase 3: render_animode.py (GPU, Blender Cycles) — distributed across nodes
+  Phase 0: setup_physxnet_scene.py (CPU only, fast) — distributed across nodes
+  Phase 1: spawn_asset.py (Blender, 1 GPU each) — distributed, multi-GPU per node
+  Phase 2: split_precompute.py (CPU only) — distributed across nodes
+  Phase 3: render_animode.py (GPU, Blender Cycles) — distributed, multi-GPU per node
 
 Usage:
-  # On each node (via SLURM / torchrun / manual):
-  NODE_RANK=0 TOTAL_NODES=100 python cluster_launch.py --phase render
+  # PET / torchrun cluster (auto-detects RANK/WORLD_SIZE or PET_NODE_RANK/PET_NNODES):
+  python cluster_launch.py --phase all --is_seeds 100 --n_gpus 8
 
-  # Or with SLURM:
-  srun --nodes=100 --ntasks-per-node=1 python cluster_launch.py --phase all
+  # Manual:
+  NODE_RANK=0 TOTAL_NODES=100 python cluster_launch.py --phase all --n_gpus 8
 
-Environment variables:
-  NODE_RANK    — this node's index (0..TOTAL_NODES-1)
-  TOTAL_NODES  — total number of nodes
-  BLENDER_BIN  — path to Blender binary (default: /mnt/data/yurh/blender-4.2.18-linux-x64/blender)
+Environment variables (auto-detection priority):
+  1. SLURM:   SLURM_PROCID / SLURM_NTASKS
+  2. PET:     PET_NODE_RANK / PET_NNODES  (node-level, preferred for multi-GPU nodes)
+  3. torchrun: RANK / WORLD_SIZE  (with PET_NPROC_PER_NODE to derive node rank)
+  4. Manual:  NODE_RANK / TOTAL_NODES
+
+  BLENDER_BIN  — path to Blender binary
   REPO_DIR     — path to Infinigen-Sim repo (default: auto-detect)
-  DATA_DIR     — base data directory (default: /mnt/data)
-
-  # SLURM auto-detection (if SLURM_PROCID / SLURM_NTASKS set, overrides NODE_RANK / TOTAL_NODES)
+  DATA_DIR     — base data directory
 """
 
 import argparse
-import glob
 import json
 import os
 import subprocess
 import sys
-from pathlib import Path
+from multiprocessing import Pool
 
 # ======================================================================
 # Path Configuration — all via environment variables for portability
 # ======================================================================
 
 REPO_DIR = os.environ.get("REPO_DIR", os.path.dirname(os.path.abspath(__file__)))
-DATA_DIR = os.environ.get("DATA_DIR", "/mnt/data")
+DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(REPO_DIR))
 BLENDER_BIN = os.environ.get("BLENDER_BIN",
-    os.path.join(DATA_DIR, "yurh/blender-4.2.18-linux-x64/blender"))
+    os.path.join(DATA_DIR, "blender-4.2.18-linux-x64/blender"))
 
 # Dataset paths (relative to DATA_DIR)
-PHYSXNET_BASE = os.path.join(DATA_DIR, "fulian/dataset/PhysXNet/version_1")
-PHYSXMOB_BASE = os.path.join(DATA_DIR, "fulian/dataset/PhysX_mobility")
+PHYSXNET_BASE = os.path.join(DATA_DIR, "PhysXNet/version_1")
+PHYSXMOB_BASE = os.path.join(DATA_DIR, "PhysX_mobility")
 
 # Output directory (on shared filesystem)
 OUTPUT_DIR = os.path.join(REPO_DIR, "precompute_output")
 
 
 def get_node_info():
-    """Get node rank and total nodes from env vars (SLURM or manual)."""
-    # SLURM auto-detection
+    """Get node rank and total nodes from env vars.
+
+    For multi-GPU nodes (e.g., 8 GPUs), we need NODE-level rank, not process rank.
+    PET_NODE_RANK/PET_NNODES give this directly. If only RANK/WORLD_SIZE are
+    available, we derive node rank using PET_NPROC_PER_NODE.
+    """
     if "SLURM_PROCID" in os.environ:
         rank = int(os.environ["SLURM_PROCID"])
         total = int(os.environ["SLURM_NTASKS"])
+    elif "PET_NODE_RANK" in os.environ and "PET_NNODES" in os.environ:
+        # Best: direct node-level rank
+        rank = int(os.environ["PET_NODE_RANK"])
+        total = int(os.environ["PET_NNODES"])
+    elif "RANK" in os.environ and "WORLD_SIZE" in os.environ:
+        # torchrun: RANK is global, derive node rank
+        global_rank = int(os.environ["RANK"])
+        world_size = int(os.environ["WORLD_SIZE"])
+        nproc = int(os.environ.get("PET_NPROC_PER_NODE", 1))
+        rank = global_rank // nproc
+        total = world_size // nproc
     else:
         rank = int(os.environ.get("NODE_RANK", 0))
         total = int(os.environ.get("TOTAL_NODES", 1))
     return rank, total
+
+
+def is_primary_local_process():
+    """Return True if this is the primary process on this node.
+
+    For multi-GPU PET clusters, multiple processes may be launched per node.
+    Only the primary (local_rank=0) should run our pipeline.
+    """
+    # If PET_NPROC_PER_NODE > 1, check local rank
+    nproc = int(os.environ.get("PET_NPROC_PER_NODE", 1))
+    if nproc <= 1:
+        return True
+    global_rank = int(os.environ.get("RANK", 0))
+    local_rank = global_rank % nproc
+    return local_rank == 0
 
 
 def shard_list(items, rank, total):
@@ -70,13 +101,12 @@ def shard_list(items, rank, total):
 
 
 # ======================================================================
-# Phase 0: Setup PhysX scenes (CPU only, fast, run on single node)
+# Phase 0: Setup PhysX scenes (CPU only, fast)
 # ======================================================================
 
 def phase_setup(args):
     rank, total = get_node_info()
 
-    # Collect all PhysXNet IDs
     physxnet_ids = []
     urdf_dir = os.path.join(PHYSXNET_BASE, "urdf")
     if os.path.isdir(urdf_dir):
@@ -84,7 +114,6 @@ def phase_setup(args):
             if f.endswith(".urdf"):
                 physxnet_ids.append(("PhysXNet", "physxnet", f.replace(".urdf", "")))
 
-    # Collect all PhysXMobility IDs
     physxmob_ids = []
     urdf_dir_mob = os.path.join(PHYSXMOB_BASE, "urdf")
     if os.path.isdir(urdf_dir_mob):
@@ -111,7 +140,7 @@ def phase_setup(args):
 
 
 # ======================================================================
-# Phase 1: IS Factory Spawn (Blender, 1 GPU each, distributed)
+# Phase 1: IS Factory Spawn (Blender, multi-GPU per node)
 # ======================================================================
 
 IS_FACTORIES = [
@@ -121,37 +150,70 @@ IS_FACTORIES = [
     "soap_dispenser", "microwave",
 ]
 
+
+def _run_spawn_job(args_tuple):
+    """Run a single spawn job on assigned GPU."""
+    factory, seed, gpu_id = args_tuple
+    env = os.environ.copy()
+    env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+    cmd = [
+        BLENDER_BIN, "--background", "--python-expr",
+        f"""
+import sys
+sys.path.insert(0, '{REPO_DIR}')
+sys.argv = ['spawn_asset', '-n', '{factory}', '-s', '{seed}', '-exp', 'urdf', '-dir', './sim_exports']
+exec(open('{REPO_DIR}/scripts/spawn_asset.py').read())
+""",
+    ]
+    try:
+        result = subprocess.run(cmd, env=env, capture_output=True, text=True,
+                                timeout=600, cwd=REPO_DIR)
+        if result.returncode == 0:
+            print(f"  [GPU{gpu_id}] DONE spawn {factory}/{seed}")
+            return True
+        else:
+            err = result.stderr[-300:] if result.stderr else result.stdout[-300:]
+            print(f"  [GPU{gpu_id}] FAIL spawn {factory}/{seed}: {err}")
+            return False
+    except subprocess.TimeoutExpired:
+        print(f"  [GPU{gpu_id}] TIMEOUT spawn {factory}/{seed}")
+        return False
+
+
 def phase_spawn(args):
     rank, total = get_node_info()
 
-    # Generate (factory, seed) pairs
     spawn_jobs = []
     for factory in IS_FACTORIES:
         for seed in range(args.is_seeds):
             spawn_jobs.append((factory, seed))
 
     my_jobs = shard_list(spawn_jobs, rank, total)
-    print(f"[Node {rank}/{total}] Phase spawn: {len(my_jobs)} / {len(spawn_jobs)} IS jobs")
 
+    # Filter already done
+    todo = []
     for factory, seed in my_jobs:
         out_check = os.path.join(REPO_DIR, "sim_exports", "urdf", factory, str(seed))
         if os.path.isdir(out_check) and not args.force:
-            print(f"  SKIP {factory}/{seed} (exists)")
             continue
+        todo.append((factory, seed))
 
-        cmd = [
-            BLENDER_BIN, "--background", "--python-expr",
-            f"""
-import sys
-sys.path.insert(0, '{REPO_DIR}')
-sys.argv = ['spawn_asset', '-n', '{factory}', '-s', '{seed}', '-exp', 'urdf', '-dir', './sim_exports']
-exec(open('{REPO_DIR}/scripts/spawn_asset.py').read())
-""",
-        ]
-        print(f"  Spawning {factory}/{seed}...")
-        subprocess.run(cmd, cwd=REPO_DIR)
+    print(f"[Node {rank}/{total}] Phase spawn: {len(todo)} todo / {len(my_jobs)} assigned / {len(spawn_jobs)} total")
 
-    print(f"[Node {rank}/{total}] Phase spawn: done")
+    if not todo:
+        print(f"[Node {rank}/{total}] Phase spawn: nothing to do")
+        return
+
+    # Assign GPUs round-robin
+    gpu_ids = list(range(args.n_gpus))
+    pool_args = [(f, s, gpu_ids[i % len(gpu_ids)]) for i, (f, s) in enumerate(todo)]
+
+    with Pool(args.n_gpus) as pool:
+        results = pool.map(_run_spawn_job, pool_args)
+
+    ok = sum(1 for r in results if r)
+    fail = sum(1 for r in results if not r)
+    print(f"[Node {rank}/{total}] Phase spawn: {ok} ok, {fail} fail")
 
 
 # ======================================================================
@@ -203,7 +265,6 @@ def phase_precompute(args):
     for source, factory, seed, base, suffix in my_objects:
         out_check = os.path.join(OUTPUT_DIR, factory, seed, "metadata.json")
         if os.path.exists(out_check) and not args.force:
-            print(f"  SKIP {factory}/{seed} (exists)")
             continue
 
         cmd = [
@@ -226,7 +287,7 @@ def phase_precompute(args):
 
 
 # ======================================================================
-# Phase 3: Render (1 GPU per node, distributed by animode)
+# Phase 3: Render (multi-GPU per node, distributed by animode)
 # ======================================================================
 
 def collect_render_jobs(args):
@@ -245,7 +306,6 @@ def collect_render_jobs(args):
             if not os.path.exists(meta_path):
                 continue
 
-            # List animode directories (basic_*, senior_*, custom_*)
             for entry in sorted(os.listdir(seed_path)):
                 animode_dir = os.path.join(seed_path, entry)
                 if not os.path.isdir(animode_dir):
@@ -264,49 +324,71 @@ def collect_render_jobs(args):
     return jobs
 
 
+def _run_render_job(args_tuple):
+    """Run a single render job on assigned GPU."""
+    meta_path, animode_name, gpu_id, resolution, samples, timeout = args_tuple
+    seed_dir = os.path.dirname(meta_path)
+    factory = os.path.basename(os.path.dirname(seed_dir))
+    seed = os.path.basename(seed_dir)
+    label = f"{factory}/{seed}/{animode_name}"
+
+    env = os.environ.copy()
+    env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+
+    cmd = [
+        BLENDER_BIN, "--background", "--python",
+        os.path.join(REPO_DIR, "render_animode.py"), "--",
+        "--metadata", meta_path,
+        "--animode", animode_name,
+        "--views", "all",
+        "--color_mode", "both",
+        "--bg_mode", "both",
+        "--resolution", str(resolution),
+        "--samples", str(samples),
+        "--skip_existing",
+    ]
+
+    print(f"  [GPU{gpu_id}] START {label}")
+    try:
+        result = subprocess.run(cmd, env=env, capture_output=True, text=True,
+                                timeout=timeout, cwd=REPO_DIR)
+        if result.returncode == 0:
+            print(f"  [GPU{gpu_id}] DONE  {label}")
+            return True
+        else:
+            err = result.stderr[-500:] if result.stderr else result.stdout[-500:]
+            print(f"  [GPU{gpu_id}] FAIL  {label}: {err}")
+            return False
+    except subprocess.TimeoutExpired:
+        print(f"  [GPU{gpu_id}] TIMEOUT {label}")
+        return False
+
+
 def phase_render(args):
     rank, total = get_node_info()
 
     all_jobs = collect_render_jobs(args)
     my_jobs = shard_list(all_jobs, rank, total)
-    print(f"[Node {rank}/{total}] Phase render: {len(my_jobs)} / {len(all_jobs)} animode jobs")
+    print(f"[Node {rank}/{total}] Phase render: {len(my_jobs)} / {len(all_jobs)} animode jobs, {args.n_gpus} GPUs")
 
-    ok, fail = 0, 0
-    for meta_path, animode_name in my_jobs:
-        seed_dir = os.path.dirname(meta_path)
-        factory = os.path.basename(os.path.dirname(seed_dir))
-        seed = os.path.basename(seed_dir)
-        label = f"{factory}/{seed}/{animode_name}"
+    if not my_jobs:
+        print(f"[Node {rank}/{total}] Phase render: nothing to do")
+        return
 
-        cmd = [
-            BLENDER_BIN, "--background", "--python",
-            os.path.join(REPO_DIR, "render_animode.py"), "--",
-            "--metadata", meta_path,
-            "--animode", animode_name,
-            "--views", "all",
-            "--color_mode", "both",
-            "--bg_mode", "both",
-            "--resolution", str(args.resolution),
-            "--samples", str(args.samples),
-            "--skip_existing",
-        ]
+    # Assign GPUs round-robin
+    gpu_ids = list(range(args.n_gpus))
+    pool_args = [
+        (meta, anim, gpu_ids[i % len(gpu_ids)],
+         args.resolution, args.samples, args.timeout)
+        for i, (meta, anim) in enumerate(my_jobs)
+    ]
 
-        print(f"  [{rank}] START {label}")
-        try:
-            result = subprocess.run(cmd, capture_output=True, text=True,
-                                    timeout=args.timeout, cwd=REPO_DIR)
-            if result.returncode == 0:
-                print(f"  [{rank}] DONE  {label}")
-                ok += 1
-            else:
-                err = result.stderr[-500:] if result.stderr else result.stdout[-500:]
-                print(f"  [{rank}] FAIL  {label}: {err}")
-                fail += 1
-        except subprocess.TimeoutExpired:
-            print(f"  [{rank}] TIMEOUT {label}")
-            fail += 1
+    with Pool(args.n_gpus) as pool:
+        results = pool.map(_run_render_job, pool_args)
 
-    print(f"[Node {rank}/{total}] Phase render: {ok} ok, {fail} fail")
+    ok = sum(1 for r in results if r)
+    fail = sum(1 for r in results if not r)
+    print(f"[Node {rank}/{total}] Phase render: {ok} ok, {fail} fail out of {len(my_jobs)}")
 
 
 # ======================================================================
@@ -314,6 +396,12 @@ def phase_render(args):
 # ======================================================================
 
 def main():
+    # Exit early if not primary local process (multi-GPU PET clusters)
+    if not is_primary_local_process():
+        local_rank = int(os.environ.get("RANK", 0)) % int(os.environ.get("PET_NPROC_PER_NODE", 1))
+        print(f"Skipping non-primary local rank {local_rank}")
+        sys.exit(0)
+
     parser = argparse.ArgumentParser(
         description="Cluster launch script for Infinigen-Sim pipeline")
     parser.add_argument("--phase", required=True,
@@ -321,6 +409,8 @@ def main():
                         help="Pipeline phase to run")
     parser.add_argument("--is_seeds", type=int, default=100,
                         help="Number of seeds per IS factory (default: 100)")
+    parser.add_argument("--n_gpus", type=int, default=8,
+                        help="Number of GPUs per node (default: 8)")
     parser.add_argument("--resolution", type=int, default=512)
     parser.add_argument("--samples", type=int, default=32)
     parser.add_argument("--timeout", type=int, default=1800,
@@ -330,7 +420,7 @@ def main():
     args = parser.parse_args()
 
     rank, total = get_node_info()
-    print(f"=== Node {rank}/{total} | Phase: {args.phase} ===")
+    print(f"=== Node {rank}/{total} | Phase: {args.phase} | GPUs: {args.n_gpus} ===")
     print(f"  REPO_DIR:    {REPO_DIR}")
     print(f"  DATA_DIR:    {DATA_DIR}")
     print(f"  BLENDER_BIN: {BLENDER_BIN}")
