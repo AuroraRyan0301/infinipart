@@ -307,6 +307,10 @@ def phase_precompute(args):
             cmd.extend(["--suffix", suffix])
         if args.force:
             cmd.append("--force")
+        if args.max_basic:
+            cmd.extend(["--max_basic", str(args.max_basic)])
+        if args.max_senior:
+            cmd.extend(["--max_senior", str(args.max_senior)])
 
         print(f"  Precomputing {factory}/{seed}...")
         subprocess.run(cmd, cwd=REPO_DIR)
@@ -450,6 +454,10 @@ def main():
                         help="Per-job timeout in seconds (default: 1800)")
     parser.add_argument("--force", action="store_true",
                         help="Force regeneration even if output exists")
+    parser.add_argument("--max_basic", type=int, default=10,
+                        help="Cap basic animodes per object (0=unlimited, default: 10)")
+    parser.add_argument("--max_senior", type=int, default=5,
+                        help="Cap senior animodes per object (0=use split_precompute default, default: 5)")
     args = parser.parse_args()
 
     rank, total = get_node_info()
