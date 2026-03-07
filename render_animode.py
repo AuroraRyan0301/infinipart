@@ -790,6 +790,12 @@ SWEEP_VIEWS = {
     "sweep_07": (10, -60, 55, 60),
 }
 
+# "fast" view set: Monte Carlo sampled subset (4 hemi + 2 orbit + 2 sweep)
+# Chosen to maximize coverage: spread across elevations and azimuth range
+FAST_HEMI_VIEWS = {k: HEMI_VIEWS[k] for k in ["hemi_01", "hemi_06", "hemi_09", "hemi_14"]}
+FAST_ORBIT_VIEWS = {k: ORBIT_VIEWS[k] for k in ["orbit_01", "orbit_04"]}
+FAST_SWEEP_VIEWS = {k: SWEEP_VIEWS[k] for k in ["sweep_00", "sweep_04"]}
+
 # Named convenience views (static)
 NAMED_VIEWS = {
     "front": (25, 0),
@@ -820,6 +826,8 @@ def parse_args():
     parser.add_argument("--fps", type=int, default=30)
     parser.add_argument("--duration", type=float, default=4.0)
     parser.add_argument("--samples", type=int, default=32)
+    parser.add_argument("--cam_distance", type=float, default=4.68,
+                        help="Camera distance from origin (default: 4.68, was 3.6)")
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--envmap", default=None, help="Path to envmap HDR/EXR")
     parser.add_argument("--skip_existing", action="store_true")
@@ -2809,6 +2817,10 @@ def resolve_views(view_args):
             static.update(HEMI_VIEWS)
             moving.update(ORBIT_VIEWS)
             moving.update(SWEEP_VIEWS)
+        elif vg_lower == "fast":
+            static.update(FAST_HEMI_VIEWS)
+            moving.update(FAST_ORBIT_VIEWS)
+            moving.update(FAST_SWEEP_VIEWS)
         elif vg_lower == "hemi":
             static.update(HEMI_VIEWS)
         elif vg_lower == "orbit":
@@ -2955,7 +2967,7 @@ def main():
 
         # Camera setup
         cam_center = [0.0, 0.0, 0.0]
-        cam_distance = 3.6  # ~2.0 * 1.8
+        cam_distance = args.cam_distance
 
         # --- Static check Method 2: probe-render 4 frames per hemi view ---
         is_probe_static, probe_saved = check_animode_static_probe(

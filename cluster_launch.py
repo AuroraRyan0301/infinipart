@@ -343,8 +343,8 @@ def collect_render_jobs(args):
                         or entry.startswith("custom_")):
                     continue
 
-                # Check if already rendered (sentinel: first hemi view)
-                sentinel = os.path.join(animode_dir, "hemi_00_nobg.mp4")
+                # Check if already rendered (sentinel: first hemi view in fast set)
+                sentinel = os.path.join(animode_dir, "hemi_01_nobg.mp4")
                 if os.path.exists(sentinel) and not args.force:
                     continue
 
@@ -355,7 +355,7 @@ def collect_render_jobs(args):
 
 def _run_render_job(args_tuple):
     """Run a single render job on assigned GPU."""
-    meta_path, animode_name, gpu_id, resolution, samples, timeout = args_tuple
+    meta_path, animode_name, gpu_id, resolution, samples, timeout, views = args_tuple
     seed_dir = os.path.dirname(meta_path)
     factory = os.path.basename(os.path.dirname(seed_dir))
     seed = os.path.basename(seed_dir)
@@ -369,7 +369,7 @@ def _run_render_job(args_tuple):
         os.path.join(REPO_DIR, "render_animode.py"), "--",
         "--metadata", meta_path,
         "--animode", animode_name,
-        "--views", "all",
+        "--views", views,
         "--color_mode", "both",
         "--bg_mode", "both",
         "--resolution", str(resolution),
@@ -408,7 +408,7 @@ def phase_render(args):
     gpu_ids = list(range(args.n_gpus))
     pool_args = [
         (meta, anim, gpu_ids[i % len(gpu_ids)],
-         args.resolution, args.samples, args.timeout)
+         args.resolution, args.samples, args.timeout, args.views)
         for i, (meta, anim) in enumerate(my_jobs)
     ]
 
@@ -442,8 +442,11 @@ def main():
                         help="Number of seeds per IS factory (default: 100)")
     parser.add_argument("--n_gpus", type=int, default=8,
                         help="Number of GPUs per node (default: 8)")
+    parser.add_argument("--views", type=str, default="fast",
+                        help="View set for render: fast (4+2+2), all (16+8+8), hemi, etc.")
     parser.add_argument("--resolution", type=int, default=512)
-    parser.add_argument("--samples", type=int, default=32)
+    parser.add_argument("--samples", type=int, default=16,
+                        help="Cycles samples (default: 16, with OIDN denoiser)")
     parser.add_argument("--timeout", type=int, default=1800,
                         help="Per-job timeout in seconds (default: 1800)")
     parser.add_argument("--force", action="store_true",
