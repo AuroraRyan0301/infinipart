@@ -18,6 +18,7 @@ import math
 import os
 import random
 import re
+import shutil
 import subprocess
 import sys
 import xml.etree.ElementTree as ET
@@ -31,8 +32,11 @@ from mathutils import Matrix, Vector, Euler
 # Constants
 # ======================================================================
 
-ENVMAP_DIR = "/mnt/data/yurh/dataset3D/envmap/indoor"
-FFMPEG_BIN = "/usr/local/bin/ffmpeg"
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+_DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(_SCRIPT_DIR))
+
+ENVMAP_DIR = os.environ.get("ENVMAP_DIR", os.path.join(_DATA_DIR, "dataset3D/envmap/indoor"))
+FFMPEG_BIN = shutil.which("ffmpeg") or "/usr/bin/ffmpeg"
 
 # Static-skip detection
 PROBE_RESOLUTION   = 64    # probe render resolution (px)
@@ -43,14 +47,14 @@ STATIC_SKIP_PROBE_FILE = "static_skip_probe.json"     # probe render check recor
 PROBE_SAVE_VIEW_KEYS   = ["hemi_00", "hemi_05", "hemi_11"]  # 3 views saved for inspection
 
 # PhysXNet / PhysXMobility JSON data paths
-PHYSXNET_JSON_DIR = "/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson"
-PHYSXMOB_JSON_DIR = "/mnt/data/fulian/dataset/PhysX_mobility/finaljson"
+PHYSXNET_JSON_DIR = os.path.join(_DATA_DIR, "PhysXNet/version_1/finaljson")
+PHYSXMOB_JSON_DIR = os.path.join(_DATA_DIR, "PhysX_mobility/finaljson")
 
 # Material source data paths
-PARTNET_BASE = "/mnt/data/yurh/dataset3D/Partnet"
-SHAPENET_BASE = "/mnt/data/yurh/dataset3D/ShapeNetCore"
-OVERLAP_MAP_PATH = "/mnt/data/yurh/infinipart/physxnet_partnet_overlap.json"
-PBR_TEXTURES_DIR = "/mnt/data/yurh/infinipart/pbr_textures"
+PARTNET_BASE = os.path.join(_DATA_DIR, "dataset3D/Partnet")
+SHAPENET_BASE = os.path.join(_DATA_DIR, "dataset3D/ShapeNetCore")
+OVERLAP_MAP_PATH = os.path.join(_DATA_DIR, "infinipart/physxnet_partnet_overlap.json")
+PBR_TEXTURES_DIR = os.path.join(_DATA_DIR, "infinipart/pbr_textures")
 
 # PartNet model_cat -> ShapeNet synset_id mapping
 PARTNET_TO_SYNSET = {

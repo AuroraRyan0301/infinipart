@@ -1769,9 +1769,10 @@ def generate_animodes(movable_joints, rng_seed=42, max_basic=0, max_senior=0):
 LID_KEYWORDS = frozenset({"lid", "cap", "cover", "top", "plug", "stopper"})
 
 # PhysX finaljson base directories (for semantic label lookup)
+_DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 _PHYSX_FINALJSON_BASES = {
-    "PhysXMobility": "/mnt/data/fulian/dataset/PhysX_mobility/finaljson",
-    "PhysXNet":      "/mnt/data/fulian/dataset/PhysXNet/version_1/finaljson",
+    "PhysXMobility": os.path.join(_DATA_DIR, "PhysX_mobility/finaljson"),
+    "PhysXNet":      os.path.join(_DATA_DIR, "PhysXNet/version_1/finaljson"),
 }
 
 
@@ -2596,7 +2597,7 @@ def main():
                         default="./precompute_output",
                         help="Output root directory")
     parser.add_argument("--base", type=str,
-                        default="/mnt/data/yurh/Infinigen-Sim",
+                        default=os.path.dirname(os.path.abspath(__file__)),
                         help="Base directory with outputs/")
     parser.add_argument("--all", action="store_true",
                         help="Process all objects found in base directory")
