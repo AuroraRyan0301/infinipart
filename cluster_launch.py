@@ -302,8 +302,7 @@ def phase_precompute(args):
             "--seed", seed,
             "--output_dir", OUTPUT_DIR,
         ]
-        if base:
-            cmd.extend(["--base", base])
+        cmd.extend(["--base", base if base else REPO_DIR])
         if suffix:
             cmd.extend(["--suffix", suffix])
         if args.force:
