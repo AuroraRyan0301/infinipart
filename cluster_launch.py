@@ -100,26 +100,43 @@ def shard_list(items, rank, total):
     return [item for i, item in enumerate(items) if i % total == rank]
 
 
+def load_manifest(path):
+    """Load subset manifest JSON. Returns None if path doesn't exist."""
+    if path and os.path.exists(path):
+        with open(path) as f:
+            return json.load(f)
+    return None
+
+
 # ======================================================================
 # Phase 0: Setup PhysX scenes (CPU only, fast)
 # ======================================================================
 
 def phase_setup(args):
     rank, total = get_node_info()
+    manifest = load_manifest(args.manifest)
 
     physxnet_ids = []
     urdf_dir = os.path.join(PHYSXNET_BASE, "urdf")
     if os.path.isdir(urdf_dir):
+        allowed = set(manifest["physxnet_ids"]) if manifest and "physxnet_ids" in manifest else None
         for f in sorted(os.listdir(urdf_dir)):
             if f.endswith(".urdf"):
-                physxnet_ids.append(("PhysXNet", "physxnet", f.replace(".urdf", "")))
+                obj_id = f.replace(".urdf", "")
+                if allowed is not None and obj_id not in allowed:
+                    continue
+                physxnet_ids.append(("PhysXNet", "physxnet", obj_id))
 
     physxmob_ids = []
     urdf_dir_mob = os.path.join(PHYSXMOB_BASE, "urdf")
     if os.path.isdir(urdf_dir_mob):
+        allowed = set(manifest["physxmob_ids"]) if manifest and "physxmob_ids" in manifest else None
         for f in sorted(os.listdir(urdf_dir_mob)):
             if f.endswith(".urdf"):
-                physxmob_ids.append(("PhysXMobility", "physx_mobility", f.replace(".urdf", "")))
+                obj_id = f.replace(".urdf", "")
+                if allowed is not None and obj_id not in allowed:
+                    continue
+                physxmob_ids.append(("PhysXMobility", "physx_mobility", obj_id))
 
     all_ids = physxnet_ids + physxmob_ids
     my_ids = shard_list(all_ids, rank, total)
@@ -182,10 +199,12 @@ exec(open('{REPO_DIR}/scripts/spawn_asset.py').read())
 
 def phase_spawn(args):
     rank, total = get_node_info()
+    manifest = load_manifest(args.manifest)
+    is_seeds = manifest.get("is_seeds", args.is_seeds) if manifest else args.is_seeds
 
     spawn_jobs = []
     for factory in IS_FACTORIES:
-        for seed in range(args.is_seeds):
+        for seed in range(is_seeds):
             spawn_jobs.append((factory, seed))
 
     my_jobs = shard_list(spawn_jobs, rank, total)
@@ -222,16 +241,20 @@ def phase_spawn(args):
 
 def collect_all_objects(args):
     """Collect all objects to precompute: IS + PhysXNet + PhysXMobility."""
+    manifest = load_manifest(args.manifest)
     objects = []
 
     # IS factories
     is_base = os.path.join(REPO_DIR, "sim_exports", "urdf")
     if os.path.isdir(is_base):
+        is_seeds = manifest.get("is_seeds", args.is_seeds) if manifest else args.is_seeds
         for factory in sorted(os.listdir(is_base)):
             factory_path = os.path.join(is_base, factory)
             if not os.path.isdir(factory_path):
                 continue
             for seed_dir in sorted(os.listdir(factory_path)):
+                if int(seed_dir) >= is_seeds:
+                    continue
                 urdf = os.path.join(factory_path, seed_dir, f"{factory}.urdf")
                 if os.path.exists(urdf):
                     objects.append(("IS", factory, seed_dir, is_base, ""))
@@ -239,7 +262,10 @@ def collect_all_objects(args):
     # PhysXNet
     physxnet_out = os.path.join(REPO_DIR, "outputs", "PhysXNet")
     if os.path.isdir(physxnet_out):
+        allowed = set(manifest["physxnet_ids"]) if manifest and "physxnet_ids" in manifest else None
         for obj_id in sorted(os.listdir(physxnet_out)):
+            if allowed is not None and obj_id not in allowed:
+                continue
             scene = os.path.join(physxnet_out, obj_id, "scene.urdf")
             if os.path.exists(scene):
                 objects.append(("PhysXNet", "PhysXNet", obj_id, "", "_PhysXnet"))
@@ -247,7 +273,10 @@ def collect_all_objects(args):
     # PhysXMobility
     physxmob_out = os.path.join(REPO_DIR, "outputs", "PhysXMobility")
     if os.path.isdir(physxmob_out):
+        allowed = set(manifest["physxmob_ids"]) if manifest and "physxmob_ids" in manifest else None
         for obj_id in sorted(os.listdir(physxmob_out)):
+            if allowed is not None and obj_id not in allowed:
+                continue
             scene = os.path.join(physxmob_out, obj_id, "scene.urdf")
             if os.path.exists(scene):
                 objects.append(("PhysXMobility", "PhysXMobility", obj_id, "", "_PhysXmobility"))
@@ -407,6 +436,8 @@ def main():
     parser.add_argument("--phase", required=True,
                         choices=["setup", "spawn", "precompute", "render", "all"],
                         help="Pipeline phase to run")
+    parser.add_argument("--manifest", type=str, default=None,
+                        help="Path to subset_manifest.json (limits objects to process)")
     parser.add_argument("--is_seeds", type=int, default=100,
                         help="Number of seeds per IS factory (default: 100)")
     parser.add_argument("--n_gpus", type=int, default=8,
