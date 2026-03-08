@@ -835,6 +835,8 @@ def parse_args():
     parser.add_argument("--device", type=int, default=0)
     parser.add_argument("--envmap", default=None, help="Path to envmap HDR/EXR")
     parser.add_argument("--skip_existing", action="store_true")
+    parser.add_argument("--skip_probe", action="store_true",
+                        help="Skip static probe check (Method 2), rely on Method 1 only")
     parser.add_argument("--color_mode", default="both",
                         choices=["realistic", "part", "group", "both"],
                         help="realistic: per-part PBR materials from source data; "
@@ -1105,8 +1107,11 @@ def check_animode_static_probe(scene, num_frames, meta_dir, animode_name,
     # {view_name: [tmp_file_paths]} for inspection views (kept only if static)
     inspection_files = {}
 
+    # Use fast subset (4 views) instead of all 16 hemi views for probe
+    probe_views = FAST_HEMI_VIEWS if FAST_HEMI_VIEWS else dict(list(HEMI_VIEWS.items())[:4])
+
     try:
-        for vi, (view_name, (elev, azim)) in enumerate(HEMI_VIEWS.items()):
+        for vi, (view_name, (elev, azim)) in enumerate(probe_views.items()):
             # Position probe camera
             er = math.radians(elev)
             ar = math.radians(azim)
@@ -1144,7 +1149,7 @@ def check_animode_static_probe(scene, num_frames, meta_dir, animode_name,
                 inspection_files[view_name] = view_files
 
         print(f"  [Probe] {'STATIC' if all_static else 'HAS MOTION'} "
-              f"({len(HEMI_VIEWS)} hemi views × {len(probe_frames)} frames @ "
+              f"({len(probe_views)} hemi views × {len(probe_frames)} frames @ "
               f"{PROBE_RESOLUTION}px, {PROBE_SAMPLE_COUNT} spp)")
 
     finally:
@@ -2973,13 +2978,14 @@ def main():
         cam_center = [0.0, 0.0, 0.0]
         cam_distance = args.cam_distance
 
-        # --- Static check Method 2: probe-render 4 frames per hemi view ---
-        is_probe_static, probe_saved = check_animode_static_probe(
-            bpy.context.scene, num_frames, meta_dir, animode_name,
-            cam_center, cam_distance)
-        if is_probe_static:
-            record_static_skip_probe(meta_dir, animode_name, probe_saved)
-            continue
+        # --- Static check Method 2: probe-render frames per hemi view ---
+        if not args.skip_probe:
+            is_probe_static, probe_saved = check_animode_static_probe(
+                bpy.context.scene, num_frames, meta_dir, animode_name,
+                cam_center, cam_distance)
+            if is_probe_static:
+                record_static_skip_probe(meta_dir, animode_name, probe_saved)
+                continue
 
         # Determine which color passes to render
         two_coloring = split_info.get("two_coloring", {})

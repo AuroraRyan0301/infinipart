@@ -378,6 +378,7 @@ def _run_render_job(args_tuple):
         "--resolution", str(resolution),
         "--samples", str(samples),
         "--skip_existing",
+        "--skip_probe",
     ]
 
     print(f"  [GPU{gpu_id}] START {label}")
