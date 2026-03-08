@@ -1965,6 +1965,10 @@ def setup_render_settings(resolution, fps, num_frames, samples):
     scene.cycles.use_denoising = True
     scene.cycles.denoiser = 'OPENIMAGEDENOISE'
     try:
+        scene.cycles.denoising_use_gpu = True
+    except (AttributeError, TypeError):
+        pass
+    try:
         scene.cycles.denoising_input_passes = 'RGB_ALBEDO_NORMAL'
     except TypeError:
         pass
