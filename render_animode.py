@@ -36,7 +36,10 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(_SCRIPT_DIR))
 
 ENVMAP_DIR = os.environ.get("ENVMAP_DIR", os.path.join(_DATA_DIR, "dataset3D/envmap/indoor"))
-FFMPEG_BIN = shutil.which("ffmpeg") or "/usr/bin/ffmpeg"
+FFMPEG_BIN = (shutil.which("ffmpeg")
+              or next((p for p in ["/usr/bin/ffmpeg", "/usr/local/bin/ffmpeg",
+                                   os.path.join(_DATA_DIR, "miniconda3/envs/larm/bin/ffmpeg")]
+                       if os.path.isfile(p)), "/usr/bin/ffmpeg"))
 _FFMPEG_AVAILABLE = None  # lazy-checked on first use
 
 # Static-skip detection
@@ -2069,9 +2072,9 @@ def setup_compositor_dual_output(bg_dir):
     # File Output node -> withbg output (RGB, no alpha needed for composited bg)
     bg_out = tree.nodes.new('CompositorNodeOutputFile')
     bg_out.base_path = bg_dir
-    bg_out.format.file_format = 'PNG'
+    bg_out.format.file_format = 'JPEG'
     bg_out.format.color_mode = 'RGB'
-    bg_out.format.compression = 0  # fastest write
+    bg_out.format.quality = 95
     bg_out.file_slots[0].path = "frame_"
     bg_out.location = (600, 200)
     tree.links.new(alpha_over.outputs['Image'], bg_out.inputs[0])
@@ -3023,76 +3026,139 @@ def _set_fast_render(enable, original_samples=32):
         scene.cycles.transparent_max_bounces = 8
 
 
+def _rename_blender_mp4(animode_dir, output_name):
+    """Rename Blender's auto-suffixed MP4 to clean name."""
+    import glob as _glob
+    expected_mp4 = os.path.join(animode_dir, f"{output_name}.mp4")
+    out_prefix = os.path.join(animode_dir, output_name)
+    candidates = _glob.glob(f"{out_prefix}*")
+    for cand in candidates:
+        if cand != expected_mp4 and os.path.isfile(cand):
+            os.rename(cand, expected_mp4)
+            break
+
+
+def _encode_frames_to_mp4(frame_dir, output_mp4, fps, frame_start=1):
+    """Encode BMP frames to MP4 using external ffmpeg. Returns True on success."""
+    global _FFMPEG_AVAILABLE
+    if _FFMPEG_AVAILABLE is None:
+        _FFMPEG_AVAILABLE = os.path.isfile(FFMPEG_BIN) and os.access(FFMPEG_BIN, os.X_OK)
+    if not _FFMPEG_AVAILABLE:
+        return False
+
+    cmd = [
+        FFMPEG_BIN, "-y", "-hide_banner", "-loglevel", "warning",
+        "-framerate", str(fps),
+        "-start_number", str(frame_start),
+        "-i", os.path.join(frame_dir, "frame_%04d.jpg"),
+        "-c:v", "libx264", "-crf", "23",
+        "-pix_fmt", "yuv420p",
+        output_mp4,
+    ]
+    try:
+        result = subprocess.run(cmd, capture_output=True, timeout=60)
+        return result.returncode == 0
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return False
+
+
+def _render_dual_pass(cam, animode_dir, nobg_name, withbg_name):
+    """Render nobg MP4 + withbg BMP in ONE render call via compositor, then encode withbg."""
+    scene = bpy.context.scene
+
+    # Temp dir for withbg JPEG frames (prefer ramdisk for speed)
+    _tmpbase = "/dev/shm" if os.path.isdir("/dev/shm") else animode_dir
+    bg_dir = os.path.join(_tmpbase, f"_tmp_bg_{withbg_name}_{os.getpid()}")
+    os.makedirs(bg_dir, exist_ok=True)
+
+    # Setup compositor: transparent Image → Composite (MP4), Alpha Over → File Output (BMP)
+    setup_compositor_dual_output(bg_dir)
+
+    # Main output: nobg MP4
+    out_prefix = os.path.join(animode_dir, nobg_name)
+    scene.render.filepath = out_prefix
+    scene.camera = cam
+    bpy.ops.render.render(animation=True)
+
+    # Rename nobg MP4
+    _rename_blender_mp4(animode_dir, nobg_name)
+
+    # Disable compositor for subsequent calls
+    cleanup_compositor()
+
+    # Encode withbg BMP → MP4
+    withbg_mp4 = os.path.join(animode_dir, f"{withbg_name}.mp4")
+    ok = _encode_frames_to_mp4(bg_dir, withbg_mp4, scene.render.fps, scene.frame_start)
+
+    # Cleanup BMP frames
+    shutil.rmtree(bg_dir, ignore_errors=True)
+
+    if ok:
+        print(f"  {nobg_name}: OK")
+        print(f"  {withbg_name}: OK (composited)")
+    else:
+        # Fallback: ffmpeg failed, render withbg separately
+        print(f"  {nobg_name}: OK")
+        print(f"  WARNING: ffmpeg encode failed for {withbg_name}, rendering separately...")
+        _render_one_pass(cam, animode_dir, withbg_name, film_transparent=False)
+
+
 def _render_one_pass(cam, animode_dir, output_name, film_transparent):
     """Render animation directly to MP4. No per-frame PNG I/O."""
     scene = bpy.context.scene
     scene.render.film_transparent = film_transparent
     scene.use_nodes = False
-    # Blender FFMPEG appends frame range suffix to filepath, so we set it
-    # to just the base name. The output will be: {output_name}0001-0120.mp4
     out_prefix = os.path.join(animode_dir, output_name)
     scene.render.filepath = out_prefix
     scene.camera = cam
     bpy.ops.render.render(animation=True)
-
-    # Rename Blender's auto-suffixed output to clean .mp4 name
-    expected_mp4 = os.path.join(animode_dir, f"{output_name}.mp4")
-    # Find the file Blender actually created (has frame range suffix)
-    import glob
-    candidates = glob.glob(f"{out_prefix}*")
-    for cand in candidates:
-        if cand != expected_mp4 and os.path.isfile(cand):
-            os.rename(cand, expected_mp4)
-            break
+    _rename_blender_mp4(animode_dir, output_name)
     print(f"  {output_name}: OK")
 
 
 def _render_views(static_views, moving_views, animode_dir, vid_suffix,
                   render_nobg, render_withbg, cam_center, cam_distance,
-                  num_frames, fps, skip_existing):
-    """Render all views directly to MP4 video. No intermediate PNG frames.
+                  num_frames, fps, skip_existing, parts=None):
+    """Render all views directly to MP4 video.
 
-    For bg_mode=both: two render passes (nobg + withbg) instead of compositor.
-    Each pass outputs directly to .mp4 via Blender's built-in FFMPEG encoder.
+    When both nobg + withbg: uses compositor dual-output to render ONCE per view,
+    outputting nobg MP4 (main) + withbg JPEG frames (File Output), then encodes
+    withbg JPEG → MP4 via ffmpeg. Falls back to two passes if ffmpeg unavailable.
     """
-    # Collect render jobs: (output_name, film_transparent)
-    def _get_jobs(view_name):
-        jobs = []
-        if render_nobg:
-            name = f"{view_name}{vid_suffix}"
-            mp4 = os.path.join(animode_dir, f"{name}.mp4")
-            if not (skip_existing and os.path.exists(mp4)):
-                jobs.append((name, True))
-        if render_withbg:
-            name = f"{view_name}_withbg"
-            mp4 = os.path.join(animode_dir, f"{name}.mp4")
-            if not (skip_existing and os.path.exists(mp4)):
-                jobs.append((name, False))
-        return jobs
+    use_dual = render_nobg and render_withbg
+
+    def _process_view(cam, view_name):
+        nobg_name = f"{view_name}{vid_suffix}"
+        withbg_name = f"{view_name}_withbg"
+        nobg_mp4 = os.path.join(animode_dir, f"{nobg_name}.mp4")
+        withbg_mp4 = os.path.join(animode_dir, f"{withbg_name}.mp4")
+
+        need_nobg = render_nobg and not (skip_existing and os.path.exists(nobg_mp4))
+        need_withbg = render_withbg and not (skip_existing and os.path.exists(withbg_mp4))
+
+        if not need_nobg and not need_withbg:
+            print(f"  SKIP {view_name} (exists)")
+            return
+
+        if use_dual and need_nobg and need_withbg:
+            _render_dual_pass(cam, animode_dir, nobg_name, withbg_name)
+        else:
+            if need_nobg:
+                _render_one_pass(cam, animode_dir, nobg_name, film_transparent=True)
+            if need_withbg:
+                _render_one_pass(cam, animode_dir, withbg_name, film_transparent=False)
 
     # Static views
     for view_name, (elev, azim) in sorted(static_views.items()):
-        jobs = _get_jobs(view_name)
-        if not jobs:
-            print(f"  SKIP {view_name} (exists)")
-            continue
-
         cam = create_camera(view_name, cam_center, cam_distance, elev, azim)
-        for output_name, film_transparent in jobs:
-            _render_one_pass(cam, animode_dir, output_name, film_transparent)
+        _process_view(cam, view_name)
         remove_camera(cam)
 
     # Moving views
     for view_name, (se, sa, ee, ea) in sorted(moving_views.items()):
-        jobs = _get_jobs(view_name)
-        if not jobs:
-            print(f"  SKIP {view_name} (exists)")
-            continue
-
         cam = create_animated_camera(view_name, cam_center, cam_distance,
                                      se, sa, ee, ea, num_frames)
-        for output_name, film_transparent in jobs:
-            _render_one_pass(cam, animode_dir, output_name, film_transparent)
+        _process_view(cam, view_name)
         remove_camera(cam)
 
 
@@ -3306,7 +3372,8 @@ def main():
             _t0 = _time.time()
             _render_views(static_views, moving_views, animode_dir, vid_suffix,
                           render_nobg, render_withbg, cam_center, cam_distance,
-                          num_frames, args.fps, args.skip_existing)
+                          num_frames, args.fps, args.skip_existing,
+                          parts=parts)
             _phase_times["render"] += _time.time() - _t0
 
         # Restore full render settings after fast pass
