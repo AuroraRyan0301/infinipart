@@ -798,11 +798,15 @@ SWEEP_VIEWS = {
     "sweep_07": (10, -60, 55, 60),
 }
 
-# "fast" view set: Monte Carlo sampled subset (4 hemi + 2 orbit + 2 sweep)
-# Chosen to maximize coverage: spread across elevations and azimuth range
+# "fast" view set: fixed subset (4 hemi + 2 orbit + 2 sweep) for quick tests
 FAST_HEMI_VIEWS = {k: HEMI_VIEWS[k] for k in ["hemi_01", "hemi_06", "hemi_09", "hemi_14"]}
 FAST_ORBIT_VIEWS = {k: ORBIT_VIEWS[k] for k in ["orbit_01", "orbit_04"]}
 FAST_SWEEP_VIEWS = {k: SWEEP_VIEWS[k] for k in ["sweep_00", "sweep_04"]}
+
+# Default sample counts for "sample" mode (per animode, randomly sampled from full pool)
+SAMPLE_N_HEMI = 4
+SAMPLE_N_ORBIT = 2
+SAMPLE_N_SWEEP = 2
 
 # Named convenience views (static)
 NAMED_VIEWS = {
@@ -828,8 +832,9 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Render animode videos from precompute metadata")
     parser.add_argument("--metadata", required=True, help="Path to metadata.json")
     parser.add_argument("--animode", default="all", help="Animode name or 'all'")
-    parser.add_argument("--views", nargs="+", default=["hemi"],
-                        help="View groups: hemi, orbit, sweep, all, front, side, etc.")
+    parser.add_argument("--views", nargs="+", default=["sample"],
+                        help="View groups: sample (4+2+2 random per animode), "
+                             "all (16+8+8), fast (4+2+2 fixed), hemi, orbit, sweep, etc.")
     parser.add_argument("--resolution", type=int, default=512)
     parser.add_argument("--fps", type=int, default=30)
     parser.add_argument("--duration", type=float, default=4.0)
@@ -2874,10 +2879,18 @@ def frames_to_video(frame_dir, output_mp4, fps):
 def resolve_views(view_args):
     """Resolve view group names to dict of {name: config}.
 
+    "sample" mode returns None — views are sampled per-animode in the render loop.
+
     Returns:
-        static_views: {name: (elev, azim)}
-        moving_views: {name: (start_elev, start_azim, end_elev, end_azim)}
+        static_views: {name: (elev, azim)} or None if sample mode
+        moving_views: {name: (start_elev, start_azim, end_elev, end_azim)} or None
+        is_sample: True if per-animode random sampling should be used
     """
+    # Check for sample mode
+    for vg in view_args:
+        if vg.lower() == "sample":
+            return None, None, True
+
     static = {}
     moving = {}
 
@@ -2907,6 +2920,35 @@ def resolve_views(view_args):
             moving[vg_lower] = SWEEP_VIEWS[vg_lower]
         else:
             print(f"  WARNING: unknown view '{vg}', skipping")
+
+    return static, moving, False
+
+
+def sample_views_for_animode(object_id, animode_name):
+    """Deterministically sample 4+2+2 views for a specific animode.
+
+    Uses MD5 hash of (object_id, animode_name) for cross-process determinism.
+    Each animode gets a different random subset of the full 32 views.
+    """
+    import hashlib
+    seed_str = f"{object_id}_{animode_name}"
+    seed = int(hashlib.md5(seed_str.encode()).hexdigest()[:8], 16)
+    rng = random.Random(seed)
+
+    hemi_keys = sorted(HEMI_VIEWS.keys())
+    orbit_keys = sorted(ORBIT_VIEWS.keys())
+    sweep_keys = sorted(SWEEP_VIEWS.keys())
+
+    sel_hemi = rng.sample(hemi_keys, min(SAMPLE_N_HEMI, len(hemi_keys)))
+    sel_orbit = rng.sample(orbit_keys, min(SAMPLE_N_ORBIT, len(orbit_keys)))
+    sel_sweep = rng.sample(sweep_keys, min(SAMPLE_N_SWEEP, len(sweep_keys)))
+
+    static = {k: HEMI_VIEWS[k] for k in sel_hemi}
+    moving = {}
+    for k in sel_orbit:
+        moving[k] = ORBIT_VIEWS[k]
+    for k in sel_sweep:
+        moving[k] = SWEEP_VIEWS[k]
 
     return static, moving
 
@@ -3210,10 +3252,13 @@ def main():
         animodes_to_render = [args.animode]
 
     # Resolve views
-    static_views, moving_views = resolve_views(args.views)
-    total_views = len(static_views) + len(moving_views)
+    static_views, moving_views, is_sample_mode = resolve_views(args.views)
     print(f"  Animodes: {animodes_to_render}")
-    print(f"  Views: {len(static_views)} static + {len(moving_views)} moving = {total_views}")
+    if is_sample_mode:
+        print(f"  Views: sample mode ({SAMPLE_N_HEMI}+{SAMPLE_N_ORBIT}+{SAMPLE_N_SWEEP} per animode from 16+8+8 pool)")
+    else:
+        total_views = len(static_views) + len(moving_views)
+        print(f"  Views: {len(static_views)} static + {len(moving_views)} moving = {total_views}")
 
     num_frames = int(args.fps * args.duration)
     print(f"  Frames: {num_frames} ({args.duration}s @ {args.fps}fps)")
@@ -3347,7 +3392,16 @@ def main():
 
         for animode_name, split_info, frame_joint_values in renderable_animodes:
             animode_dir = os.path.join(meta_dir, animode_name)
-            print(f"\n--- {animode_name} / {color_pass} (suffix: {vid_suffix}) ---")
+
+            # Per-animode view sampling (deterministic per object+animode)
+            if is_sample_mode:
+                object_id = f"{metadata.get('output_name', '')}_{metadata.get('identifier', '')}"
+                sv, mv = sample_views_for_animode(object_id, animode_name)
+            else:
+                sv, mv = static_views, moving_views
+
+            print(f"\n--- {animode_name} / {color_pass} (suffix: {vid_suffix}, "
+                  f"{len(sv)}+{len(mv)} views) ---")
 
             # Re-animate this animode
             _t0 = _time.time()
@@ -3370,7 +3424,7 @@ def main():
             _phase_times["material"] += _time.time() - _t0
 
             _t0 = _time.time()
-            _render_views(static_views, moving_views, animode_dir, vid_suffix,
+            _render_views(sv, mv, animode_dir, vid_suffix,
                           render_nobg, render_withbg, cam_center, cam_distance,
                           num_frames, args.fps, args.skip_existing,
                           parts=parts)

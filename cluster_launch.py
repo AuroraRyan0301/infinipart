@@ -689,8 +689,8 @@ def main():
                         help="Number of seeds per IS factory (default: 100)")
     parser.add_argument("--n_gpus", type=int, default=8,
                         help="Number of GPUs per node (default: 8)")
-    parser.add_argument("--views", type=str, default="fast",
-                        help="View set for render: fast (4+2+2), all (16+8+8), hemi, etc.")
+    parser.add_argument("--views", type=str, default="sample",
+                        help="View set: sample (4+2+2 random/animode), all (16+8+8), fast (4+2+2 fixed)")
     parser.add_argument("--resolution", type=int, default=512)
     parser.add_argument("--samples", type=int, default=16,
                         help="Cycles samples (default: 16, with OIDN denoiser)")
