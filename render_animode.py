@@ -1930,26 +1930,36 @@ def remove_camera(cam):
 # ======================================================================
 
 def setup_render_engine():
-    """Set up Cycles with GPU."""
+    """Set up Cycles with GPU (OptiX preferred, CUDA fallback)."""
     scene = bpy.context.scene
     scene.render.engine = 'CYCLES'
     prefs = bpy.context.preferences.addons['cycles'].preferences
 
+    chosen = None
     for backend in ('OPTIX', 'CUDA'):
         try:
             prefs.compute_device_type = backend
             prefs.get_devices()
             usable = [d for d in prefs.devices if d.type == backend]
-            if usable:
-                for dev in prefs.devices:
-                    dev.use = (dev.type == backend)
-                    if dev.use:
-                        print(f"  GPU ({backend}): {dev.name}")
-                break
-        except Exception:
+            if not usable:
+                continue
+            # Enable GPU device(s) for this backend
+            scene.cycles.device = 'GPU'
+            for dev in prefs.devices:
+                dev.use = (dev.type == backend)
+            chosen = backend
+            print(f"  GPU backend: {backend}")
+            for dev in prefs.devices:
+                if dev.use:
+                    print(f"    device: {dev.name}")
+            break
+        except Exception as e:
+            print(f"  {backend} failed ({e}), trying next...")
             continue
 
-    scene.cycles.device = 'GPU'
+    if chosen is None:
+        print("  WARNING: No GPU backend available, falling back to CPU")
+        scene.cycles.device = 'CPU'
 
 
 def setup_render_settings(resolution, fps, num_frames, samples):
