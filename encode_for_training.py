@@ -140,7 +140,7 @@ def load_vae(device):
     return model
 
 
-def prepare_vae_input(vertices, faces, num_fps=1024, num_fps_salient=1024):
+def prepare_vae_input(vertices, faces, num_fps=2048, num_fps_salient=2048):
     """Prepare VAE input from mesh vertices/faces."""
     import fpsample
     import meshiki
