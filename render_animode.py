@@ -1087,6 +1087,8 @@ def check_animode_static_probe(scene, num_frames, meta_dir, animode_name,
         "camera":      scene.camera,
         "frame_start": scene.frame_start,
         "frame_end":   scene.frame_end,
+        "file_format": scene.render.image_settings.file_format,
+        "color_mode":  scene.render.image_settings.color_mode,
     }
 
     scene.render.resolution_x      = PROBE_RESOLUTION
@@ -1095,6 +1097,9 @@ def check_animode_static_probe(scene, num_frames, meta_dir, animode_name,
     scene.cycles.use_denoising     = False
     scene.cycles.use_animated_seed = False   # same seed every frame → static = same bytes
     scene.cycles.seed              = 0
+    # Probe needs PNG for per-frame pixel comparison (main render uses FFMPEG)
+    scene.render.image_settings.file_format = 'PNG'
+    scene.render.image_settings.color_mode = 'RGBA'
 
     # Single reusable probe camera (repositioned per view)
     cam_data = bpy.data.cameras.new("_probe_cam_data")
@@ -1164,6 +1169,8 @@ def check_animode_static_probe(scene, num_frames, meta_dir, animode_name,
         scene.render.filepath          = saved["filepath"]
         scene.frame_start              = saved["frame_start"]
         scene.frame_end                = saved["frame_end"]
+        scene.render.image_settings.file_format = saved["file_format"]
+        scene.render.image_settings.color_mode  = saved["color_mode"]
         scene.camera                   = saved["camera"]
         bpy.data.objects.remove(cam_obj, do_unlink=True)
         bpy.data.cameras.remove(cam_data, do_unlink=True)
@@ -1995,9 +2002,14 @@ def setup_render_settings(resolution, fps, num_frames, samples):
 
     scene.render.use_persistent_data = True
     scene.render.film_transparent = True
-    scene.render.image_settings.file_format = 'PNG'
-    scene.render.image_settings.color_mode = 'RGBA'
-    scene.render.image_settings.compression = 0  # fastest PNG write (no zlib compression)
+
+    # Default to direct MP4 video output (eliminates per-frame PNG I/O)
+    scene.render.image_settings.file_format = 'FFMPEG'
+    scene.render.ffmpeg.format = 'MPEG4'
+    scene.render.ffmpeg.codec = 'H264'
+    scene.render.ffmpeg.constant_rate_factor = 'MEDIUM'
+    scene.render.ffmpeg.gopsize = 18
+    scene.render.ffmpeg.audio_codec = 'NONE'
 
     try:
         scene.view_settings.view_transform = 'Filmic'
@@ -3011,101 +3023,76 @@ def _set_fast_render(enable, original_samples=32):
         scene.cycles.transparent_max_bounces = 8
 
 
+def _render_one_pass(cam, animode_dir, output_name, film_transparent):
+    """Render animation directly to MP4. No per-frame PNG I/O."""
+    scene = bpy.context.scene
+    scene.render.film_transparent = film_transparent
+    scene.use_nodes = False
+    # Blender FFMPEG appends frame range suffix to filepath, so we set it
+    # to just the base name. The output will be: {output_name}0001-0120.mp4
+    out_prefix = os.path.join(animode_dir, output_name)
+    scene.render.filepath = out_prefix
+    scene.camera = cam
+    bpy.ops.render.render(animation=True)
+
+    # Rename Blender's auto-suffixed output to clean .mp4 name
+    expected_mp4 = os.path.join(animode_dir, f"{output_name}.mp4")
+    # Find the file Blender actually created (has frame range suffix)
+    import glob
+    candidates = glob.glob(f"{out_prefix}*")
+    for cand in candidates:
+        if cand != expected_mp4 and os.path.isfile(cand):
+            os.rename(cand, expected_mp4)
+            break
+    print(f"  {output_name}: OK")
+
+
 def _render_views(static_views, moving_views, animode_dir, vid_suffix,
                   render_nobg, render_withbg, cam_center, cam_distance,
                   num_frames, fps, skip_existing):
-    """Render all views for the current scene state. Returns nothing."""
+    """Render all views directly to MP4 video. No intermediate PNG frames.
+
+    For bg_mode=both: two render passes (nobg + withbg) instead of compositor.
+    Each pass outputs directly to .mp4 via Blender's built-in FFMPEG encoder.
+    """
+    # Collect render jobs: (output_name, film_transparent)
+    def _get_jobs(view_name):
+        jobs = []
+        if render_nobg:
+            name = f"{view_name}{vid_suffix}"
+            mp4 = os.path.join(animode_dir, f"{name}.mp4")
+            if not (skip_existing and os.path.exists(mp4)):
+                jobs.append((name, True))
+        if render_withbg:
+            name = f"{view_name}_withbg"
+            mp4 = os.path.join(animode_dir, f"{name}.mp4")
+            if not (skip_existing and os.path.exists(mp4)):
+                jobs.append((name, False))
+        return jobs
+
     # Static views
     for view_name, (elev, azim) in sorted(static_views.items()):
-        nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-        withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
-
-        skip_nobg = not render_nobg or (skip_existing and os.path.exists(nobg_mp4))
-        skip_withbg = not render_withbg or (skip_existing and os.path.exists(withbg_mp4))
-        if skip_nobg and skip_withbg:
-            print(f"  SKIP {view_name}{vid_suffix} (exists)")
+        jobs = _get_jobs(view_name)
+        if not jobs:
+            print(f"  SKIP {view_name} (exists)")
             continue
 
-        nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-        withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
-
-        if render_nobg and render_withbg:
-            os.makedirs(nobg_frame_dir, exist_ok=True)
-            os.makedirs(withbg_frame_dir, exist_ok=True)
-            setup_compositor_dual_output(withbg_frame_dir)
-            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
-        elif render_withbg:
-            os.makedirs(withbg_frame_dir, exist_ok=True)
-            bpy.context.scene.render.film_transparent = False
-            bpy.context.scene.use_nodes = False
-            bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
-        else:
-            os.makedirs(nobg_frame_dir, exist_ok=True)
-            bpy.context.scene.render.film_transparent = True
-            bpy.context.scene.use_nodes = False
-            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
-
         cam = create_camera(view_name, cam_center, cam_distance, elev, azim)
-        bpy.context.scene.camera = cam
-        bpy.ops.render.render(animation=True)
-
-        if render_nobg and render_withbg:
-            cleanup_compositor()
-
-        if render_nobg and not skip_nobg:
-            ok = frames_to_video(nobg_frame_dir, nobg_mp4, fps)
-            print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
-        if render_withbg and not skip_withbg:
-            ok = frames_to_video(withbg_frame_dir, withbg_mp4, fps)
-            print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
-
+        for output_name, film_transparent in jobs:
+            _render_one_pass(cam, animode_dir, output_name, film_transparent)
         remove_camera(cam)
 
     # Moving views
     for view_name, (se, sa, ee, ea) in sorted(moving_views.items()):
-        nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-        withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
-
-        skip_nobg = not render_nobg or (skip_existing and os.path.exists(nobg_mp4))
-        skip_withbg = not render_withbg or (skip_existing and os.path.exists(withbg_mp4))
-        if skip_nobg and skip_withbg:
-            print(f"  SKIP {view_name}{vid_suffix} (exists)")
+        jobs = _get_jobs(view_name)
+        if not jobs:
+            print(f"  SKIP {view_name} (exists)")
             continue
-
-        nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-        withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
-
-        if render_nobg and render_withbg:
-            os.makedirs(nobg_frame_dir, exist_ok=True)
-            os.makedirs(withbg_frame_dir, exist_ok=True)
-            setup_compositor_dual_output(withbg_frame_dir)
-            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
-        elif render_withbg:
-            os.makedirs(withbg_frame_dir, exist_ok=True)
-            bpy.context.scene.render.film_transparent = False
-            bpy.context.scene.use_nodes = False
-            bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
-        else:
-            os.makedirs(nobg_frame_dir, exist_ok=True)
-            bpy.context.scene.render.film_transparent = True
-            bpy.context.scene.use_nodes = False
-            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
 
         cam = create_animated_camera(view_name, cam_center, cam_distance,
                                      se, sa, ee, ea, num_frames)
-        bpy.context.scene.camera = cam
-        bpy.ops.render.render(animation=True)
-
-        if render_nobg and render_withbg:
-            cleanup_compositor()
-
-        if render_nobg and not skip_nobg:
-            ok = frames_to_video(nobg_frame_dir, nobg_mp4, fps)
-            print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
-        if render_withbg and not skip_withbg:
-            ok = frames_to_video(withbg_frame_dir, withbg_mp4, fps)
-            print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
-
+        for output_name, film_transparent in jobs:
+            _render_one_pass(cam, animode_dir, output_name, film_transparent)
         remove_camera(cam)
 
 
