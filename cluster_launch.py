@@ -32,8 +32,10 @@ Environment variables (auto-detection priority):
 import argparse
 import json
 import os
+import queue
 import subprocess
 import sys
+import threading
 from multiprocessing import Pool
 
 # ======================================================================
@@ -323,7 +325,10 @@ def phase_precompute(args):
 # ======================================================================
 
 def collect_render_jobs(args):
-    """Find all (metadata_path, animode_name) pairs to render."""
+    """Find all metadata_path for objects that need rendering.
+
+    Returns list of metadata paths (one per object, renders all animodes together).
+    """
     jobs = []
     if not os.path.isdir(OUTPUT_DIR):
         return jobs
@@ -338,31 +343,35 @@ def collect_render_jobs(args):
             if not os.path.exists(meta_path):
                 continue
 
-            for entry in sorted(os.listdir(seed_path)):
-                animode_dir = os.path.join(seed_path, entry)
-                if not os.path.isdir(animode_dir):
+            if not args.force:
+                # Check if any animode still needs rendering
+                try:
+                    with open(meta_path) as _mf:
+                        splits = json.load(_mf).get("splits", {})
+                except (json.JSONDecodeError, IOError):
                     continue
-                if not (entry.startswith("basic_") or entry.startswith("senior_")
-                        or entry.startswith("custom_")):
+                all_done = True
+                for animode_name in splits:
+                    animode_dir = os.path.join(seed_path, animode_name)
+                    sentinel = os.path.join(animode_dir, "hemi_01_nobg.mp4")
+                    if not os.path.exists(sentinel):
+                        all_done = False
+                        break
+                if all_done:
                     continue
 
-                # Check if already rendered (sentinel: first hemi view in fast set)
-                sentinel = os.path.join(animode_dir, "hemi_01_nobg.mp4")
-                if os.path.exists(sentinel) and not args.force:
-                    continue
-
-                jobs.append((meta_path, entry))
+            jobs.append(meta_path)
 
     return jobs
 
 
 def _run_render_job(args_tuple):
-    """Run a single render job on assigned GPU."""
-    meta_path, animode_name, gpu_id, resolution, samples, timeout, views = args_tuple
+    """Run render for one object (all animodes) on assigned GPU."""
+    meta_path, gpu_id, resolution, samples, timeout, views = args_tuple
     seed_dir = os.path.dirname(meta_path)
     factory = os.path.basename(os.path.dirname(seed_dir))
     seed = os.path.basename(seed_dir)
-    label = f"{factory}/{seed}/{animode_name}"
+    label = f"{factory}/{seed}"
 
     env = os.environ.copy()
     env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
@@ -371,7 +380,7 @@ def _run_render_job(args_tuple):
         BLENDER_BIN, "--background", "--python",
         os.path.join(REPO_DIR, "render_animode.py"), "--",
         "--metadata", meta_path,
-        "--animode", animode_name,
+        "--animode", "all",
         "--views", views,
         "--color_mode", "both",
         "--bg_mode", "both",
@@ -381,7 +390,7 @@ def _run_render_job(args_tuple):
         "--skip_probe",
     ]
 
-    print(f"  [GPU{gpu_id}] START {label}")
+    print(f"  [GPU{gpu_id}] RENDER {label}")
     try:
         result = subprocess.run(cmd, env=env, capture_output=True, text=True,
                                 timeout=timeout, cwd=REPO_DIR)
@@ -389,7 +398,7 @@ def _run_render_job(args_tuple):
             print(f"  [GPU{gpu_id}] DONE  {label}")
             return True
         else:
-            err = result.stderr[-500:] if result.stderr else result.stdout[-500:]
+            err = (result.stderr or result.stdout or "")[-500:]
             print(f"  [GPU{gpu_id}] FAIL  {label}: {err}")
             return False
     except subprocess.TimeoutExpired:
@@ -402,7 +411,7 @@ def phase_render(args):
 
     all_jobs = collect_render_jobs(args)
     my_jobs = shard_list(all_jobs, rank, total)
-    print(f"[Node {rank}/{total}] Phase render: {len(my_jobs)} / {len(all_jobs)} animode jobs, {args.n_gpus} GPUs")
+    print(f"[Node {rank}/{total}] Phase render: {len(my_jobs)} / {len(all_jobs)} objects, {args.n_gpus} GPUs")
 
     if not my_jobs:
         print(f"[Node {rank}/{total}] Phase render: nothing to do")
@@ -411,9 +420,9 @@ def phase_render(args):
     # Assign GPUs round-robin
     gpu_ids = list(range(args.n_gpus))
     pool_args = [
-        (meta, anim, gpu_ids[i % len(gpu_ids)],
+        (meta, gpu_ids[i % len(gpu_ids)],
          args.resolution, args.samples, args.timeout, args.views)
-        for i, (meta, anim) in enumerate(my_jobs)
+        for i, meta in enumerate(my_jobs)
     ]
 
     with Pool(args.n_gpus) as pool:
@@ -422,6 +431,240 @@ def phase_render(args):
     ok = sum(1 for r in results if r)
     fail = sum(1 for r in results if not r)
     print(f"[Node {rank}/{total}] Phase render: {ok} ok, {fail} fail out of {len(my_jobs)}")
+
+
+# ======================================================================
+# Phase "pipeline": Pipelined spawn+precompute (CPU) + render (GPU)
+# ======================================================================
+
+def _run_precompute_one(source, factory, seed, base, suffix, args):
+    """Run precompute for a single object. Returns metadata path or None."""
+    out_check = os.path.join(OUTPUT_DIR, factory, seed, "metadata.json")
+    if os.path.exists(out_check) and not args.force:
+        return out_check  # already done, still needs render check
+
+    cmd = [
+        sys.executable, os.path.join(REPO_DIR, "split_precompute.py"),
+        "--factory", factory,
+        "--seed", seed,
+        "--output_dir", OUTPUT_DIR,
+        "--base", base if base else REPO_DIR,
+    ]
+    if suffix:
+        cmd.extend(["--suffix", suffix])
+    if args.force:
+        cmd.append("--force")
+    if args.max_basic:
+        cmd.extend(["--max_basic", str(args.max_basic)])
+    if args.max_senior:
+        cmd.extend(["--max_senior", str(args.max_senior)])
+
+    result = subprocess.run(cmd, cwd=REPO_DIR, capture_output=True, text=True)
+    if result.returncode == 0 and os.path.exists(out_check):
+        return out_check
+    else:
+        err = (result.stderr or result.stdout or "")[-200:]
+        print(f"  FAIL precompute {factory}/{seed}: {err}")
+        return None
+
+
+def _run_spawn_one(factory, seed, gpu_id=None):
+    """Run IS factory spawn. Returns True on success."""
+    out_check = os.path.join(REPO_DIR, "sim_exports", "urdf", factory, str(seed))
+    if os.path.isdir(out_check):
+        return True
+
+    env = os.environ.copy()
+    if gpu_id is not None:
+        env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+    cmd = [
+        BLENDER_BIN, "--background", "--python-expr",
+        f"import sys; sys.path.insert(0, '{REPO_DIR}'); "
+        f"sys.argv = ['spawn_asset', '-n', '{factory}', '-s', '{seed}', '-exp', 'urdf', '-dir', './sim_exports']; "
+        f"exec(open('{REPO_DIR}/scripts/spawn_asset.py').read())",
+    ]
+    try:
+        result = subprocess.run(cmd, env=env, capture_output=True, text=True,
+                                timeout=600, cwd=REPO_DIR)
+        return result.returncode == 0
+    except subprocess.TimeoutExpired:
+        print(f"  TIMEOUT spawn {factory}/{seed}")
+        return False
+
+
+def _run_render_object(meta_path, gpu_id, args):
+    """Render ALL animodes for one object on a single GPU (uses --animode all)."""
+    seed_dir = os.path.dirname(meta_path)
+    factory = os.path.basename(os.path.dirname(seed_dir))
+    seed = os.path.basename(seed_dir)
+    label = f"{factory}/{seed}"
+
+    env = os.environ.copy()
+    env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
+
+    cmd = [
+        BLENDER_BIN, "--background", "--python",
+        os.path.join(REPO_DIR, "render_animode.py"), "--",
+        "--metadata", meta_path,
+        "--animode", "all",
+        "--views", args.views,
+        "--color_mode", "both",
+        "--bg_mode", "both",
+        "--resolution", str(args.resolution),
+        "--samples", str(args.samples),
+        "--skip_existing",
+        "--skip_probe",
+    ]
+
+    print(f"  [GPU{gpu_id}] RENDER {label}")
+    try:
+        result = subprocess.run(cmd, env=env, capture_output=True, text=True,
+                                timeout=args.timeout, cwd=REPO_DIR)
+        if result.returncode == 0:
+            print(f"  [GPU{gpu_id}] DONE  {label}")
+            return True
+        else:
+            err = (result.stderr or result.stdout or "")[-500:]
+            print(f"  [GPU{gpu_id}] FAIL  {label}: {err}")
+            return False
+    except subprocess.TimeoutExpired:
+        print(f"  [GPU{gpu_id}] TIMEOUT {label}")
+        return False
+
+
+def phase_pipeline(args):
+    """Pipelined execution: CPU spawn+precompute overlapped with GPU render.
+
+    Architecture:
+      - 1 CPU producer thread: spawn (IS only) → precompute → push to render queue
+      - N GPU consumer threads: pull from queue → render all animodes per object
+      - Since render (~20min/obj) >> precompute (~25s/obj), the queue stays full
+        and precompute latency is fully hidden behind GPU rendering.
+    """
+    rank, total = get_node_info()
+
+    # Collect PhysX objects (need setup + precompute)
+    all_objects = []
+
+    # PhysX setup + collect
+    physxnet_out = os.path.join(REPO_DIR, "outputs", "PhysXNet")
+    physxmob_out = os.path.join(REPO_DIR, "outputs", "PhysXMobility")
+    manifest = load_manifest(args.manifest)
+
+    if os.path.isdir(physxnet_out):
+        allowed = set(manifest["physxnet_ids"]) if manifest and "physxnet_ids" in manifest else None
+        for obj_id in sorted(os.listdir(physxnet_out)):
+            if allowed is not None and obj_id not in allowed:
+                continue
+            if os.path.exists(os.path.join(physxnet_out, obj_id, "scene.urdf")):
+                all_objects.append(("PhysXNet", "PhysXNet", obj_id, "", "_PhysXnet"))
+
+    if os.path.isdir(physxmob_out):
+        allowed = set(manifest["physxmob_ids"]) if manifest and "physxmob_ids" in manifest else None
+        for obj_id in sorted(os.listdir(physxmob_out)):
+            if allowed is not None and obj_id not in allowed:
+                continue
+            if os.path.exists(os.path.join(physxmob_out, obj_id, "scene.urdf")):
+                all_objects.append(("PhysXMobility", "PhysXMobility", obj_id, "", "_PhysXmobility"))
+
+    # IS factories (need spawn first)
+    is_base = os.path.join(REPO_DIR, "sim_exports", "urdf")
+    is_seeds = manifest.get("is_seeds", args.is_seeds) if manifest else args.is_seeds
+    is_jobs = []
+    for factory in IS_FACTORIES:
+        for seed in range(is_seeds):
+            is_jobs.append((factory, seed))
+
+    my_objects = shard_list(all_objects, rank, total)
+    my_is_jobs = shard_list(is_jobs, rank, total)
+
+    total_work = len(my_objects) + len(my_is_jobs)
+    print(f"[Node {rank}/{total}] Pipeline: {len(my_objects)} PhysX + {len(my_is_jobs)} IS = {total_work} objects, {args.n_gpus} GPUs")
+
+    if total_work == 0:
+        print(f"[Node {rank}/{total}] Pipeline: nothing to do")
+        return
+
+    # Shared render queue: CPU pushes metadata paths, GPU workers consume
+    render_q = queue.Queue(maxsize=args.n_gpus * 4)
+    stats = {"precompute_ok": 0, "precompute_fail": 0, "render_ok": 0, "render_fail": 0}
+    stats_lock = threading.Lock()
+
+    # Number of parallel CPU workers for spawn+precompute
+    n_cpu_workers = min(4, max(1, os.cpu_count() // 4))
+
+    def _process_one_object(item):
+        """Process one object: spawn (if IS) + precompute. Returns metadata path or None."""
+        kind = item[0]
+        if kind == "physx":
+            _, source, factory, seed, base, suffix = item
+            return _run_precompute_one(source, factory, seed, base, suffix, args)
+        else:  # IS
+            _, factory, seed = item
+            ok = _run_spawn_one(factory, seed)
+            if not ok:
+                return None
+            return _run_precompute_one(
+                "IS", factory, str(seed),
+                os.path.join(REPO_DIR, "sim_exports", "urdf"), "", args)
+
+    def producer():
+        """CPU thread pool: spawn+precompute in parallel → push to render queue."""
+        from concurrent.futures import ThreadPoolExecutor, as_completed
+
+        # Build unified work list (PhysX first for fast queue fill, then IS)
+        work = []
+        for source, factory, seed, base, suffix in my_objects:
+            work.append(("physx", source, factory, seed, base, suffix))
+        for factory, seed in my_is_jobs:
+            work.append(("is", factory, seed))
+
+        with ThreadPoolExecutor(max_workers=n_cpu_workers) as pool:
+            futures = {pool.submit(_process_one_object, item): item for item in work}
+            for future in as_completed(futures):
+                meta = future.result()
+                with stats_lock:
+                    if meta:
+                        stats["precompute_ok"] += 1
+                    else:
+                        stats["precompute_fail"] += 1
+                if meta:
+                    render_q.put(meta)
+
+        # Poison pills for GPU workers
+        for _ in range(args.n_gpus):
+            render_q.put(None)
+
+    def gpu_consumer(gpu_id):
+        """GPU thread: pull objects from queue, render all animodes."""
+        while True:
+            meta_path = render_q.get()
+            if meta_path is None:
+                break
+            ok = _run_render_object(meta_path, gpu_id, args)
+            with stats_lock:
+                if ok:
+                    stats["render_ok"] += 1
+                else:
+                    stats["render_fail"] += 1
+
+    # Launch threads
+    producer_thread = threading.Thread(target=producer, name="producer")
+    producer_thread.start()
+
+    gpu_threads = []
+    for gid in range(args.n_gpus):
+        t = threading.Thread(target=gpu_consumer, args=(gid,), name=f"gpu_{gid}")
+        t.start()
+        gpu_threads.append(t)
+
+    producer_thread.join()
+    for t in gpu_threads:
+        t.join()
+
+    print(f"\n[Node {rank}/{total}] Pipeline done:")
+    print(f"  Precompute: {stats['precompute_ok']} ok, {stats['precompute_fail']} fail")
+    print(f"  Render:     {stats['render_ok']} ok, {stats['render_fail']} fail")
 
 
 # ======================================================================
@@ -438,8 +681,8 @@ def main():
     parser = argparse.ArgumentParser(
         description="Cluster launch script for Infinigen-Sim pipeline")
     parser.add_argument("--phase", required=True,
-                        choices=["setup", "spawn", "precompute", "render", "all"],
-                        help="Pipeline phase to run")
+                        choices=["setup", "spawn", "precompute", "render", "all", "pipeline"],
+                        help="Pipeline phase to run (pipeline = pipelined spawn+precompute+render)")
     parser.add_argument("--manifest", type=str, default=None,
                         help="Path to subset_manifest.json (limits objects to process)")
     parser.add_argument("--is_seeds", type=int, default=100,
@@ -468,11 +711,9 @@ def main():
     print(f"  BLENDER_BIN: {BLENDER_BIN}")
     print(f"  OUTPUT_DIR:  {OUTPUT_DIR}")
 
-    if args.phase == "all":
+    if args.phase in ("all", "pipeline"):
         phase_setup(args)
-        phase_spawn(args)
-        phase_precompute(args)
-        phase_render(args)
+        phase_pipeline(args)
     elif args.phase == "setup":
         phase_setup(args)
     elif args.phase == "spawn":

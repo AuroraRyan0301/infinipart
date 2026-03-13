@@ -305,6 +305,105 @@ sim_exports/                    # IS factory spawn outputs
 precompute_output/              # Pipeline output (part0/1.obj + verify.png + videos)
 ```
 
+## Render Pipeline Design (`render_animode.py`)
+
+### Render Flow (per object, single Blender process)
+
+```
+Phase 1: Pre-animate all animodes, static filtering
+  For each animode:
+    compute_collision_safe_animation()     # BVH collision → joint trajectories
+    check_static_method1()                 # joint-value-based static check
+    check_animode_static_probe()           # 64px probe render (4 views × 4 frames)
+    → append to renderable_animodes
+
+Phase 2: Render by color pass (outer: pass, inner: animode)
+  For color_pass in [realistic, group]:
+    For each renderable animode:
+      re-animate → apply materials → render all views
+```
+
+### Optimization Stack
+
+| Optimization | Effect | Mechanism |
+|---|---|---|
+| **Direct MP4 output** | Eliminated per-frame PNG I/O (~60ms/frame) | Blender built-in FFMPEG encoder (`file_format='FFMPEG'`) |
+| **Compositor dual-output** | bg_mode=both renders once instead of twice (~20-25% faster) | Composite node → nobg MP4 (main), File Output → withbg JPEG (ramdisk), ffmpeg encodes to MP4 |
+| **Fast group pass** | ~8x faster for group/part color modes | 4 samples, no denoise, 1 bounce for flat matte materials |
+| **Persistent data** | BVH + texture cache reused across render calls | `use_persistent_data = True`, eliminates re-init for subsequent calls |
+| **OIDN GPU denoise** | ~50x faster than CPU denoise | OpenImageDenoise with GPU acceleration (OptiX denoiser unsupported on L20X) |
+| **Compositor node caching** | Avoids rebuilding node tree per view | Global `_COMPOSITOR_BG_OUT_NODE` cache, only update `base_path` |
+| **Adaptive sampling** | Converges early on simple regions | `adaptive_threshold = 0.01`, 16-32 samples nearly identical speed |
+
+### Per-frame Time Breakdown (512px, 32 samples, adaptive)
+
+```
+GPU ray tracing:    ~20ms (Cycles OptiX/CUDA)
+OIDN GPU denoise:   ~10ms
+FFMPEG encode:      ~5ms
+Compositor + JPEG:  ~28ms (only when bg_mode=both, writes to /dev/shm)
+────────────────────
+nobg only:          ~46ms/frame
+nobg + withbg:      ~74ms/frame
+```
+
+### Render Settings
+
+```python
+# Realistic pass
+samples = 32 (adaptive, threshold=0.01)
+max_bounces = 4, diffuse = 2, glossy = 2, transmission = 2
+transparent_max_bounces = 8
+denoiser = OIDN (GPU)
+
+# Group/part pass (fast)
+samples = 4, no denoise, max_bounces = 1
+```
+
+## Cluster Pipeline (`cluster_launch.py`)
+
+### Pipeline Architecture (`--phase all` / `--phase pipeline`)
+
+```
+┌─ CPU Thread Pool (4 workers) ──────┐     ┌─ GPU Workers (N threads) ─────┐
+│                                     │     │                                │
+│  PhysX: precompute ─────────────┐   │     │  GPU0: Blender --animode all  │
+│  PhysX: precompute ─────────┐   │   │     │  GPU1: Blender --animode all  │
+│  IS: spawn → precompute ┐   │   ├───┼──→  │  GPU2: Blender --animode all  │
+│  IS: spawn → precompute │   │   │   │     │  GPU3: Blender --animode all  │
+│         ~25s/obj        │   │   │   │     │       ~20min/obj              │
+└─────────────────────────┴───┴───┘   │     └────────────────────────────────┘
+                                      │
+                          render_queue (bounded)
+```
+
+- **Producer** (CPU): 4 parallel threads run spawn (IS only) + precompute, push metadata paths to queue
+- **Consumer** (GPU): N threads each pull from queue, render ALL animodes in one Blender process (`--animode all`)
+- Render is ~50x slower than precompute, so **spawn + precompute latency is fully hidden**
+- PhysX objects (no spawn needed) are processed first for fastest queue fill
+- Per-object dispatch with `--animode all` leverages `persistent_data` BVH/texture cache
+
+### Production Throughput Estimate
+
+| Config | Per object | 30K objects / 8 GPU |
+|--------|-----------|---------------------|
+| 32 views, 4 animodes, bg_mode=both, color_mode=both | ~21.5 min | ~56 days |
+| 8 views (fast), 4 animodes | ~5.4 min | ~14 days |
+
+### Usage
+
+```bash
+# Full pipeline (recommended): pipelined spawn+precompute+render
+python cluster_launch.py --phase all --n_gpus 4 --views fast --is_seeds 100
+
+# Render only (precompute already done)
+python cluster_launch.py --phase render --n_gpus 4 --views fast
+
+# Multi-node cluster (SLURM)
+srun --nodes=100 --ntasks-per-node=1 \
+    python cluster_launch.py --phase all --n_gpus 8 --is_seeds 100
+```
+
 ## References
 
 - [Infinigen: Infinite Photorealistic Worlds Using Procedural Generation](https://arxiv.org/abs/2306.09310) (CVPR 2023)
