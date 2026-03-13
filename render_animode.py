@@ -37,6 +37,7 @@ _DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(_SCRIPT_DIR))
 
 ENVMAP_DIR = os.environ.get("ENVMAP_DIR", os.path.join(_DATA_DIR, "dataset3D/envmap/indoor"))
 FFMPEG_BIN = shutil.which("ffmpeg") or "/usr/bin/ffmpeg"
+_FFMPEG_AVAILABLE = None  # lazy-checked on first use
 
 # Static-skip detection
 PROBE_RESOLUTION   = 64    # probe render resolution (px)
@@ -1985,10 +1986,18 @@ def setup_render_settings(resolution, fps, num_frames, samples):
     scene.cycles.use_adaptive_sampling = True
     scene.cycles.adaptive_threshold = 0.01
 
+    # Light bounce limits — sufficient for envmap + simple objects
+    scene.cycles.max_bounces = 4
+    scene.cycles.diffuse_bounces = 2
+    scene.cycles.glossy_bounces = 2
+    scene.cycles.transmission_bounces = 2
+    scene.cycles.transparent_max_bounces = 8
+
     scene.render.use_persistent_data = True
     scene.render.film_transparent = True
     scene.render.image_settings.file_format = 'PNG'
     scene.render.image_settings.color_mode = 'RGBA'
+    scene.render.image_settings.compression = 0  # fastest PNG write (no zlib compression)
 
     try:
         scene.view_settings.view_transform = 'Filmic'
@@ -2002,18 +2011,31 @@ def setup_render_settings(resolution, fps, num_frames, samples):
     scene.view_settings.gamma = 1.0
 
 
+_COMPOSITOR_BG_OUT_NODE = None  # cached File Output node for dual-output
+
+
 def setup_compositor_dual_output(bg_dir):
     """Set up compositor to output both nobg and withbg in a single render pass.
 
     nobg RGBA goes through the Composite node (scene.render.filepath).
     withbg composites the Environment pass behind the transparent render
     via Alpha Over, output through a File Output node to bg_dir.
+
+    Reuses existing node tree if already set up — only updates bg_dir path.
     """
+    global _COMPOSITOR_BG_OUT_NODE
     scene = bpy.context.scene
     scene.render.film_transparent = True
     bpy.context.view_layer.use_pass_environment = True
-
     scene.use_nodes = True
+
+    # Fast path: if compositor already built, just update the output path
+    if (_COMPOSITOR_BG_OUT_NODE is not None
+            and _COMPOSITOR_BG_OUT_NODE.name in scene.node_tree.nodes):
+        _COMPOSITOR_BG_OUT_NODE.base_path = bg_dir
+        return
+
+    # Build node tree from scratch
     tree = scene.node_tree
     for n in tree.nodes:
         tree.nodes.remove(n)
@@ -2032,18 +2054,20 @@ def setup_compositor_dual_output(bg_dir):
     tree.links.new(rl.outputs['Env'], alpha_over.inputs[1])
     tree.links.new(rl.outputs['Image'], alpha_over.inputs[2])
 
-    # File Output node -> withbg output
+    # File Output node -> withbg output (RGB, no alpha needed for composited bg)
     bg_out = tree.nodes.new('CompositorNodeOutputFile')
     bg_out.base_path = bg_dir
     bg_out.format.file_format = 'PNG'
-    bg_out.format.color_mode = 'RGBA'
+    bg_out.format.color_mode = 'RGB'
+    bg_out.format.compression = 0  # fastest write
     bg_out.file_slots[0].path = "frame_"
     bg_out.location = (600, 200)
     tree.links.new(alpha_over.outputs['Image'], bg_out.inputs[0])
+    _COMPOSITOR_BG_OUT_NODE = bg_out
 
 
 def cleanup_compositor():
-    """Reset compositor to default state."""
+    """Disable compositor (keeps node tree for fast re-enable)."""
     bpy.context.scene.use_nodes = False
     bpy.context.view_layer.use_pass_environment = False
 
@@ -2798,6 +2822,14 @@ def animate_scene_normalized(parts, joints, children_map, root_link,
 
 def frames_to_video(frame_dir, output_mp4, fps):
     """Encode PNG sequence to MP4 with ffmpeg."""
+    global _FFMPEG_AVAILABLE
+    if _FFMPEG_AVAILABLE is None:
+        _FFMPEG_AVAILABLE = os.path.isfile(FFMPEG_BIN) and os.access(FFMPEG_BIN, os.X_OK)
+        if not _FFMPEG_AVAILABLE:
+            print(f"  NOTE: ffmpeg not found at {FFMPEG_BIN}, video encoding disabled")
+    if not _FFMPEG_AVAILABLE:
+        return False
+
     frame_pattern = os.path.join(frame_dir, "frame_%04d.png")
     cmd = [
         FFMPEG_BIN, "-y",
@@ -2868,6 +2900,215 @@ def resolve_views(view_args):
 # Main
 # ======================================================================
 
+def clear_animation(parts):
+    """Remove all animation keyframes from parts without reloading meshes."""
+    for link_name, obj in parts.items():
+        if obj.animation_data:
+            obj.animation_data_clear()
+        obj.matrix_world = Matrix.Identity(4)
+
+
+def _apply_materials_for_pass(color_pass, parts, links, split_info,
+                              realistic_mats, metadata):
+    """Assign materials for a given color pass."""
+    GROUP_COLORS = [
+        (0.22, 0.46, 0.72),  # blue
+        (0.89, 0.35, 0.13),  # orange
+        (0.17, 0.63, 0.17),  # green
+        (0.84, 0.15, 0.16),  # red
+        (0.58, 0.40, 0.74),  # purple
+        (0.55, 0.34, 0.29),  # brown
+        (0.89, 0.47, 0.76),  # pink
+        (0.50, 0.50, 0.50),  # gray
+        (0.74, 0.74, 0.13),  # olive
+        (0.09, 0.75, 0.81),  # cyan
+        (0.98, 0.60, 0.01),  # amber
+        (0.40, 0.76, 0.65),  # teal
+    ]
+
+    two_coloring = split_info.get("two_coloring", {})
+
+    if color_pass == "group":
+        all_groups = (two_coloring.get("part0_groups", []) +
+                      two_coloring.get("part1_groups", []))
+        idx_to_group = {}
+        for gi, group in enumerate(all_groups):
+            for link_idx in group:
+                idx_to_group[link_idx] = gi
+        for link_name, obj in parts.items():
+            idx = links[link_name]["part_idx"]
+            gi = idx_to_group.get(idx, 0)
+            color = GROUP_COLORS[gi % len(GROUP_COLORS)]
+            assign_material(obj, color, metallic=0.0, roughness=1.0)
+    elif color_pass == "realistic":
+        factory = metadata.get("factory", "")
+        identifier = metadata.get("identifier", "")
+        for link_name, obj in parts.items():
+            mat_info = realistic_mats.get(link_name, {})
+            source = mat_info.get("source", "pbr")
+            metallic = mat_info.get("metallic", 0.10)
+            roughness = mat_info.get("roughness", 0.45)
+
+            if source == "is_baked":
+                fix_is_baked_materials(obj)
+            elif source == "native":
+                enhance_existing_materials(obj, metallic, roughness)
+            else:
+                color = mat_info.get("color", (0.60, 0.60, 0.60))
+                category = mat_info.get("category", "plastic")
+                tex_set = mat_info.get("tex_set")
+                if tex_set and category != "glass":
+                    apply_textured_material(
+                        obj, color, metallic, roughness,
+                        category, tex_set,
+                        links[link_name]["part_idx"],
+                        factory, identifier)
+                else:
+                    assign_material(obj, color, metallic=metallic,
+                                    roughness=roughness)
+    else:  # "part"
+        part0_link_idxs = set()
+        for group in two_coloring.get("part0_groups", []):
+            part0_link_idxs.update(group)
+        part1_link_idxs = set()
+        for group in two_coloring.get("part1_groups", []):
+            part1_link_idxs.update(group)
+        for link_name, obj in parts.items():
+            idx = links[link_name]["part_idx"]
+            if idx in part0_link_idxs:
+                assign_material(obj, (0.45, 0.55, 0.65), metallic=0.0, roughness=1.0)
+            elif idx in part1_link_idxs:
+                assign_material(obj, (0.85, 0.55, 0.25), metallic=0.0, roughness=1.0)
+            else:
+                assign_material(obj, (0.6, 0.6, 0.6), metallic=0.0, roughness=1.0)
+
+
+def _set_fast_render(enable, original_samples=32):
+    """Toggle fast render settings for non-photorealistic passes (group/part).
+
+    Flat-color materials (roughness=1, metallic=0) produce virtually no noise,
+    so we can drop samples from 32→4 and skip denoising entirely.
+    """
+    scene = bpy.context.scene
+    if enable:
+        scene.cycles.samples = 4
+        scene.cycles.use_denoising = False
+        scene.cycles.use_adaptive_sampling = False
+        # Flat matte materials need minimal light bounces
+        scene.cycles.max_bounces = 1
+        scene.cycles.diffuse_bounces = 1
+        scene.cycles.glossy_bounces = 0
+        scene.cycles.transmission_bounces = 0
+        scene.cycles.transparent_max_bounces = 4
+    else:
+        scene.cycles.samples = original_samples
+        scene.cycles.use_denoising = True
+        scene.cycles.use_adaptive_sampling = True
+        scene.cycles.max_bounces = 4
+        scene.cycles.diffuse_bounces = 2
+        scene.cycles.glossy_bounces = 2
+        scene.cycles.transmission_bounces = 2
+        scene.cycles.transparent_max_bounces = 8
+
+
+def _render_views(static_views, moving_views, animode_dir, vid_suffix,
+                  render_nobg, render_withbg, cam_center, cam_distance,
+                  num_frames, fps, skip_existing):
+    """Render all views for the current scene state. Returns nothing."""
+    # Static views
+    for view_name, (elev, azim) in sorted(static_views.items()):
+        nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
+        withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
+
+        skip_nobg = not render_nobg or (skip_existing and os.path.exists(nobg_mp4))
+        skip_withbg = not render_withbg or (skip_existing and os.path.exists(withbg_mp4))
+        if skip_nobg and skip_withbg:
+            print(f"  SKIP {view_name}{vid_suffix} (exists)")
+            continue
+
+        nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
+        withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
+
+        if render_nobg and render_withbg:
+            os.makedirs(nobg_frame_dir, exist_ok=True)
+            os.makedirs(withbg_frame_dir, exist_ok=True)
+            setup_compositor_dual_output(withbg_frame_dir)
+            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
+        elif render_withbg:
+            os.makedirs(withbg_frame_dir, exist_ok=True)
+            bpy.context.scene.render.film_transparent = False
+            bpy.context.scene.use_nodes = False
+            bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
+        else:
+            os.makedirs(nobg_frame_dir, exist_ok=True)
+            bpy.context.scene.render.film_transparent = True
+            bpy.context.scene.use_nodes = False
+            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
+
+        cam = create_camera(view_name, cam_center, cam_distance, elev, azim)
+        bpy.context.scene.camera = cam
+        bpy.ops.render.render(animation=True)
+
+        if render_nobg and render_withbg:
+            cleanup_compositor()
+
+        if render_nobg and not skip_nobg:
+            ok = frames_to_video(nobg_frame_dir, nobg_mp4, fps)
+            print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
+        if render_withbg and not skip_withbg:
+            ok = frames_to_video(withbg_frame_dir, withbg_mp4, fps)
+            print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
+
+        remove_camera(cam)
+
+    # Moving views
+    for view_name, (se, sa, ee, ea) in sorted(moving_views.items()):
+        nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
+        withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
+
+        skip_nobg = not render_nobg or (skip_existing and os.path.exists(nobg_mp4))
+        skip_withbg = not render_withbg or (skip_existing and os.path.exists(withbg_mp4))
+        if skip_nobg and skip_withbg:
+            print(f"  SKIP {view_name}{vid_suffix} (exists)")
+            continue
+
+        nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
+        withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
+
+        if render_nobg and render_withbg:
+            os.makedirs(nobg_frame_dir, exist_ok=True)
+            os.makedirs(withbg_frame_dir, exist_ok=True)
+            setup_compositor_dual_output(withbg_frame_dir)
+            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
+        elif render_withbg:
+            os.makedirs(withbg_frame_dir, exist_ok=True)
+            bpy.context.scene.render.film_transparent = False
+            bpy.context.scene.use_nodes = False
+            bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
+        else:
+            os.makedirs(nobg_frame_dir, exist_ok=True)
+            bpy.context.scene.render.film_transparent = True
+            bpy.context.scene.use_nodes = False
+            bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
+
+        cam = create_animated_camera(view_name, cam_center, cam_distance,
+                                     se, sa, ee, ea, num_frames)
+        bpy.context.scene.camera = cam
+        bpy.ops.render.render(animation=True)
+
+        if render_nobg and render_withbg:
+            cleanup_compositor()
+
+        if render_nobg and not skip_nobg:
+            ok = frames_to_video(nobg_frame_dir, nobg_mp4, fps)
+            print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
+        if render_withbg and not skip_withbg:
+            ok = frames_to_video(withbg_frame_dir, withbg_mp4, fps)
+            print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
+
+        remove_camera(cam)
+
+
 def main():
     args = parse_args()
 
@@ -2887,12 +3128,10 @@ def main():
     metadata_dir = os.path.dirname(os.path.realpath(args.metadata))
     urdf_path = metadata["urdf_path"]
     scene_dir = metadata["scene_dir"]
-    # Resolve relative paths (stored relative to metadata.json location, portable across machines)
     if not os.path.isabs(urdf_path):
         urdf_path = os.path.normpath(os.path.join(metadata_dir, urdf_path))
     if not os.path.isabs(scene_dir):
         scene_dir = os.path.normpath(os.path.join(metadata_dir, scene_dir))
-    # Propagate resolved paths back so helper functions (e.g. get_realistic_materials) see them
     metadata["urdf_path"] = urdf_path
     metadata["scene_dir"] = scene_dir
     center = metadata["normalize"]["center"]
@@ -2934,65 +3173,82 @@ def main():
                     if f.endswith(('.hdr', '.exr'))]
         envmap_path = random.choice(envmaps) if envmaps else None
 
-    # Output directory is the parent of metadata.json
     meta_dir = os.path.dirname(os.path.abspath(args.metadata))
+    factory = metadata.get("factory", "")
+    cam_center = [0.0, 0.0, 0.0]
+    cam_distance = args.cam_distance
 
-    # Render each animode
+    # Determine color passes
+    if args.color_mode == "both":
+        color_passes = ["realistic", "group"]
+    else:
+        color_passes = [args.color_mode]
+
+    # ================================================================
+    # ONE-TIME SETUP: engine, settings, envmap, parts, realistic mats
+    # ================================================================
+    clear_scene()
+    setup_render_engine()
+    setup_render_settings(args.resolution, args.fps, num_frames, args.samples)
+    if envmap_path:
+        setup_envmap(envmap_path)
+
+    parts = load_scene_parts(metadata, links, joints, root_link)
+    if not parts:
+        print("ERROR: No parts loaded")
+        sys.exit(1)
+
+    print(f"  Loaded {len(parts)} parts: {sorted(parts.keys())}")
+
+    apply_upright_rotation_blender(parts, factory)
+    normalize_parts(parts, center, scale)
+
+    # Pre-load realistic material info (metadata lookup, not Blender ops)
+    realistic_mats = None
+    if any(p == "realistic" for p in color_passes):
+        realistic_mats = get_realistic_materials(metadata, links)
+
+    # Apply realistic materials ONCE (same across all animodes).
+    # For group/part passes, materials are re-assigned per animode inside the loop.
+    # We track which material state is currently active to avoid redundant re-assignment.
+    if "realistic" in color_passes:
+        _apply_materials_for_pass("realistic", parts, links,
+                                  all_splits[animodes_to_render[0]],
+                                  realistic_mats, metadata)
+    current_mat_pass = "realistic" if "realistic" in color_passes else None
+
+    # ================================================================
+    # PHASE 1: Pre-animate all animodes, run static checks
+    # ================================================================
+    # Pre-compute animation data and filter out static animodes FIRST,
+    # then render color passes in batches (all animodes per pass) to
+    # minimize shader recompiles between render calls.
+    renderable_animodes = []  # list of (animode_name, split_info, frame_joint_values)
     for animode_name in animodes_to_render:
-        print(f"\n--- Animode: {animode_name} ---")
         split_info = all_splits[animode_name]
-        animode_dir = os.path.join(meta_dir, animode_name)
 
-        # Fast-path: previously recorded as static → skip without any setup
+        # Fast-path: previously recorded as static
         if is_recorded_static(meta_dir, animode_name):
             print(f"  SKIP (recorded static): {animode_name}")
             continue
 
-        # Set up Blender scene
-        clear_scene()
-        setup_render_engine()
-        setup_render_settings(args.resolution, args.fps, num_frames, args.samples)
-        if envmap_path:
-            setup_envmap(envmap_path)
+        clear_animation(parts)
 
-        # Load parts
-        parts = load_scene_parts(metadata, links, joints, root_link)
-        if not parts:
-            print(f"  ERROR: No parts loaded, skipping {animode_name}")
-            continue
-
-        print(f"  Loaded {len(parts)} parts: {sorted(parts.keys())}")
-
-        # Apply PhysX coordinate rotation (Y-up → Z-up) before normalize
-        apply_upright_rotation_blender(parts, metadata.get("factory", ""))
-
-        # Normalize
-        normalize_parts(parts, center, scale)
-
-        # Compute collision-safe animation first (needed for static checks)
-        factory = metadata.get("factory", "")
         frame_joint_values = compute_collision_safe_animation(
             parts, joints, children_map, root_link,
             joints_by_name, split_info, num_frames, center, scale,
             factory_name=factory)
 
-        # --- Static check Method 1: joint values identical across all frames ---
         if check_static_method1(frame_joint_values):
             record_static_skip_method1(meta_dir, animode_name)
             continue
 
-        # Apply animation keyframes (pass precomputed values — no double computation)
         animate_scene_normalized(parts, joints, children_map, root_link,
                                  joints_by_name, split_info, num_frames,
                                  center, scale,
                                  precomputed_frame_joint_values=frame_joint_values,
                                  factory_name=factory)
 
-        # Camera setup
-        cam_center = [0.0, 0.0, 0.0]
-        cam_distance = args.cam_distance
-
-        # --- Static check Method 2: probe-render frames per hemi view ---
         if not args.skip_probe:
             is_probe_static, probe_saved = check_animode_static_probe(
                 bpy.context.scene, num_frames, meta_dir, animode_name,
@@ -3001,202 +3257,80 @@ def main():
                 record_static_skip_probe(meta_dir, animode_name, probe_saved)
                 continue
 
-        # Determine which color passes to render
-        two_coloring = split_info.get("two_coloring", {})
-        if args.color_mode == "both":
-            color_passes = ["realistic", "group"]
-        else:
-            color_passes = [args.color_mode]
+        renderable_animodes.append((animode_name, split_info, frame_joint_values))
 
-        # Pre-load realistic materials (only if needed)
-        realistic_mats = None
-        if any(p == "realistic" for p in color_passes):
-            realistic_mats = get_realistic_materials(metadata, links)
+    if not renderable_animodes:
+        print("  All animodes are static, nothing to render.")
 
-        GROUP_COLORS = [
-            (0.22, 0.46, 0.72),  # blue
-            (0.89, 0.35, 0.13),  # orange
-            (0.17, 0.63, 0.17),  # green
-            (0.84, 0.15, 0.16),  # red
-            (0.58, 0.40, 0.74),  # purple
-            (0.55, 0.34, 0.29),  # brown
-            (0.89, 0.47, 0.76),  # pink
-            (0.50, 0.50, 0.50),  # gray
-            (0.74, 0.74, 0.13),  # olive
-            (0.09, 0.75, 0.81),  # cyan
-            (0.98, 0.60, 0.01),  # amber
-            (0.40, 0.76, 0.65),  # teal
-        ]
+    # ================================================================
+    # PHASE 2: Render by color pass (batch all animodes per pass)
+    # ================================================================
+    # By iterating color_pass as the outer loop, we keep materials
+    # stable across animodes for the expensive realistic pass,
+    # avoiding shader recompiles between consecutive render calls.
+    import time as _time
+    _t_render_start = _time.time()
+    _phase_times = {"animate": 0, "material": 0, "render": 0}
 
-        for color_pass in color_passes:
-            suffix_map = {"group": "_group", "part": "_part", "realistic": "_nobg"}
-            vid_suffix = suffix_map.get(color_pass, "_nobg")
-            print(f"  --- Color pass: {color_pass} (suffix: {vid_suffix}) ---")
+    for color_pass in color_passes:
+        suffix_map = {"group": "_group", "part": "_part", "realistic": "_nobg"}
+        vid_suffix = suffix_map.get(color_pass, "_nobg")
+        is_fast = color_pass in ("group", "part")
 
-            # Assign materials for this pass
-            if color_pass == "group":
-                all_groups = []
-                for group in two_coloring.get("part0_groups", []):
-                    all_groups.append(group)
-                for group in two_coloring.get("part1_groups", []):
-                    all_groups.append(group)
-                idx_to_group = {}
-                for gi, group in enumerate(all_groups):
-                    for link_idx in group:
-                        idx_to_group[link_idx] = gi
-                for link_name, obj in parts.items():
-                    idx = links[link_name]["part_idx"]
-                    gi = idx_to_group.get(idx, 0)
-                    color = GROUP_COLORS[gi % len(GROUP_COLORS)]
-                    assign_material(obj, color, metallic=0.0, roughness=1.0)
-            elif color_pass == "realistic":
-                factory = metadata.get("factory", "")
-                identifier = metadata.get("identifier", "")
-                for link_name, obj in parts.items():
-                    mat_info = realistic_mats.get(link_name, {})
-                    source = mat_info.get("source", "pbr")
-                    metallic = mat_info.get("metallic", 0.10)
-                    roughness = mat_info.get("roughness", 0.45)
+        # Set render quality for this pass
+        if is_fast:
+            _set_fast_render(True, original_samples=args.samples)
 
-                    if source == "is_baked":
-                        # IS factory: baked PBR textures — wire METAL/ROUGHNESS/NORMAL maps
-                        fix_is_baked_materials(obj)
-                    elif source == "native":
-                        # PhysXMobility: has Kd colors but no roughness/metallic maps
-                        enhance_existing_materials(obj, metallic, roughness)
-                    else:
-                        color = mat_info.get("color", (0.60, 0.60, 0.60))
-                        category = mat_info.get("category", "plastic")
-                        tex_set = mat_info.get("tex_set")
-                        if tex_set and category != "glass":
-                            apply_textured_material(
-                                obj, color, metallic, roughness,
-                                category, tex_set,
-                                links[link_name]["part_idx"],
-                                factory, identifier)
-                        else:
-                            assign_material(obj, color, metallic=metallic,
-                                            roughness=roughness)
-            else:  # "part" — binary part0/part1 coloring
-                part0_link_idxs = set()
-                for group in two_coloring.get("part0_groups", []):
-                    part0_link_idxs.update(group)
-                part1_link_idxs = set()
-                for group in two_coloring.get("part1_groups", []):
-                    part1_link_idxs.update(group)
-                for link_name, obj in parts.items():
-                    idx = links[link_name]["part_idx"]
-                    if idx in part0_link_idxs:
-                        assign_material(obj, (0.45, 0.55, 0.65), metallic=0.0, roughness=1.0)
-                    elif idx in part1_link_idxs:
-                        assign_material(obj, (0.85, 0.55, 0.25), metallic=0.0, roughness=1.0)
-                    else:
-                        assign_material(obj, (0.6, 0.6, 0.6), metallic=0.0, roughness=1.0)
-
-            # Determine bg modes for this color pass
-            # Only realistic pass supports withbg; group/part always nobg
-            if color_pass == "realistic":
-                if args.bg_mode == "both":
-                    render_nobg, render_withbg = True, True
-                elif args.bg_mode == "withbg":
-                    render_nobg, render_withbg = False, True
-                else:
-                    render_nobg, render_withbg = True, False
+        # bg modes: only realistic supports withbg
+        if color_pass == "realistic":
+            if args.bg_mode == "both":
+                render_nobg, render_withbg = True, True
+            elif args.bg_mode == "withbg":
+                render_nobg, render_withbg = False, True
             else:
                 render_nobg, render_withbg = True, False
+        else:
+            render_nobg, render_withbg = True, False
 
-            # Render static views
-            for view_name, (elev, azim) in sorted(static_views.items()):
-                nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-                withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
+        for animode_name, split_info, frame_joint_values in renderable_animodes:
+            animode_dir = os.path.join(meta_dir, animode_name)
+            print(f"\n--- {animode_name} / {color_pass} (suffix: {vid_suffix}) ---")
 
-                skip_nobg = not render_nobg or (args.skip_existing and os.path.exists(nobg_mp4))
-                skip_withbg = not render_withbg or (args.skip_existing and os.path.exists(withbg_mp4))
-                if skip_nobg and skip_withbg:
-                    print(f"  SKIP {view_name}{vid_suffix} (exists)")
-                    continue
+            # Re-animate this animode
+            _t0 = _time.time()
+            clear_animation(parts)
+            animate_scene_normalized(parts, joints, children_map, root_link,
+                                     joints_by_name, split_info, num_frames,
+                                     center, scale,
+                                     precomputed_frame_joint_values=frame_joint_values,
+                                     factory_name=factory)
+            _phase_times["animate"] += _time.time() - _t0
 
-                nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-                withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
+            # Apply materials: realistic is shared (skip if cached),
+            # group/part depends on two_coloring per animode.
+            _t0 = _time.time()
+            needs_mat = (color_pass != "realistic" or current_mat_pass != "realistic")
+            if needs_mat:
+                _apply_materials_for_pass(color_pass, parts, links, split_info,
+                                          realistic_mats, metadata)
+                current_mat_pass = color_pass
+            _phase_times["material"] += _time.time() - _t0
 
-                if render_nobg and render_withbg:
-                    os.makedirs(nobg_frame_dir, exist_ok=True)
-                    os.makedirs(withbg_frame_dir, exist_ok=True)
-                    setup_compositor_dual_output(withbg_frame_dir)
-                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
-                elif render_withbg:
-                    os.makedirs(withbg_frame_dir, exist_ok=True)
-                    bpy.context.scene.render.film_transparent = False
-                    bpy.context.scene.use_nodes = False
-                    bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
-                else:
-                    os.makedirs(nobg_frame_dir, exist_ok=True)
-                    bpy.context.scene.render.film_transparent = True
-                    bpy.context.scene.use_nodes = False
-                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
+            _t0 = _time.time()
+            _render_views(static_views, moving_views, animode_dir, vid_suffix,
+                          render_nobg, render_withbg, cam_center, cam_distance,
+                          num_frames, args.fps, args.skip_existing)
+            _phase_times["render"] += _time.time() - _t0
 
-                cam = create_camera(view_name, cam_center, cam_distance, elev, azim)
-                bpy.context.scene.camera = cam
-                bpy.ops.render.render(animation=True)
+        # Restore full render settings after fast pass
+        if is_fast:
+            _set_fast_render(False, original_samples=args.samples)
 
-                if render_nobg and render_withbg:
-                    cleanup_compositor()
-
-                if render_nobg and not skip_nobg:
-                    ok = frames_to_video(nobg_frame_dir, nobg_mp4, args.fps)
-                    print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
-                if render_withbg and not skip_withbg:
-                    ok = frames_to_video(withbg_frame_dir, withbg_mp4, args.fps)
-                    print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
-
-                remove_camera(cam)
-
-            # Render moving views
-            for view_name, (se, sa, ee, ea) in sorted(moving_views.items()):
-                nobg_mp4 = os.path.join(animode_dir, f"{view_name}{vid_suffix}.mp4")
-                withbg_mp4 = os.path.join(animode_dir, f"{view_name}_withbg.mp4")
-
-                skip_nobg = not render_nobg or (args.skip_existing and os.path.exists(nobg_mp4))
-                skip_withbg = not render_withbg or (args.skip_existing and os.path.exists(withbg_mp4))
-                if skip_nobg and skip_withbg:
-                    print(f"  SKIP {view_name}{vid_suffix} (exists)")
-                    continue
-
-                nobg_frame_dir = os.path.join(animode_dir, f"{view_name}{vid_suffix}")
-                withbg_frame_dir = os.path.join(animode_dir, f"{view_name}_withbg")
-
-                if render_nobg and render_withbg:
-                    os.makedirs(nobg_frame_dir, exist_ok=True)
-                    os.makedirs(withbg_frame_dir, exist_ok=True)
-                    setup_compositor_dual_output(withbg_frame_dir)
-                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
-                elif render_withbg:
-                    os.makedirs(withbg_frame_dir, exist_ok=True)
-                    bpy.context.scene.render.film_transparent = False
-                    bpy.context.scene.use_nodes = False
-                    bpy.context.scene.render.filepath = os.path.join(withbg_frame_dir, "frame_")
-                else:
-                    os.makedirs(nobg_frame_dir, exist_ok=True)
-                    bpy.context.scene.render.film_transparent = True
-                    bpy.context.scene.use_nodes = False
-                    bpy.context.scene.render.filepath = os.path.join(nobg_frame_dir, "frame_")
-
-                cam = create_animated_camera(view_name, cam_center, cam_distance,
-                                             se, sa, ee, ea, num_frames)
-                bpy.context.scene.camera = cam
-                bpy.ops.render.render(animation=True)
-
-                if render_nobg and render_withbg:
-                    cleanup_compositor()
-
-                if render_nobg and not skip_nobg:
-                    ok = frames_to_video(nobg_frame_dir, nobg_mp4, args.fps)
-                    print(f"  {view_name}{vid_suffix}: {'OK' if ok else 'FAIL (ffmpeg)'}")
-                if render_withbg and not skip_withbg:
-                    ok = frames_to_video(withbg_frame_dir, withbg_mp4, args.fps)
-                    print(f"  {view_name}_withbg: {'OK' if ok else 'FAIL (ffmpeg)'}")
-
-                remove_camera(cam)
+    _t_total = _time.time() - _t_render_start
+    print(f"\n  [PROFILE] render_total={_t_total:.1f}s  "
+          f"animate={_phase_times['animate']:.1f}s  "
+          f"material={_phase_times['material']:.1f}s  "
+          f"render_views={_phase_times['render']:.1f}s")
 
     # Update metadata with envmap info
     if envmap_path:
