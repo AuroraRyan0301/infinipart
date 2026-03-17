@@ -58,6 +58,20 @@ PHYSXMOB_BASE = os.environ.get("PHYSXMOB_BASE",
 # Output directory (on shared filesystem)
 OUTPUT_DIR = os.path.join(REPO_DIR, "precompute_output")
 
+
+def _urdf_has_movable_joints(urdf_path):
+    """Fast check (~1ms) whether a URDF has any movable joints.
+    Avoids spawning a 5s subprocess just to discover 'no movable joints'."""
+    try:
+        import xml.etree.ElementTree as ET
+        tree = ET.parse(urdf_path)
+        for j in tree.findall("joint"):
+            if j.get("type") in ("revolute", "prismatic", "continuous"):
+                return True
+        return False
+    except Exception:
+        return True  # if can't parse, let split_precompute handle the error
+
 # Stats directory for event-driven dashboard
 STATS_DIR = "/mnt/data_ssd/infinigen-sim/.stats"
 
@@ -532,12 +546,37 @@ def _run_spawn_one(factory, seed, gpu_id=None):
         return False
 
 
+def _render_already_complete(meta_path):
+    """Fast check: are all animodes already fully rendered?
+    Checks if each animode dir has at least one _nobg.mp4 file.
+    Returns True if everything is already done (skip Blender startup)."""
+    try:
+        seed_dir = os.path.dirname(meta_path)
+        animode_dirs = [d for d in os.listdir(seed_dir)
+                        if os.path.isdir(os.path.join(seed_dir, d))]
+        if not animode_dirs:
+            return False  # no animodes = needs work
+        for ad in animode_dirs:
+            ad_path = os.path.join(seed_dir, ad)
+            has_nobg = any(f.endswith("_nobg.mp4") for f in os.listdir(ad_path))
+            if not has_nobg:
+                return False  # this animode needs rendering
+        return True
+    except Exception:
+        return False
+
+
 def _run_render_object(meta_path, gpu_id, args):
     """Render ALL animodes for one object on a single GPU (uses --animode all)."""
     seed_dir = os.path.dirname(meta_path)
     factory = os.path.basename(os.path.dirname(seed_dir))
     seed = os.path.basename(seed_dir)
     label = f"{factory}/{seed}"
+
+    # Fast skip: if all animodes already have rendered videos, don't start Blender
+    if _render_already_complete(meta_path):
+        print(f"  [GPU{gpu_id}] SKIP  {label} (already rendered)")
+        return True
 
     env = os.environ.copy()
     env["CUDA_VISIBLE_DEVICES"] = str(gpu_id)
@@ -628,7 +667,7 @@ def phase_pipeline(args):
         return
 
     # Shared render queue: CPU pushes metadata paths, GPU workers consume
-    render_q = queue.Queue(maxsize=args.n_gpus * 4)
+    render_q = queue.Queue(maxsize=args.n_gpus * args.workers_per_gpu * 4)
     now = time.time()
     stats = {
         "precompute_ok": 0, "precompute_fail": 0, "precompute_skip": 0,
@@ -709,7 +748,8 @@ def phase_pipeline(args):
             _, source, factory, seed, base, suffix = item
             # Auto-setup if not already done
             out_dir = os.path.join(REPO_DIR, "outputs", factory, seed)
-            if not os.path.exists(os.path.join(out_dir, "scene.urdf")):
+            urdf_path = os.path.join(out_dir, "scene.urdf")
+            if not os.path.exists(urdf_path):
                 src_map = {"PhysXNet": "physxnet", "PhysXMobility": "physx_mobility"}
                 cmd = [
                     sys.executable, os.path.join(REPO_DIR, "setup_physxnet_scene.py"),
@@ -720,6 +760,10 @@ def phase_pipeline(args):
                 if result.returncode != 0:
                     print(f"  FAIL setup {factory}/{seed}: {(result.stderr or '')[-200:]}")
                     return None
+                urdf_path = os.path.join(out_dir, "scene.urdf")
+            # Fast skip: check URDF for movable joints (~1ms vs ~5s subprocess)
+            if not _urdf_has_movable_joints(urdf_path):
+                return None
             return _run_precompute_one(source, factory, seed, base, suffix, args)
         else:  # IS
             _, factory, seed = item
@@ -773,8 +817,9 @@ def phase_pipeline(args):
                         stats["precompute_fail"] += 1
                     _emit_event("precompute", label, False, duration=dur)
 
-        # Poison pills for GPU workers
-        for _ in range(args.n_gpus):
+        # Poison pills for GPU workers (one per worker thread)
+        n_render_workers = args.n_gpus * args.workers_per_gpu
+        for _ in range(n_render_workers):
             render_q.put(None)
 
     def gpu_consumer(gpu_id):
@@ -805,9 +850,11 @@ def phase_pipeline(args):
 
     gpu_threads = []
     for gid in args._gpu_ids:
-        t = threading.Thread(target=gpu_consumer, args=(gid,), name=f"gpu_{gid}")
-        t.start()
-        gpu_threads.append(t)
+        for w in range(args.workers_per_gpu):
+            t = threading.Thread(target=gpu_consumer, args=(gid,),
+                                 name=f"gpu_{gid}_w{w}")
+            t.start()
+            gpu_threads.append(t)
 
     producer_thread.join()
     for t in gpu_threads:
@@ -858,6 +905,9 @@ def main():
                         help="Cycles samples (default: 16, with OIDN denoiser)")
     parser.add_argument("--timeout", type=int, default=1800,
                         help="Per-job timeout in seconds (default: 1800)")
+    parser.add_argument("--workers_per_gpu", type=int, default=1,
+                        help="Parallel render workers per GPU (default: 1). "
+                             "Increase to fill GPU SM when single Blender underutilizes.")
     parser.add_argument("--force", action="store_true",
                         help="Force regeneration even if output exists")
     parser.add_argument("--max_basic", type=int, default=10,
