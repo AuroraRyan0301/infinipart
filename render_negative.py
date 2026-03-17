@@ -14,7 +14,7 @@ and NO BVH collision detection (negative samples intentionally interpenetrate).
   6. jitter             — additive Gaussian noise per frame
 
 Output layout:
-  {animode_dir}/negatives/{neg_type}/{view}_{suffix}.mp4
+  {output_dir}/{factory}/{seed}/{animode}/negatives/{neg_type}/{view}_{suffix}.mp4
 
 Usage:
   CUDA_VISIBLE_DEVICES=0 blender --background --python render_negative.py -- \
@@ -58,6 +58,8 @@ parser.add_argument("--samples", type=int, default=16)
 parser.add_argument("--fps", type=int, default=30)
 parser.add_argument("--duration", type=float, default=3.0)
 parser.add_argument("--cam_distance", type=float, default=1.4)
+parser.add_argument("--output_dir", default="./precompute_nega_output",
+                    help="Output root directory (default: ./precompute_nega_output)")
 parser.add_argument("--skip_existing", action="store_true")
 # Negative-specific params
 parser.add_argument("--neg_direction_offset_deg", type=float, default=45.0)
@@ -283,24 +285,22 @@ def animate_negative(parts, joints, children_map, root_link,
 
 
 def swap_active_links(split_info, links, parts):
-    """For wrong_parts_moving: invert which links are part0 vs part1.
+    """For wrong_parts_moving: swap active <-> fixed joints.
 
-    Returns a modified split_info where active_joints animate the OTHER set
-    of parts. We do this by swapping the coloring (part0 <-> part1).
+    Makes the currently-fixed joints active and vice versa, so the WRONG
+    parts animate. Only meaningful when there are both active AND fixed joints.
+    Returns None if swap would result in no active joints (e.g. single-joint objects).
     """
     modified = copy.deepcopy(split_info)
-    coloring = modified.get("coloring", {})
-    if not coloring:
+
+    jc = modified.get("joint_classification", {})
+    has_active = any(c == "active" for c in jc.values())
+    has_fixed = any(c == "fixed" for c in jc.values())
+
+    if not (has_active and has_fixed):
+        # Single-joint or no fixed joints — swap is meaningless
         return None
 
-    # Swap the colors: 0 -> 1, 1 -> 0
-    new_coloring = {}
-    for link, color in coloring.items():
-        new_coloring[link] = 1 - color
-    modified["coloring"] = new_coloring
-
-    # Also swap the joint classification: active <-> fixed
-    jc = modified.get("joint_classification", {})
     new_jc = {}
     for jname, cls in jc.items():
         if cls == "active":
@@ -310,6 +310,10 @@ def swap_active_links(split_info, links, parts):
         else:
             new_jc[jname] = cls
     modified["joint_classification"] = new_jc
+
+    # Update active_joints / fixed_joints lists
+    modified["active_joints"] = [j for j, c in new_jc.items() if c == "active"]
+    modified["fixed_joints"] = [j for j, c in new_jc.items() if c == "fixed"]
 
     return modified
 
@@ -328,6 +332,14 @@ def main():
     print(f"{'='*60}")
 
     metadata_dir = os.path.dirname(os.path.realpath(args.metadata))
+    # Output goes to separate directory: {output_dir}/{output_name}/{identifier}/
+    nega_base = os.path.join(
+        args.output_dir,
+        metadata["output_name"],
+        str(metadata["identifier"]),
+    )
+    os.makedirs(nega_base, exist_ok=True)
+
     urdf_path = metadata["urdf_path"]
     scene_dir = metadata["scene_dir"]
     if not os.path.isabs(urdf_path):
@@ -423,7 +435,7 @@ def main():
             print(f"  {animode_name} / {neg_type}")
             print(f"{'─'*50}")
 
-            animode_dir = os.path.join(metadata_dir, animode_name)
+            animode_dir = os.path.join(nega_base, animode_name)
             neg_out_dir = os.path.join(animode_dir, "negatives", neg_type)
             os.makedirs(neg_out_dir, exist_ok=True)
 
@@ -518,8 +530,9 @@ def main():
                     sv, mv = static_views, moving_views
 
                 _render_views(sv, mv, neg_out_dir, vid_suffix,
+                              render_nobg, render_withbg,
                               cam_center, cam_distance, num_frames, args.fps,
-                              render_nobg, render_withbg)
+                              args.skip_existing)
 
                 if is_fast:
                     _set_fast_render(False, original_samples=args.samples)
@@ -527,7 +540,7 @@ def main():
             neg_metadata[f"{animode_name}/{neg_type}"] = meta_entry
 
     # Save negative metadata
-    neg_meta_path = os.path.join(metadata_dir, "negative_metadata.json")
+    neg_meta_path = os.path.join(nega_base, "negative_metadata.json")
     with open(neg_meta_path, "w") as f:
         json.dump(neg_metadata, f, indent=2)
     print(f"\nNegative metadata saved to {neg_meta_path}")
