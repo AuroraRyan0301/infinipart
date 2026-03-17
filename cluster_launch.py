@@ -35,7 +35,9 @@ import os
 import queue
 import subprocess
 import sys
+import tempfile
 import threading
+import time
 from multiprocessing import Pool
 
 # ======================================================================
@@ -47,12 +49,33 @@ DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(REPO_DIR))
 BLENDER_BIN = os.environ.get("BLENDER_BIN",
     os.path.join(DATA_DIR, "blender-4.2.18-linux-x64/blender"))
 
-# Dataset paths (relative to DATA_DIR)
-PHYSXNET_BASE = os.path.join(DATA_DIR, "PhysXNet/version_1")
-PHYSXMOB_BASE = os.path.join(DATA_DIR, "PhysX_mobility")
+# Dataset paths
+PHYSXNET_BASE = os.environ.get("PHYSXNET_BASE",
+    "/mnt/data/fulian/dataset/PhysXNet/version_1")
+PHYSXMOB_BASE = os.environ.get("PHYSXMOB_BASE",
+    "/mnt/data/fulian/dataset/PhysX_mobility")
 
 # Output directory (on shared filesystem)
 OUTPUT_DIR = os.path.join(REPO_DIR, "precompute_output")
+
+# Stats directory for event-driven dashboard
+STATS_DIR = "/mnt/data_ssd/infinigen-sim/.stats"
+
+
+def write_stats(filename, data):
+    """Atomically write JSON stats file for dashboard consumption."""
+    os.makedirs(STATS_DIR, exist_ok=True)
+    path = os.path.join(STATS_DIR, filename)
+    tmp_fd, tmp_path = tempfile.mkstemp(dir=STATS_DIR, suffix=".tmp")
+    try:
+        with os.fdopen(tmp_fd, "w") as f:
+            json.dump(data, f)
+        os.replace(tmp_path, path)
+    except Exception:
+        try:
+            os.unlink(tmp_path)
+        except OSError:
+            pass
 
 
 def get_node_info():
@@ -143,17 +166,27 @@ def phase_setup(args):
     all_ids = physxnet_ids + physxmob_ids
     my_ids = shard_list(all_ids, rank, total)
 
-    print(f"[Node {rank}/{total}] Phase setup: {len(my_ids)} / {len(all_ids)} objects")
-
+    # Filter already-setup objects
+    todo = []
     for factory, source, obj_id in my_ids:
         out_dir = os.path.join(REPO_DIR, "outputs", factory, obj_id)
-        if os.path.exists(os.path.join(out_dir, "scene.urdf")):
-            continue
+        if not os.path.exists(os.path.join(out_dir, "scene.urdf")):
+            todo.append((factory, source, obj_id))
+
+    print(f"[Node {rank}/{total}] Phase setup: {len(todo)} new / {len(my_ids)} total objects")
+
+    def _setup_one(item):
+        factory, source, obj_id = item
         cmd = [
             sys.executable, os.path.join(REPO_DIR, "setup_physxnet_scene.py"),
             "--id", obj_id, "--factory", factory, "--source", source,
         ]
-        subprocess.run(cmd, cwd=REPO_DIR)
+        subprocess.run(cmd, cwd=REPO_DIR, capture_output=True)
+
+    n_workers = min(32, max(1, os.cpu_count() // 4))
+    from concurrent.futures import ThreadPoolExecutor
+    with ThreadPoolExecutor(max_workers=n_workers) as pool:
+        list(pool.map(_setup_one, todo))
 
     print(f"[Node {rank}/{total}] Phase setup: done")
 
@@ -226,7 +259,7 @@ def phase_spawn(args):
         return
 
     # Assign GPUs round-robin
-    gpu_ids = list(range(args.n_gpus))
+    gpu_ids = args._gpu_ids
     pool_args = [(f, s, gpu_ids[i % len(gpu_ids)]) for i, (f, s) in enumerate(todo)]
 
     with Pool(args.n_gpus) as pool:
@@ -418,7 +451,7 @@ def phase_render(args):
         return
 
     # Assign GPUs round-robin
-    gpu_ids = list(range(args.n_gpus))
+    gpu_ids = args._gpu_ids
     pool_args = [
         (meta, gpu_ids[i % len(gpu_ids)],
          args.resolution, args.samples, args.timeout, args.views)
@@ -439,7 +472,9 @@ def phase_render(args):
 
 def _run_precompute_one(source, factory, seed, base, suffix, args):
     """Run precompute for a single object. Returns metadata path or None."""
-    out_check = os.path.join(OUTPUT_DIR, factory, seed, "metadata.json")
+    # Output dir includes suffix (e.g. PhysXNet_PhysXnet)
+    out_factory = factory + suffix if suffix else factory
+    out_check = os.path.join(OUTPUT_DIR, out_factory, seed, "metadata.json")
     if os.path.exists(out_check) and not args.force:
         return out_check  # already done, still needs render check
 
@@ -459,7 +494,12 @@ def _run_precompute_one(source, factory, seed, base, suffix, args):
     if args.max_senior:
         cmd.extend(["--max_senior", str(args.max_senior)])
 
-    result = subprocess.run(cmd, cwd=REPO_DIR, capture_output=True, text=True)
+    try:
+        result = subprocess.run(cmd, cwd=REPO_DIR, capture_output=True, text=True,
+                                timeout=300)  # 5 min timeout for precompute
+    except subprocess.TimeoutExpired:
+        print(f"  TIMEOUT precompute {factory}/{seed} (>300s)")
+        return None
     if result.returncode == 0 and os.path.exists(out_check):
         return out_check
     else:
@@ -543,28 +583,30 @@ def phase_pipeline(args):
     """
     rank, total = get_node_info()
 
-    # Collect PhysX objects (need setup + precompute)
+    # Collect PhysX objects from SOURCE urdf directories (auto-setup in pipeline)
     all_objects = []
-
-    # PhysX setup + collect
-    physxnet_out = os.path.join(REPO_DIR, "outputs", "PhysXNet")
-    physxmob_out = os.path.join(REPO_DIR, "outputs", "PhysXMobility")
     manifest = load_manifest(args.manifest)
 
-    if os.path.isdir(physxnet_out):
+    # PhysXNet: scan source urdf dir for all available objects
+    physxnet_urdf_dir = os.path.join(PHYSXNET_BASE, "urdf")
+    if os.path.isdir(physxnet_urdf_dir):
         allowed = set(manifest["physxnet_ids"]) if manifest and "physxnet_ids" in manifest else None
-        for obj_id in sorted(os.listdir(physxnet_out)):
-            if allowed is not None and obj_id not in allowed:
-                continue
-            if os.path.exists(os.path.join(physxnet_out, obj_id, "scene.urdf")):
+        for f in sorted(os.listdir(physxnet_urdf_dir)):
+            if f.endswith(".urdf"):
+                obj_id = f.replace(".urdf", "")
+                if allowed is not None and obj_id not in allowed:
+                    continue
                 all_objects.append(("PhysXNet", "PhysXNet", obj_id, "", "_PhysXnet"))
 
-    if os.path.isdir(physxmob_out):
+    # PhysXMobility: scan source urdf dir
+    physxmob_urdf_dir = os.path.join(PHYSXMOB_BASE, "urdf")
+    if os.path.isdir(physxmob_urdf_dir):
         allowed = set(manifest["physxmob_ids"]) if manifest and "physxmob_ids" in manifest else None
-        for obj_id in sorted(os.listdir(physxmob_out)):
-            if allowed is not None and obj_id not in allowed:
-                continue
-            if os.path.exists(os.path.join(physxmob_out, obj_id, "scene.urdf")):
+        for f in sorted(os.listdir(physxmob_urdf_dir)):
+            if f.endswith(".urdf"):
+                obj_id = f.replace(".urdf", "")
+                if allowed is not None and obj_id not in allowed:
+                    continue
                 all_objects.append(("PhysXMobility", "PhysXMobility", obj_id, "", "_PhysXmobility"))
 
     # IS factories (need spawn first)
@@ -587,17 +629,97 @@ def phase_pipeline(args):
 
     # Shared render queue: CPU pushes metadata paths, GPU workers consume
     render_q = queue.Queue(maxsize=args.n_gpus * 4)
-    stats = {"precompute_ok": 0, "precompute_fail": 0, "render_ok": 0, "render_fail": 0}
+    now = time.time()
+    stats = {
+        "precompute_ok": 0, "precompute_fail": 0, "precompute_skip": 0,
+        "render_ok": 0, "render_fail": 0,
+        "setup_ok": 0, "setup_fail": 0,
+        "start_time": now,
+        "total_objects": total_work,
+        "total_physx": len(my_objects),
+        "total_is": len(my_is_jobs),
+        "last_render": None, "last_precompute": None,
+        "recent_events": [],  # last 50 events
+        # Per-phase timing for ETA
+        "precompute_times": [],  # last 100 durations (seconds)
+        "render_times": [],     # last 100 durations (seconds)
+        # Currently active work items
+        "active_renders": {},   # gpu_id -> {label, start_ts}
+        "active_precomputes": [],  # [label, ...]
+        "phase": "starting",    # starting / precompute / render / done
+    }
     stats_lock = threading.Lock()
 
+    def _emit_event(event_type, label, success=True, duration=None):
+        """Record an event and flush stats to disk."""
+        with stats_lock:
+            evt = {"type": event_type, "label": label, "ok": success, "ts": time.time()}
+            if duration is not None:
+                evt["dur_s"] = round(duration, 1)
+            stats["recent_events"].append(evt)
+            if len(stats["recent_events"]) > 50:
+                stats["recent_events"] = stats["recent_events"][-50:]
+            if event_type == "render":
+                stats["last_render"] = label
+                if duration is not None:
+                    stats["render_times"].append(duration)
+                    if len(stats["render_times"]) > 100:
+                        stats["render_times"] = stats["render_times"][-100:]
+            elif event_type == "precompute":
+                stats["last_precompute"] = label
+                if duration is not None:
+                    stats["precompute_times"].append(duration)
+                    if len(stats["precompute_times"]) > 100:
+                        stats["precompute_times"] = stats["precompute_times"][-100:]
+
+            # Compute ETAs
+            snap = {k: v for k, v in stats.items()}
+            snap["elapsed_s"] = time.time() - stats["start_time"]
+            snap["queue_size"] = render_q.qsize()
+
+            # Precompute ETA
+            pc_done = stats["precompute_ok"] + stats["precompute_fail"] + stats["precompute_skip"]
+            pc_remain = total_work - pc_done
+            if stats["precompute_times"]:
+                avg_pc = sum(stats["precompute_times"]) / len(stats["precompute_times"])
+                snap["precompute_eta_s"] = round(pc_remain * avg_pc / max(n_cpu_workers, 1))
+                snap["precompute_avg_s"] = round(avg_pc, 1)
+            snap["precompute_done"] = pc_done
+
+            # Render ETA
+            r_done = stats["render_ok"] + stats["render_fail"]
+            r_total = stats["precompute_ok"]  # only successfully precomputed get rendered
+            r_remain = max(0, r_total - r_done) + render_q.qsize()
+            if stats["render_times"]:
+                avg_r = sum(stats["render_times"]) / len(stats["render_times"])
+                snap["render_eta_s"] = round(r_remain * avg_r / max(args.n_gpus, 1))
+                snap["render_avg_s"] = round(avg_r, 1)
+            snap["render_done"] = r_done
+            snap["render_total"] = r_total
+
+        write_stats("gen.json", snap)
+
     # Number of parallel CPU workers for spawn+precompute
-    n_cpu_workers = min(4, max(1, os.cpu_count() // 4))
+    n_cpu_workers = min(16, max(1, os.cpu_count() // 8))
 
     def _process_one_object(item):
-        """Process one object: spawn (if IS) + precompute. Returns metadata path or None."""
+        """Process one object: setup (if PhysX) / spawn (if IS) + precompute. Returns metadata path or None."""
         kind = item[0]
         if kind == "physx":
             _, source, factory, seed, base, suffix = item
+            # Auto-setup if not already done
+            out_dir = os.path.join(REPO_DIR, "outputs", factory, seed)
+            if not os.path.exists(os.path.join(out_dir, "scene.urdf")):
+                src_map = {"PhysXNet": "physxnet", "PhysXMobility": "physx_mobility"}
+                cmd = [
+                    sys.executable, os.path.join(REPO_DIR, "setup_physxnet_scene.py"),
+                    "--id", seed, "--factory", factory,
+                    "--source", src_map.get(factory, "physxnet"),
+                ]
+                result = subprocess.run(cmd, cwd=REPO_DIR, capture_output=True, text=True)
+                if result.returncode != 0:
+                    print(f"  FAIL setup {factory}/{seed}: {(result.stderr or '')[-200:]}")
+                    return None
             return _run_precompute_one(source, factory, seed, base, suffix, args)
         else:  # IS
             _, factory, seed = item
@@ -619,17 +741,37 @@ def phase_pipeline(args):
         for factory, seed in my_is_jobs:
             work.append(("is", factory, seed))
 
+        with stats_lock:
+            stats["phase"] = "precompute"
+
+        # Track start times for duration calculation
+        start_times = {}
+
+        def _timed_process(item):
+            label = f"{item[2]}/{item[3]}" if item[0] == "physx" else f"{item[1]}/{item[2]}"
+            with stats_lock:
+                stats["active_precomputes"].append(label)
+            t0 = time.time()
+            result = _process_one_object(item)
+            dur = time.time() - t0
+            with stats_lock:
+                if label in stats["active_precomputes"]:
+                    stats["active_precomputes"].remove(label)
+            return result, label, dur
+
         with ThreadPoolExecutor(max_workers=n_cpu_workers) as pool:
-            futures = {pool.submit(_process_one_object, item): item for item in work}
+            futures = {pool.submit(_timed_process, item): item for item in work}
             for future in as_completed(futures):
-                meta = future.result()
-                with stats_lock:
-                    if meta:
-                        stats["precompute_ok"] += 1
-                    else:
-                        stats["precompute_fail"] += 1
+                meta, label, dur = future.result()
                 if meta:
+                    with stats_lock:
+                        stats["precompute_ok"] += 1
+                    _emit_event("precompute", label, True, duration=dur)
                     render_q.put(meta)
+                else:
+                    with stats_lock:
+                        stats["precompute_fail"] += 1
+                    _emit_event("precompute", label, False, duration=dur)
 
         # Poison pills for GPU workers
         for _ in range(args.n_gpus):
@@ -641,19 +783,28 @@ def phase_pipeline(args):
             meta_path = render_q.get()
             if meta_path is None:
                 break
-            ok = _run_render_object(meta_path, gpu_id, args)
+            seed_dir = os.path.dirname(meta_path)
+            label = f"{os.path.basename(os.path.dirname(seed_dir))}/{os.path.basename(seed_dir)}"
             with stats_lock:
+                stats["active_renders"][str(gpu_id)] = {"label": label, "start_ts": time.time()}
+                stats["phase"] = "render"
+            t0 = time.time()
+            ok = _run_render_object(meta_path, gpu_id, args)
+            dur = time.time() - t0
+            with stats_lock:
+                stats["active_renders"].pop(str(gpu_id), None)
                 if ok:
                     stats["render_ok"] += 1
                 else:
                     stats["render_fail"] += 1
+            _emit_event("render", label, ok, duration=dur)
 
     # Launch threads
     producer_thread = threading.Thread(target=producer, name="producer")
     producer_thread.start()
 
     gpu_threads = []
-    for gid in range(args.n_gpus):
+    for gid in args._gpu_ids:
         t = threading.Thread(target=gpu_consumer, args=(gid,), name=f"gpu_{gid}")
         t.start()
         gpu_threads.append(t)
@@ -661,6 +812,14 @@ def phase_pipeline(args):
     producer_thread.join()
     for t in gpu_threads:
         t.join()
+
+    # Write final stats
+    with stats_lock:
+        stats["finished"] = True
+        snap = {k: v for k, v in stats.items()}
+        snap["elapsed_s"] = time.time() - stats["start_time"]
+        snap["queue_size"] = 0
+    write_stats("gen.json", snap)
 
     print(f"\n[Node {rank}/{total}] Pipeline done:")
     print(f"  Precompute: {stats['precompute_ok']} ok, {stats['precompute_fail']} fail")
@@ -689,6 +848,9 @@ def main():
                         help="Number of seeds per IS factory (default: 100)")
     parser.add_argument("--n_gpus", type=int, default=8,
                         help="Number of GPUs per node (default: 8)")
+    parser.add_argument("--gpu_ids", type=str, default=None,
+                        help="Comma-separated GPU IDs to use (e.g. '2,3'). "
+                             "Overrides --n_gpus.")
     parser.add_argument("--views", type=str, default="sample",
                         help="View set: sample (4+2+2 random/animode), all (16+8+8), fast (4+2+2 fixed)")
     parser.add_argument("--resolution", type=int, default=512)
@@ -704,8 +866,15 @@ def main():
                         help="Cap senior animodes per object (0=use split_precompute default, default: 5)")
     args = parser.parse_args()
 
+    # Resolve GPU IDs
+    if args.gpu_ids:
+        args._gpu_ids = [int(x) for x in args.gpu_ids.split(",")]
+        args.n_gpus = len(args._gpu_ids)
+    else:
+        args._gpu_ids = args._gpu_ids
+
     rank, total = get_node_info()
-    print(f"=== Node {rank}/{total} | Phase: {args.phase} | GPUs: {args.n_gpus} ===")
+    print(f"=== Node {rank}/{total} | Phase: {args.phase} | GPUs: {args._gpu_ids} ===")
     print(f"  REPO_DIR:    {REPO_DIR}")
     print(f"  DATA_DIR:    {DATA_DIR}")
     print(f"  BLENDER_BIN: {BLENDER_BIN}")

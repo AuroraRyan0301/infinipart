@@ -23,8 +23,10 @@ import xml.etree.ElementTree as ET
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(_SCRIPT_DIR))
 
-PHYSXNET_BASE = os.environ.get("PHYSXNET_BASE", os.path.join(_DATA_DIR, "PhysXNet/version_1"))
-PHYSX_MOBILITY_BASE = os.environ.get("PHYSXMOB_BASE", os.path.join(_DATA_DIR, "PhysX_mobility"))
+PHYSXNET_BASE = os.environ.get("PHYSXNET_BASE",
+    "/mnt/data/fulian/dataset/PhysXNet/version_1")
+PHYSX_MOBILITY_BASE = os.environ.get("PHYSXMOB_BASE",
+    "/mnt/data/fulian/dataset/PhysX_mobility")
 INFINIGEN_SIM_BASE = _SCRIPT_DIR
 
 
