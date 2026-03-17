@@ -54,6 +54,7 @@ parser.add_argument("--output_dir", default=None, help="Override output director
 parser.add_argument("--png_only", action="store_true", help="Output PNG sequences only (skip ffmpeg)")
 parser.add_argument("--skip_nobg", action="store_true", help="Skip transparent background renders")
 parser.add_argument("--skip_bg", action="store_true", help="Skip opaque background renders")
+parser.add_argument("--skip_depth", action="store_true", help="Skip depth map renders")
 # Negative-specific args
 parser.add_argument("--neg_types", nargs="+",
                     default=["wrong_joint_type", "wrong_axis", "wrong_direction",
@@ -252,8 +253,8 @@ def mutate_wrong_joint_type(joints, animated_joint_names):
             continue
         if j.jtype in ("revolute", "continuous"):
             j.jtype = "prismatic"
-            j.lower *= 0.1
-            j.upper *= 0.1
+            j.lower *= 0.5
+            j.upper *= 0.5
         elif j.jtype == "prismatic":
             j.jtype = "revolute"
             j.lower *= 10.0
@@ -296,12 +297,21 @@ def mutate_wrong_direction(joints, animated_joint_names, offset_deg=45.0):
 
 
 def mutate_over_motion(joints, animated_joint_names, scale_factor=2.5):
-    """Scale joint limits beyond URDF bounds."""
+    """Scale joint limits beyond URDF bounds.
+
+    For revolute/continuous joints: override to full 360-degree rotation.
+    For prismatic joints: scale limits by 10x.
+    """
     for j in joints:
         if j.name not in animated_joint_names or j.jtype == "fixed":
             continue
-        j.lower *= scale_factor
-        j.upper *= scale_factor
+        if j.jtype in ("revolute", "continuous"):
+            # Full 360-degree rotation: sin peak = 2*pi
+            j.lower = -2 * math.pi
+            j.upper = 2 * math.pi
+        elif j.jtype == "prismatic":
+            j.lower *= 10.0
+            j.upper *= 10.0
 
 
 def invert_moving_indices(all_part_indices, original_moving_indices):
@@ -457,7 +467,8 @@ def animate_parts_negative(part_objects, links, joints, parent_map, children_map
 # ═══════════════════════════════════════════════════════════════
 
 def render_neg_views(neg_dir, neg_views, num_frames, center, distance,
-                     render_bg, render_nobg, animode_suffix, fps, png_only):
+                     render_bg, render_nobg, render_depth, animode_suffix,
+                     fps, png_only):
     """Render the specified views and optionally encode to MP4."""
     for view_name in neg_views:
         if view_name not in VIEW_CONFIGS:
@@ -465,11 +476,12 @@ def render_neg_views(neg_dir, neg_views, num_frames, center, distance,
             continue
 
         elev_deg, azim_deg = VIEW_CONFIGS[view_name]
-        nobg_dir, bg_dir = render_view(
+        nobg_dir, bg_dir, depth_exr_dir, depth_png_dir = render_view(
             neg_dir, view_name, num_frames,
             center, distance, elev_deg, azim_deg,
             render_bg=render_bg,
             render_nobg=render_nobg,
+            render_depth=render_depth,
             animode_suffix=animode_suffix,
         )
 
@@ -481,6 +493,9 @@ def render_neg_views(neg_dir, neg_views, num_frames, center, distance,
             if bg_dir:
                 frames_to_video(bg_dir,
                                 os.path.join(neg_dir, f"{vname}_bg.mp4"), fps)
+            if depth_png_dir:
+                frames_to_video(depth_png_dir,
+                                os.path.join(neg_dir, f"{vname}_depth.mp4"), fps)
 
 
 # ═══════════════════════════════════════════════════════════════
@@ -701,8 +716,8 @@ def main():
 
         # ── Render views ──
         render_neg_views(neg_out, args.neg_views, NUM_FRAMES, center, distance,
-                         render_bg, render_nobg, animode_suffix,
-                         args.fps, args.png_only)
+                         render_bg, render_nobg, not args.skip_depth,
+                         animode_suffix, args.fps, args.png_only)
 
         metadata.append(meta_info)
 

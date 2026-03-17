@@ -60,6 +60,7 @@ parser.add_argument("--output_dir", default=None, help="Override output director
 parser.add_argument("--png_only", action="store_true", help="Output PNG sequences only (skip ffmpeg)")
 parser.add_argument("--skip_nobg", action="store_true", help="Skip transparent background renders")
 parser.add_argument("--skip_bg", action="store_true", help="Skip opaque background renders (only render nobg)")
+parser.add_argument("--skip_depth", action="store_true", help="Skip depth map renders")
 parser.add_argument("--joint_filter", default=None, help="Only animate joints matching this substring")
 parser.add_argument("--moving_views", nargs="+", default=[],
                     help="Moving camera views to render (orbit_XX, sweep_XX)")
@@ -1522,20 +1523,30 @@ def forward_kinematics_at_q(links, joints, parent_map, children_map, q_values=No
 # Rendering
 # ═══════════════════════════════════════════════════════════════
 
-def setup_compositor_dual_output(bg_dir):
-    """Set up compositor to output bg version via File Output node.
+def setup_compositor_dual_output(bg_dir, depth_exr_dir=None, depth_png_dir=None):
+    """Set up compositor to output bg version and optional depth maps via File Output nodes.
 
     Renders with film_transparent=True. The nobg RGBA output goes through
     the Composite node (saved to scene.render.filepath). The bg version
     composites the Environment pass behind the transparent render via
     Alpha Over, output through a File Output node.
     Single render pass produces both outputs — no double rendering.
+
+    If depth_exr_dir / depth_png_dir are provided, also outputs depth as:
+      - EXR (raw float depth values)
+      - PNG (normalized 0-1 depth, near=white, far=black)
     """
     scene = bpy.context.scene
     scene.render.film_transparent = True
 
-    # Enable environment pass for background compositing
-    bpy.context.view_layer.use_pass_environment = True
+    # Enable environment pass for background compositing (only if bg needed)
+    if bg_dir:
+        bpy.context.view_layer.use_pass_environment = True
+
+    # Enable depth pass
+    render_depth = depth_exr_dir is not None or depth_png_dir is not None
+    if render_depth:
+        bpy.context.view_layer.use_pass_z = True
 
     scene.use_nodes = True
     tree = scene.node_tree
@@ -1554,20 +1565,50 @@ def setup_compositor_dual_output(bg_dir):
     composite.location = (600, 0)
     links.new(rl.outputs['Image'], composite.inputs['Image'])
 
-    # Alpha Over: environment background + transparent render foreground
-    alpha_over = nodes.new('CompositorNodeAlphaOver')
-    alpha_over.location = (300, 200)
-    links.new(rl.outputs['Env'], alpha_over.inputs[1])   # background
-    links.new(rl.outputs['Image'], alpha_over.inputs[2])  # foreground
+    # Alpha Over + File Output -> bg output (only if bg_dir provided)
+    if bg_dir:
+        alpha_over = nodes.new('CompositorNodeAlphaOver')
+        alpha_over.location = (300, 200)
+        links.new(rl.outputs['Env'], alpha_over.inputs[1])   # background
+        links.new(rl.outputs['Image'], alpha_over.inputs[2])  # foreground
 
-    # File Output node -> bg output
-    bg_out = nodes.new('CompositorNodeOutputFile')
-    bg_out.base_path = bg_dir
-    bg_out.format.file_format = 'PNG'
-    bg_out.format.color_mode = 'RGBA'
-    bg_out.file_slots[0].path = "frame_"
-    bg_out.location = (600, 200)
-    links.new(alpha_over.outputs['Image'], bg_out.inputs[0])
+        bg_out = nodes.new('CompositorNodeOutputFile')
+        bg_out.base_path = bg_dir
+        bg_out.format.file_format = 'PNG'
+        bg_out.format.color_mode = 'RGBA'
+        bg_out.file_slots[0].path = "frame_"
+        bg_out.location = (600, 200)
+        links.new(alpha_over.outputs['Image'], bg_out.inputs[0])
+
+    # ── Depth outputs ──
+    if depth_exr_dir:
+        depth_exr_out = nodes.new('CompositorNodeOutputFile')
+        depth_exr_out.base_path = depth_exr_dir
+        depth_exr_out.format.file_format = 'OPEN_EXR'
+        depth_exr_out.format.color_depth = '32'
+        depth_exr_out.file_slots[0].path = "frame_"
+        depth_exr_out.location = (600, -200)
+        links.new(rl.outputs['Depth'], depth_exr_out.inputs[0])
+
+    if depth_png_dir:
+        # Normalize depth: map [0, max_depth] -> [0, 1], then invert so near=white
+        # Use Map Value to normalize, then Invert
+        normalize = nodes.new('CompositorNodeNormalize')
+        normalize.location = (300, -400)
+        links.new(rl.outputs['Depth'], normalize.inputs[0])
+
+        invert = nodes.new('CompositorNodeInvert')
+        invert.location = (500, -400)
+        links.new(normalize.outputs[0], invert.inputs['Color'])
+
+        depth_png_out = nodes.new('CompositorNodeOutputFile')
+        depth_png_out.base_path = depth_png_dir
+        depth_png_out.format.file_format = 'PNG'
+        depth_png_out.format.color_mode = 'BW'
+        depth_png_out.format.color_depth = '16'
+        depth_png_out.file_slots[0].path = "frame_"
+        depth_png_out.location = (700, -400)
+        links.new(invert.outputs['Color'], depth_png_out.inputs[0])
 
 
 def cleanup_compositor():
@@ -1575,40 +1616,50 @@ def cleanup_compositor():
     scene = bpy.context.scene
     scene.use_nodes = False
     bpy.context.view_layer.use_pass_environment = False
+    bpy.context.view_layer.use_pass_z = False
 
 
 def render_view(out_dir, view_name, num_frames, center, distance, elev_deg, azim_deg,
-                render_bg=True, render_nobg=True, animode_suffix=""):
+                render_bg=True, render_nobg=True, render_depth=False, animode_suffix=""):
     """Render a single view, outputting bg and/or nobg in one render pass.
 
     When both are needed, uses compositor to produce both from a single render.
     This halves the render time compared to rendering bg and nobg separately.
+
+    If render_depth=True, also outputs depth as EXR (raw) and PNG (normalized).
     """
     if not render_bg and not render_nobg:
-        return None, None
+        return None, None, None, None
 
     vname = f"{view_name}{animode_suffix}"
     nobg_dir = os.path.join(out_dir, f"{vname}_nobg") if render_nobg else None
     bg_dir = os.path.join(out_dir, f"{vname}_bg") if render_bg else None
+    depth_exr_dir = os.path.join(out_dir, f"{vname}_depth_exr") if render_depth else None
+    depth_png_dir = os.path.join(out_dir, f"{vname}_depth_png") if render_depth else None
 
-    if nobg_dir:
-        os.makedirs(nobg_dir, exist_ok=True)
-    if bg_dir:
-        os.makedirs(bg_dir, exist_ok=True)
+    for d in (nobg_dir, bg_dir, depth_exr_dir, depth_png_dir):
+        if d:
+            os.makedirs(d, exist_ok=True)
 
     scene = bpy.context.scene
 
     if render_bg and render_nobg:
         # Single render: nobg via Composite, bg via File Output + Alpha Over
-        setup_compositor_dual_output(bg_dir)
+        setup_compositor_dual_output(bg_dir, depth_exr_dir, depth_png_dir)
         scene.render.filepath = os.path.join(nobg_dir, "frame_")
     elif render_nobg:
         scene.render.film_transparent = True
-        scene.use_nodes = False
+        if render_depth:
+            setup_compositor_dual_output(None, depth_exr_dir, depth_png_dir)
+        else:
+            scene.use_nodes = False
         scene.render.filepath = os.path.join(nobg_dir, "frame_")
     else:  # only bg
         scene.render.film_transparent = False
-        scene.use_nodes = False
+        if render_depth:
+            setup_compositor_dual_output(None, depth_exr_dir, depth_png_dir)
+        else:
+            scene.use_nodes = False
         scene.render.filepath = os.path.join(bg_dir, "frame_")
 
     scene.render.image_settings.file_format = 'PNG'
@@ -1617,45 +1668,62 @@ def render_view(out_dir, view_name, num_frames, center, distance, elev_deg, azim
     cam = create_camera(f"cam_{vname}", center, distance, elev_deg, azim_deg)
     scene.camera = cam
 
-    mode = "bg+nobg" if (render_bg and render_nobg) else ("nobg" if render_nobg else "bg")
+    mode_parts = []
+    if render_bg and render_nobg:
+        mode_parts.append("bg+nobg")
+    elif render_nobg:
+        mode_parts.append("nobg")
+    else:
+        mode_parts.append("bg")
+    if render_depth:
+        mode_parts.append("depth")
+    mode = "+".join(mode_parts)
     print(f"\n  Rendering {vname} ({mode}): {num_frames} frames")
     bpy.ops.render.render(animation=True)
 
     bpy.data.objects.remove(cam, do_unlink=True)
-    if render_bg and render_nobg:
+    if (render_bg and render_nobg) or render_depth:
         cleanup_compositor()
 
-    return nobg_dir, bg_dir
+    return nobg_dir, bg_dir, depth_exr_dir, depth_png_dir
 
 
 def render_moving_view(out_dir, view_name, num_frames, center, distance,
                        start_elev, start_azim, end_elev, end_azim,
-                       render_bg=True, render_nobg=True, animode_suffix=""):
+                       render_bg=True, render_nobg=True, render_depth=False,
+                       animode_suffix=""):
     """Render a moving camera view that orbits from start to end position."""
     if not render_bg and not render_nobg:
-        return None, None
+        return None, None, None, None
 
     vname = f"{view_name}{animode_suffix}"
     nobg_dir = os.path.join(out_dir, f"{vname}_nobg") if render_nobg else None
     bg_dir = os.path.join(out_dir, f"{vname}_bg") if render_bg else None
+    depth_exr_dir = os.path.join(out_dir, f"{vname}_depth_exr") if render_depth else None
+    depth_png_dir = os.path.join(out_dir, f"{vname}_depth_png") if render_depth else None
 
-    if nobg_dir:
-        os.makedirs(nobg_dir, exist_ok=True)
-    if bg_dir:
-        os.makedirs(bg_dir, exist_ok=True)
+    for d in (nobg_dir, bg_dir, depth_exr_dir, depth_png_dir):
+        if d:
+            os.makedirs(d, exist_ok=True)
 
     scene = bpy.context.scene
 
     if render_bg and render_nobg:
-        setup_compositor_dual_output(bg_dir)
+        setup_compositor_dual_output(bg_dir, depth_exr_dir, depth_png_dir)
         scene.render.filepath = os.path.join(nobg_dir, "frame_")
     elif render_nobg:
         scene.render.film_transparent = True
-        scene.use_nodes = False
+        if render_depth:
+            setup_compositor_dual_output(None, depth_exr_dir, depth_png_dir)
+        else:
+            scene.use_nodes = False
         scene.render.filepath = os.path.join(nobg_dir, "frame_")
     else:
         scene.render.film_transparent = False
-        scene.use_nodes = False
+        if render_depth:
+            setup_compositor_dual_output(None, depth_exr_dir, depth_png_dir)
+        else:
+            scene.use_nodes = False
         scene.render.filepath = os.path.join(bg_dir, "frame_")
 
     scene.render.image_settings.file_format = 'PNG'
@@ -1666,16 +1734,25 @@ def render_moving_view(out_dir, view_name, num_frames, center, distance,
                                  num_frames)
     scene.camera = cam
 
-    mode = "bg+nobg" if (render_bg and render_nobg) else ("nobg" if render_nobg else "bg")
+    mode_parts = []
+    if render_bg and render_nobg:
+        mode_parts.append("bg+nobg")
+    elif render_nobg:
+        mode_parts.append("nobg")
+    else:
+        mode_parts.append("bg")
+    if render_depth:
+        mode_parts.append("depth")
+    mode = "+".join(mode_parts)
     print(f"\n  Rendering {vname} (moving, {mode}): {num_frames} frames")
     print(f"    ({start_elev}°,{start_azim}°) -> ({end_elev}°,{end_azim}°)")
     bpy.ops.render.render(animation=True)
 
     bpy.data.objects.remove(cam, do_unlink=True)
-    if render_bg and render_nobg:
+    if (render_bg and render_nobg) or render_depth:
         cleanup_compositor()
 
-    return nobg_dir, bg_dir
+    return nobg_dir, bg_dir, depth_exr_dir, depth_png_dir
 
 
 def frames_to_video(frame_dir, output_mp4, fps):
@@ -1815,11 +1892,12 @@ def main():
 
         elev_deg, azim_deg = VIEW_CONFIGS[view_name]
 
-        nobg_dir, bg_dir = render_view(
+        nobg_dir, bg_dir, depth_exr_dir, depth_png_dir = render_view(
             OUT_DIR, view_name, NUM_FRAMES,
             center, distance, elev_deg, azim_deg,
             render_bg=not args.skip_bg,
             render_nobg=not args.skip_nobg,
+            render_depth=not args.skip_depth,
             animode_suffix=animode_suffix,
         )
 
@@ -1830,6 +1908,9 @@ def main():
             if bg_dir:
                 mp4_bg = os.path.join(OUT_DIR, f"{view_name}{animode_suffix}_bg.mp4")
                 frames_to_video(bg_dir, mp4_bg, args.fps)
+            if depth_png_dir:
+                mp4_depth = os.path.join(OUT_DIR, f"{view_name}{animode_suffix}_depth.mp4")
+                frames_to_video(depth_png_dir, mp4_depth, args.fps)
 
     # Render moving views
     for view_name in args.moving_views:
@@ -1839,11 +1920,12 @@ def main():
 
         start_elev, start_azim, end_elev, end_azim = MOVING_VIEW_CONFIGS[view_name]
 
-        nobg_dir, bg_dir = render_moving_view(
+        nobg_dir, bg_dir, depth_exr_dir, depth_png_dir = render_moving_view(
             OUT_DIR, view_name, NUM_FRAMES,
             center, distance, start_elev, start_azim, end_elev, end_azim,
             render_bg=not args.skip_bg,
             render_nobg=not args.skip_nobg,
+            render_depth=not args.skip_depth,
             animode_suffix=animode_suffix,
         )
 
@@ -1854,6 +1936,9 @@ def main():
             if bg_dir:
                 mp4_bg = os.path.join(OUT_DIR, f"{view_name}{animode_suffix}_bg.mp4")
                 frames_to_video(bg_dir, mp4_bg, args.fps)
+            if depth_png_dir:
+                mp4_depth = os.path.join(OUT_DIR, f"{view_name}{animode_suffix}_depth.mp4")
+                frames_to_video(depth_png_dir, mp4_depth, args.fps)
 
     print(f"\n{'='*60}")
     print(f"DONE! Output: {OUT_DIR}")
