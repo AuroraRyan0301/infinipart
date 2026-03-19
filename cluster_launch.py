@@ -921,7 +921,7 @@ def main():
         args._gpu_ids = [int(x) for x in args.gpu_ids.split(",")]
         args.n_gpus = len(args._gpu_ids)
     else:
-        args._gpu_ids = args._gpu_ids
+        args._gpu_ids = list(range(args.n_gpus))
 
     rank, total = get_node_info()
     print(f"=== Node {rank}/{total} | Phase: {args.phase} | GPUs: {args._gpu_ids} ===")
