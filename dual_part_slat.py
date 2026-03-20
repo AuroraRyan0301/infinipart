@@ -26,6 +26,7 @@ from trellis2.modules.sparse import SparseTensor, VarLenTensor
 from trellis2.modules.sparse.attention import SparseMultiHeadAttention
 from trellis2.modules.norm import LayerNorm32
 from trellis2.models.structured_latent_flow import SLatFlowModel
+from trellis2.modules.utils import manual_cast
 
 
 # ================================================================
@@ -53,7 +54,7 @@ class VJEPAProjector(nn.Module):
 
     def forward(self, x):
         """x: [B, T, 1408] → [B, T, 1024]"""
-        h = self.proj_in(x)
+        h = self.proj_in(x.float())
         for layer in self.layers:
             h = layer(h)
         h = self.proj_out(h)
@@ -174,7 +175,7 @@ class DualPartSLatModel(nn.Module):
             other_part_feats: [1, N_other, channels] — other part's hidden features
         """
         h = self.slat.input_layer(x)
-        from trellis2.utils.general_utils import manual_cast
+        from trellis2.modules.utils import manual_cast
         h = manual_cast(h, self.slat.dtype)
         t_emb = self.slat.t_embedder(t)
         if self.slat.share_mod:
@@ -227,7 +228,7 @@ class DualPartSLatModel(nn.Module):
         with torch.no_grad():
             # Get part0 hidden features for part1 to attend to
             h0 = self.slat.input_layer(x_part0)
-            from trellis2.utils.general_utils import manual_cast
+            from trellis2.modules.utils import manual_cast
             h0 = manual_cast(h0, self.slat.dtype)
             part0_feats = h0.feats.unsqueeze(0).float()  # [1, N0, channels]
 

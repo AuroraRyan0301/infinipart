@@ -122,27 +122,30 @@ class SLatPairDataset(Dataset):
         return len(self.samples)
 
     def __getitem__(self, idx):
-        s = self.samples[idx]
-
-        # Load SLat GT for both parts
-        p0 = torch.load(s["p0_slat"], weights_only=False)
-        p1 = torch.load(s["p1_slat"], weights_only=False)
-
-        # Load a random VJEPA feature
-        jepa_path = random.choice(s["jepa_files"])
-        jepa = torch.load(jepa_path, weights_only=False)
-        if jepa.dim() == 2:
-            jepa = jepa.unsqueeze(0)  # [1, T, D]
-
-        return {
-            "p0_feats": p0["slat_feats"],       # [N0, 32]
-            "p0_coords": p0["slat_coords"],      # [N0, 4]
-            "p0_grid_size": p0["grid_size"],
-            "p1_feats": p1["slat_feats"],        # [N1, 32]
-            "p1_coords": p1["slat_coords"],      # [N1, 4]
-            "p1_grid_size": p1["grid_size"],
-            "jepa": jepa.squeeze(0),              # [T, D]
-        }
+        # Try requested sample, fallback on corrupt files
+        for attempt in range(5):
+            try:
+                i = idx if attempt == 0 else random.randint(0, len(self.samples) - 1)
+                s = self.samples[i]
+                p0 = torch.load(s["p0_slat"], weights_only=False)
+                p1 = torch.load(s["p1_slat"], weights_only=False)
+                jepa_path = random.choice(s["jepa_files"])
+                jepa = torch.load(jepa_path, weights_only=False)
+                if jepa.dim() == 2:
+                    jepa = jepa.unsqueeze(0)
+                return {
+                    "p0_feats": p0["slat_feats"],
+                    "p0_coords": p0["slat_coords"],
+                    "p0_grid_size": p0["grid_size"],
+                    "p1_feats": p1["slat_feats"],
+                    "p1_coords": p1["slat_coords"],
+                    "p1_grid_size": p1["grid_size"],
+                    "jepa": jepa.squeeze(0),
+                }
+            except (EOFError, RuntimeError, KeyError) as e:
+                continue
+        # Last resort: return first valid sample
+        return self.__getitem__(0)
 
 
 def collate_slat(batch):
@@ -272,14 +275,13 @@ def train(args):
             x0_t, vel0 = sample_flow_matching(p0_feats, t_val)
             x1_t, vel1 = sample_flow_matching(p1_feats, t_val)
 
-            # Build SparseTensors
-            x0_st = SparseTensor(feats=x0_t.to(torch.bfloat16), coords=p0_coords)
-            x1_st = SparseTensor(feats=x1_t.to(torch.bfloat16), coords=p1_coords)
+            # Build SparseTensors (float32, autocast handles dtype)
+            x0_st = SparseTensor(feats=x0_t, coords=p0_coords)
+            x1_st = SparseTensor(feats=x1_t, coords=p1_coords)
 
-            # Forward
-            pred0, pred1 = raw_model(
-                x0_st, x1_st, t_broadcast,
-                jepa.to(torch.bfloat16))
+            # Forward with mixed precision
+            with torch.amp.autocast('cuda', dtype=torch.bfloat16):
+                pred0, pred1 = raw_model(x0_st, x1_st, t_broadcast, jepa)
 
             # Loss: MSE on predicted velocity
             loss0 = F.mse_loss(pred0.feats.float(), vel0)
