@@ -3231,6 +3231,44 @@ def _render_dual_pass(cam, animode_dir, nobg_name, withbg_name):
         _render_one_pass(cam, animode_dir, withbg_name, film_transparent=False)
 
 
+def _check_magenta(mp4_path, threshold=0.15):
+    """Check rendered video for magenta (missing material) pixels.
+
+    Samples frame at 25% position. If >threshold fraction of non-black pixels
+    are magenta-ish (R>150, G<80, B>150 in RGB), log a warning.
+    Returns True if magenta detected.
+    """
+    try:
+        import cv2, numpy as np
+        cap = cv2.VideoCapture(mp4_path)
+        total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+        cap.set(cv2.CAP_PROP_POS_FRAMES, max(1, total // 4))
+        ret, frame = cap.read()
+        cap.release()
+        if not ret or frame is None:
+            return False
+        # BGR: magenta = B>150, G<80, R>150
+        nonblack = frame[frame.sum(axis=2) > 60]
+        if len(nonblack) < 100:
+            return False
+        magenta = (nonblack[:, 0] > 150) & (nonblack[:, 1] < 80) & (nonblack[:, 2] > 150)
+        ratio = magenta.sum() / len(nonblack)
+        if ratio > threshold:
+            print(f"  WARNING MAGENTA: {os.path.basename(mp4_path)} "
+                  f"({ratio*100:.1f}% magenta pixels)", flush=True)
+            # Log to file
+            log_path = os.path.join(os.path.dirname(mp4_path), "..", "..", "magenta_warnings.log")
+            try:
+                with open(os.path.normpath(log_path), "a") as f:
+                    f.write(f"{mp4_path}\t{ratio:.3f}\n")
+            except OSError:
+                pass
+            return True
+    except ImportError:
+        pass  # cv2 not available in Blender python — skip check
+    return False
+
+
 def _render_one_pass(cam, animode_dir, output_name, film_transparent):
     """Render animation directly to MP4. No per-frame PNG I/O."""
     scene = bpy.context.scene
@@ -3241,6 +3279,9 @@ def _render_one_pass(cam, animode_dir, output_name, film_transparent):
     scene.camera = cam
     bpy.ops.render.render(animation=True)
     _rename_blender_mp4(animode_dir, output_name)
+    mp4_path = os.path.join(animode_dir, f"{output_name}.mp4")
+    if os.path.exists(mp4_path):
+        _check_magenta(mp4_path)
     print(f"  {output_name}: OK")
 
 
