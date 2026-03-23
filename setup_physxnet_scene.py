@@ -31,15 +31,24 @@ INFINIGEN_SIM_BASE = _SCRIPT_DIR
 
 
 def merge_obj_files(src_paths, dst_path):
-    """Merge multiple OBJ files into one, adjusting face vertex indices."""
+    """Merge multiple OBJ files into one, adjusting face vertex indices.
+
+    Material names are prefixed with source filename to avoid conflicts
+    when multiple OBJs share names like 'material_0_0'.
+    MTL files are rewritten with prefixed names alongside the merged OBJ.
+    """
     vertex_offset = 0
     vt_offset = 0
     vn_offset = 0
     lines_out = []
+    dst_dir = os.path.dirname(dst_path)
 
     for src in src_paths:
         if not os.path.exists(src):
             continue
+        src_stem = os.path.splitext(os.path.basename(src))[0]  # e.g. "original-159"
+        prefix = src_stem + "_"  # unique prefix per source OBJ
+
         v_count = 0
         vt_count = 0
         vn_count = 0
@@ -60,7 +69,25 @@ def merge_obj_files(src_paths, dst_path):
                     other_lines.append(line)
                 elif stripped.startswith("f "):
                     face_lines.append(stripped)
-                elif stripped.startswith("mtllib") or stripped.startswith("usemtl") or stripped.startswith("o ") or stripped.startswith("g "):
+                elif stripped.startswith("mtllib "):
+                    # Rewrite MTL filename and prefix material names inside it
+                    mtl_name = stripped[7:].strip()
+                    mtl_src = os.path.join(os.path.dirname(src), mtl_name)
+                    new_mtl_name = prefix + mtl_name
+                    mtl_dst = os.path.join(dst_dir, new_mtl_name)
+                    if os.path.exists(mtl_src) and not os.path.exists(mtl_dst):
+                        with open(mtl_src) as mf:
+                            mtl_content = mf.read()
+                        # Prefix all newmtl names
+                        import re
+                        mtl_content = re.sub(r'^(newmtl\s+)', rf'\1{prefix}', mtl_content, flags=re.MULTILINE)
+                        with open(mtl_dst, 'w') as mf:
+                            mf.write(mtl_content)
+                    other_lines.append(f"mtllib {new_mtl_name}\n")
+                elif stripped.startswith("usemtl "):
+                    mat_name = stripped[7:].strip()
+                    other_lines.append(f"usemtl {prefix}{mat_name}\n")
+                elif stripped.startswith("o ") or stripped.startswith("g "):
                     other_lines.append(line)
                 else:
                     other_lines.append(line)

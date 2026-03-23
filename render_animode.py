@@ -13,6 +13,7 @@ Run with:
 """
 
 import argparse
+import glob
 import json
 import math
 import os
@@ -33,12 +34,12 @@ from mathutils import Matrix, Vector, Euler
 # ======================================================================
 
 _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-_DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(_SCRIPT_DIR))
+_YURH_DIR = "/mnt/cpfs/yurh"
+_FULIAN_DIR = "/mnt/cpfs/fulian/dataset"
 
-ENVMAP_DIR = os.environ.get("ENVMAP_DIR", os.path.join(_DATA_DIR, "dataset3D/envmap/indoor"))
+ENVMAP_DIR = os.environ.get("ENVMAP_DIR", os.path.join(_YURH_DIR, "dataset3D/envmap/indoor"))
 FFMPEG_BIN = (shutil.which("ffmpeg")
-              or next((p for p in ["/usr/bin/ffmpeg", "/usr/local/bin/ffmpeg",
-                                   os.path.join(_DATA_DIR, "miniconda3/envs/larm/bin/ffmpeg")]
+              or next((p for p in ["/usr/bin/ffmpeg", "/usr/local/bin/ffmpeg"]
                        if os.path.isfile(p)), "/usr/bin/ffmpeg"))
 _FFMPEG_AVAILABLE = None  # lazy-checked on first use
 
@@ -50,15 +51,15 @@ STATIC_SKIP_M1_FILE    = "static_skip_method1.json"   # joint-value check record
 STATIC_SKIP_PROBE_FILE = "static_skip_probe.json"     # probe render check record
 PROBE_SAVE_VIEW_KEYS   = ["hemi_00", "hemi_05", "hemi_11"]  # 3 views saved for inspection
 
-# PhysXNet / PhysXMobility JSON data paths
-PHYSXNET_JSON_DIR = os.path.join(_DATA_DIR, "PhysXNet/version_1/finaljson")
-PHYSXMOB_JSON_DIR = os.path.join(_DATA_DIR, "PhysX_mobility/finaljson")
+# PhysXNet / PhysXMobility JSON data paths (fulian dataset)
+PHYSXNET_JSON_DIR = os.path.join(_FULIAN_DIR, "PhysXNet/version_1/finaljson")
+PHYSXMOB_JSON_DIR = os.path.join(_FULIAN_DIR, "PhysX_mobility/finaljson")
 
-# Material source data paths
-PARTNET_BASE = os.path.join(_DATA_DIR, "dataset3D/Partnet")
-SHAPENET_BASE = os.path.join(_DATA_DIR, "dataset3D/ShapeNetCore")
-OVERLAP_MAP_PATH = os.path.join(_DATA_DIR, "infinipart/physxnet_partnet_overlap.json")
-PBR_TEXTURES_DIR = os.path.join(_DATA_DIR, "infinipart/pbr_textures")
+# Material source data paths (yurh)
+PARTNET_BASE = os.path.join(_YURH_DIR, "dataset3D/Partnet")
+SHAPENET_BASE = os.path.join(_YURH_DIR, "dataset3D/ShapeNetCore")
+OVERLAP_MAP_PATH = os.path.join(_YURH_DIR, "infinipart/physxnet_partnet_overlap.json")
+PBR_TEXTURES_DIR = os.path.join(_YURH_DIR, "infinipart/pbr_textures")
 
 # PartNet model_cat -> ShapeNet synset_id mapping
 PARTNET_TO_SYNSET = {
@@ -1454,47 +1455,132 @@ def import_obj(filepath, name=None):
     return result
 
 
+def _find_source_partseg_dir(scene_dir):
+    """Derive original partseg/objs/ path from scene_dir for correct MTL texture paths."""
+    parts = scene_dir.rstrip("/").split("/")
+    obj_id = parts[-1]
+    for base in ["/mnt/cpfs/fulian/dataset/PhysX_mobility/partseg",
+                 "/mnt/cpfs/fulian/dataset/PhysXNet/version_1/partseg"]:
+        candidate = os.path.join(base, obj_id, "objs")
+        if os.path.isdir(candidate):
+            return candidate
+    return None
+
+
 def load_parts_im_format(scene_dir, links, link_to_part_idx):
-    """Load parts for IM/PhysXNet format: objs/{idx}/{idx}.obj + origins.json."""
+    """Load parts for IM/PhysXNet format: objs/{idx}/ + origins.json.
+
+    Imports original-*.obj files directly from source partseg directory
+    (like PhysX-Anything). This preserves MTL Kd colors and ../images/ texture
+    paths correctly. Falls back to scene dir grouped OBJ if source not found.
+    """
     origins_path = os.path.join(scene_dir, "origins.json")
     with open(origins_path) as f:
         origins = json.load(f)
 
-    parts = {}  # link_name -> blender object
+    parts = {}
 
-    # Find objs/ directory (may be nested: outputs/{Factory}/{id}/objs/)
+    # Find objs/ in scene dir (for group→original mapping and fallback)
     objs_dir = os.path.join(scene_dir, "objs")
     if not os.path.isdir(objs_dir):
-        # Search for nested objs/ directory
         for root, dirs, files in os.walk(scene_dir):
             if "objs" in dirs:
                 objs_dir = os.path.join(root, "objs")
                 break
+
+    # Try to find original source partseg dir (for correct texture paths)
+    source_objs_dir = _find_source_partseg_dir(scene_dir)
 
     for link_name, info in links.items():
         idx = info["part_idx"]
         if idx is None:
             continue
 
-        obj_path = os.path.join(objs_dir, str(idx), f"{idx}.obj")
-        if not os.path.exists(obj_path):
+        group_dir = os.path.join(objs_dir, str(idx))
+        if not os.path.isdir(group_dir):
             continue
 
-        obj = import_obj(obj_path, name=f"part_{link_name}")
-        if obj is None:
+        # Find which original-*.obj belong to this group
+        scene_originals = sorted(glob.glob(os.path.join(group_dir, "original-*.obj")))
+
+        # Resolve to source partseg paths (../images/ works from there)
+        obj_paths = []
+        if scene_originals and source_objs_dir:
+            for f in scene_originals:
+                src = os.path.join(source_objs_dir, os.path.basename(f))
+                obj_paths.append(src if os.path.exists(src) else f)
+        elif scene_originals:
+            obj_paths = scene_originals
+
+        if obj_paths:
+            # Import each original OBJ separately from source partseg dir.
+            # Blender reads each MTL + textures correctly this way.
+            # We DON'T join — instead, parent children to first object.
+            # Animation system moves the parent, children follow automatically.
+            imported = []
+            for p in obj_paths:
+                before = set(bpy.data.objects.keys())
+                bpy.ops.wm.obj_import(filepath=p)
+                for name in (set(bpy.data.objects.keys()) - before):
+                    imported.append(bpy.data.objects[name])
+
+            if not imported:
+                continue
+
+            # Parent all sub-objects to the first one (no join = no material conflict)
+            result = imported[0]
+            if len(imported) > 1:
+                for child in imported[1:]:
+                    child.parent = result
+                    child.matrix_parent_inverse = result.matrix_world.inverted()
+        else:
+            # Fallback: grouped {idx}.obj
+            obj_path = os.path.join(group_dir, f"{idx}.obj")
+            if not os.path.exists(obj_path):
+                continue
+            result = import_obj(obj_path, name=f"part_{link_name}")
+
+        if result is None:
             continue
 
-        # Apply origin offset
+        # Fix texture paths: ensure all images are loaded (wm.obj_import may fail to resolve ../images/)
+        all_objs = [result] + list(result.children) if hasattr(result, 'children') else [result]
+        for obj in all_objs:
+            if not hasattr(obj.data, 'materials'):
+                continue
+            for mat in obj.data.materials:
+                if mat is None or not mat.use_nodes:
+                    continue
+                for node in mat.node_tree.nodes:
+                    if node.type == 'TEX_IMAGE' and node.image and node.image.size[0] == 0:
+                        # Image failed to load — try resolving with absolute path
+                        img = node.image
+                        fp = bpy.path.abspath(img.filepath)
+                        if not os.path.exists(fp):
+                            # Try resolving relative to source partseg dir
+                            basename = os.path.basename(fp)
+                            for candidate_dir in [
+                                os.path.join(source_objs_dir, '..', 'images') if source_objs_dir else '',
+                                os.path.join(os.path.dirname(fp)),
+                            ]:
+                                candidate = os.path.join(candidate_dir, basename)
+                                if os.path.exists(candidate):
+                                    img.filepath = candidate
+                                    img.reload()
+                                    break
+
+        result.name = f"part_{link_name}"
+
         origin_key = str(idx)
         if origin_key in origins:
             ox, oy, oz = origins[origin_key]
-            obj.location = Vector((ox, oy, oz))
-            bpy.context.view_layer.objects.active = obj
-            obj.select_set(True)
+            result.location = Vector((ox, oy, oz))
+            bpy.context.view_layer.objects.active = result
+            result.select_set(True)
             bpy.ops.object.transform_apply(location=True)
-            obj.select_set(False)
+            result.select_set(False)
 
-        parts[link_name] = obj
+        parts[link_name] = result
 
     return parts
 
