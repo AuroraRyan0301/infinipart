@@ -1,0 +1,91 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Found 200 animode pairs
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+VAE loaded from /mnt/data_ssd/infinigen-sim/vae_finetune/vae_ft_step_20000.pt (340.3M params)
+  [1/200] CD=0.0043/0.0242 OBJ_CC=5.0/2.0 VAE_CC=1.0/1.0 CC_err=4.0/1.0 | 0.3 it/s, ETA 11m
+  [10] ERROR PhysXNet_PhysXnet/11560/basic_0: 
+  [20/200] CD=0.0675/0.1249 OBJ_CC=5.2/6.1 VAE_CC=1.4/1.9 CC_err=3.8/4.4 | 0.3 it/s, ETA 10m
+  [22] ERROR PhysXNet_PhysXnet/7079/basic_1: 
+  [30/200] CD=0.0883/0.1050 OBJ_CC=10.3/7.7 VAE_CC=1.8/3.3 CC_err=9.4/5.7 | 0.3 it/s, ETA 8m
+  [40/200] CD=0.0751/0.0176 OBJ_CC=13.8/8.4 VAE_CC=1.3/2.7 CC_err=12.4/6.0 | 0.4 it/s, ETA 7m
+  [47] ERROR PhysXNet_PhysXnet/48244/basic_0: 
+  [50/200] CD=0.0602/0.0211 OBJ_CC=8.8/8.7 VAE_CC=2.2/2.1 CC_err=7.0/7.0 | 0.4 it/s, ETA 7m
+  [60/200] CD=0.0545/0.0602 OBJ_CC=6.7/3.0 VAE_CC=1.7/1.3 CC_err=5.4/1.7 | 0.4 it/s, ETA 6m
+  [70/200] CD=0.0244/0.0164 OBJ_CC=5.0/4.0 VAE_CC=1.6/3.2 CC_err=3.8/1.0 | 0.4 it/s, ETA 6m
+  [80/200] CD=0.0262/0.0525 OBJ_CC=8.1/4.2 VAE_CC=1.6/2.9 CC_err=6.6/2.9 | 0.4 it/s, ETA 5m
+  [90/200] CD=0.0207/0.0744 OBJ_CC=5.0/1.6 VAE_CC=2.4/2.7 CC_err=2.9/1.7 | 0.4 it/s, ETA 5m
+  [100/200] CD=0.0414/0.0352 OBJ_CC=7.6/6.2 VAE_CC=2.1/4.8 CC_err=5.5/5.0 | 0.4 it/s, ETA 4m
+  [110/200] CD=0.0686/0.0826 OBJ_CC=15.9/3.8 VAE_CC=1.8/3.0 CC_err=14.6/2.1 | 0.4 it/s, ETA 4m
+  [112] ERROR PhysXNet_PhysXnet/7064/senior_2: 
+  [120/200] CD=0.0781/0.0533 OBJ_CC=6.6/4.9 VAE_CC=1.6/2.1 CC_err=5.4/2.8 | 0.4 it/s, ETA 3m
+  [130/200] CD=0.0445/0.2357 OBJ_CC=7.7/3.6 VAE_CC=1.1/1.9 CC_err=6.6/2.0 | 0.4 it/s, ETA 3m
+  [140/200] CD=0.0376/0.0264 OBJ_CC=7.2/3.6 VAE_CC=2.4/2.0 CC_err=6.1/2.1 | 0.4 it/s, ETA 2m
+  [150/200] CD=0.0634/0.0393 OBJ_CC=11.0/8.4 VAE_CC=1.9/2.0 CC_err=9.1/6.8 | 0.4 it/s, ETA 2m
+  [160/200] CD=0.0690/0.0449 OBJ_CC=10.4/8.8 VAE_CC=1.6/4.0 CC_err=8.8/7.2 | 0.4 it/s, ETA 2m
+  [170/200] CD=0.0676/0.0470 OBJ_CC=6.9/5.1 VAE_CC=2.6/2.8 CC_err=5.7/3.0 | 0.4 it/s, ETA 1m
+  [180/200] CD=0.0620/0.0479 OBJ_CC=7.0/9.2 VAE_CC=1.9/3.6 CC_err=5.4/6.1 | 0.4 it/s, ETA 1m
+  [182] ERROR PhysXNet_PhysXnet/48419/basic_1: 
+  [190/200] CD=0.0420/0.0241 OBJ_CC=11.0/9.2 VAE_CC=2.5/2.0 CC_err=9.2/7.2 | 0.4 it/s, ETA 0m
+  [200/200] CD=0.0413/0.0986 OBJ_CC=11.8/4.7 VAE_CC=2.8/2.3 CC_err=9.7/3.9 | 0.4 it/s, ETA 0m
+
+Done in 7.7m (195 results)
+
+================================================================================
+  VAE Roundtrip: 164 samples
+
+                  Chamfer     OBJ CC     VAE CC     CC err   CC exact
+         Part0     0.0547       8.78       1.91       7.27     22.6%
+         Part1     0.0639       5.68       2.62       4.05     25.0%
+  Both CC exact: 8.5%
+
+  Per-category:
+  Category                  N      CD0      CD1      OCC      VCC    CCerr  Exact%
+  PhysXMobility_PhysXmobility   27   0.0763   0.0287  9.0/6.8  1.9/2.5    12.22     7%
+  PhysXNet_PhysXnet        99   0.0334   0.0737  5.8/4.5  2.0/2.4     7.52    12%
+  box                       1   0.1766   0.4291 31.0/38.0  3.0/2.0    64.00     0%
+  cabinet                   1   0.0583   0.0631 27.0/12.0  1.0/6.0    32.00     0%
+  dishwasher                2   0.2751   0.1096 23.0/3.5  2.0/7.5    25.00     0%
+  door                      1   0.0579   0.0283  5.0/5.0  1.0/1.0     8.00     0%
+  drawer                    8   0.0733   0.0493 11.6/4.2  1.6/2.4    11.88     0%
+  faucet                    4   0.0468   0.0974  2.5/2.5  1.5/1.5     2.00     0%
+  microwave                 1   0.1270   0.0221 11.0/4.0  1.0/2.0    12.00     0%
+  oven                      4   0.1697   0.1414 32.2/15.8  1.8/8.5    41.25     0%
+  refrigerator              2   0.0794   0.0490 17.5/9.5  1.0/4.5    21.50     0%
+  stovetop                  5   0.0622   0.0344 28.6/12.4  2.0/2.8    36.20     0%
+  toaster                   8   0.0862   0.0023  6.6/2.5  1.5/1.5     6.62     0%
+  window                    1   0.0249   0.0167 42.0/34.0  3.0/1.0    72.00     0%
+================================================================================
+
+Saved to eval_vae_finetuned.json

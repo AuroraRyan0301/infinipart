@@ -1,0 +1,20 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Found 4636 OBJ files
+Already cached: 1244
+Processing with 8 workers...
+  [100/4636] ok=0 skip=100 err=0 | 2200.2/s ETA 0m
+  [200/4636] ok=0 skip=200 err=0 | 4251.2/s ETA 0m
+  [300/4636] ok=0 skip=300 err=0 | 6146.0/s ETA 0m
+  [400/4636] ok=0 skip=400 err=0 | 8120.6/s ETA 0m
+  [500/4636] ok=0 skip=500 err=0 | 10048.7/s ETA 0m
+  [600/4636] ok=0 skip=600 err=0 | 11963.5/s ETA 0m
+  [700/4636] ok=0 skip=700 err=0 | 13883.3/s ETA 0m
+  [800/4636] ok=0 skip=800 err=0 | 15729.7/s ETA 0m
+  [900/4636] ok=0 skip=900 err=0 | 17614.5/s ETA 0m
+  [1000/4636] ok=0 skip=1000 err=0 | 19432.9/s ETA 0m
+  [1100/4636] ok=0 skip=1100 err=0 | 21234.2/s ETA 0m
+  [1200/4636] ok=2 skip=1196 err=0 | 18.1/s ETA 3m
+  [1300/4636] ok=57 skip=1241 err=0 | 3.5/s ETA 16m
+  [1400/4636] ok=154 skip=1244 err=0 | 2.3/s ETA 24m
+  [1500/4636] ok=254 skip=1244 err=0 | 1.6/s ETA 32m

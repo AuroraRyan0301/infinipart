@@ -1,0 +1,587 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+
+============================================================
+Loading VAE model...
+============================================================
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+[VAE] Loaded from /mnt/data/yurh/PartPacker/pretrained/vae.pt
+
+============================================================
+Loading V-JEPA2 model...
+============================================================
+[VJEPA2] Loaded ViT-g: 1012M params, 81 frames -> 10240 tokens
+
+[Iter 1] Found 212 new animodes (1654 videos), 2162 already done
+[R0/1] Processing 212 animodes
+[R0] VAE:   0%|          | 0/212 [00:00<?, ?it/s][R0] VAE:   0%|          | 1/212 [00:04<14:15,  4.05s/it][R0] VAE:   1%|          | 2/212 [00:06<11:08,  3.18s/it][R0] VAE:   1%|▏         | 3/212 [00:09<10:50,  3.11s/it][R0] VAE:   2%|▏         | 4/212 [00:12<10:25,  3.01s/it][R0] VAE:   2%|▏         | 5/212 [00:15<10:10,  2.95s/it][R0] VAE:   3%|▎         | 6/212 [00:18<10:16,  2.99s/it][R0] VAE:   3%|▎         | 7/212 [00:21<10:03,  2.95s/it][R0] VAE:   4%|▍         | 8/212 [00:23<09:19,  2.74s/it][R0] VAE:   4%|▍         | 9/212 [00:26<09:36,  2.84s/it][R0] VAE:   5%|▍         | 10/212 [00:29<09:56,  2.96s/it][R0] VAE:   5%|▌         | 11/212 [00:32<09:23,  2.80s/it][R0] VAE:   6%|▌         | 12/212 [00:35<09:47,  2.94s/it][R0] VAE:   6%|▌         | 13/212 [00:38<09:51,  2.97s/it][R0] VAE:   7%|▋         | 15/212 [00:42<08:05,  2.46s/it][R0] VAE:   8%|▊         | 16/212 [00:44<08:09,  2.50s/it][R0] VAE:   8%|▊         | 17/212 [00:47<08:31,  2.62s/it][R0] VAE:   8%|▊         | 18/212 [00:50<08:40,  2.69s/it][R0] VAE:   9%|▉         | 19/212 [00:53<08:47,  2.73s/it][R0] VAE:   9%|▉         | 20/212 [00:56<08:51,  2.77s/it][R0] VAE:  10%|▉         | 21/212 [00:59<08:38,  2.72s/it][R0] VAE:  11%|█         | 23/212 [01:02<07:22,  2.34s/it][R0] VAE:  11%|█▏        | 24/212 [01:07<08:53,  2.84s/it][R0] VAE:  12%|█▏        | 25/212 [01:09<08:41,  2.79s/it][R0] VAE:  12%|█▏        | 26/212 [01:12<08:24,  2.71s/it][R0] VAE:  13%|█▎        | 27/212 [01:15<08:17,  2.69s/it][R0] VAE:  13%|█▎        | 28/212 [01:18<09:02,  2.95s/it][R0] VAE:  14%|█▎        | 29/212 [01:21<09:18,  3.05s/it][R0] VAE:  14%|█▍        | 30/212 [01:24<09:02,  2.98s/it][R0] VAE:  15%|█▌        | 32/212 [01:28<07:17,  2.43s/it][R0] VAE:  16%|█▌        | 33/212 [01:30<07:19,  2.46s/it][R0] VAE:  16%|█▌        | 34/212 [01:33<07:41,  2.59s/it][R0] VAE:  17%|█▋        | 35/212 [01:37<08:25,  2.86s/it][R0] VAE:  17%|█▋        | 36/212 [01:40<08:16,  2.82s/it][R0] VAE:  22%|██▏       | 46/212 [01:43<02:15,  1.23it/s][R0] VAE:  30%|██▉       | 63/212 [01:45<00:56,  2.65it/s][R0] VAE:  30%|███       | 64/212 [01:49<01:19,  1.85it/s][R0] VAE:  31%|███       | 65/212 [01:51<01:41,  1.45it/s][R0] VAE:  33%|███▎      | 69/212 [01:54<01:35,  1.50it/s][R0] VAE:  33%|███▎      | 70/212 [01:57<02:05,  1.13it/s][R0] VAE:  33%|███▎      | 71/212 [02:00<02:35,  1.10s/it][R0] VAE:  34%|███▍      | 72/212 [02:03<03:17,  1.41s/it][R0] VAE:  34%|███▍      | 73/212 [02:06<03:49,  1.65s/it][R0] VAE:  35%|███▍      | 74/212 [02:09<04:41,  2.04s/it][R0] VAE:  35%|███▌      | 75/212 [02:13<05:32,  2.42s/it][R0] VAE:  36%|███▌      | 76/212 [02:18<06:40,  2.95s/it][R0] VAE:  36%|███▋      | 77/212 [02:20<06:01,  2.67s/it][R0] VAE:  37%|███▋      | 78/212 [02:21<05:14,  2.35s/it][R0] VAE:  37%|███▋      | 79/212 [02:24<05:27,  2.46s/it][R0] VAE:  38%|███▊      | 80/212 [02:25<04:33,  2.07s/it][R0] VAE:  38%|███▊      | 81/212 [02:27<04:11,  1.92s/it][R0] VAE:  54%|█████▍    | 115/212 [02:28<00:15,  6.07it/s][R0] VAE:  55%|█████▌    | 117/212 [02:28<00:15,  6.32it/s][R0] VAE:  56%|█████▌    | 118/212 [02:28<00:15,  6.26it/s][R0] VAE:  58%|█████▊    | 124/212 [02:29<00:15,  5.77it/s][R0] VAE:  59%|█████▉    | 126/212 [02:30<00:13,  6.32it/s][R0] VAE:  61%|██████▏   | 130/212 [02:30<00:11,  7.30it/s][R0] VAE:  62%|██████▏   | 132/212 [02:30<00:10,  7.69it/s][R0] VAE:  64%|██████▍   | 136/212 [02:30<00:07,  9.60it/s][R0] VAE:  69%|██████▉   | 146/212 [02:34<00:16,  4.04it/s][R0] VAE:  70%|███████   | 149/212 [02:35<00:17,  3.60it/s][R0] VAE:  77%|███████▋  | 164/212 [02:38<00:10,  4.63it/s][R0] VAE:  79%|███████▉  | 168/212 [02:41<00:14,  3.09it/s][R0] VAE:  88%|████████▊ | 187/212 [02:45<00:06,  3.72it/s][R0] VAE:  89%|████████▊ | 188/212 [02:50<00:10,  2.24it/s][R0] VAE:  89%|████████▉ | 189/212 [02:55<00:15,  1.51it/s][R0] VAE:  90%|████████▉ | 190/212 [02:55<00:13,  1.59it/s][R0] VAE:  90%|█████████ | 191/212 [02:59<00:19,  1.08it/s][R0] VAE:  91%|█████████ | 192/212 [03:02<00:24,  1.25s/it][R0] VAE:  91%|█████████ | 193/212 [03:05<00:28,  1.50s/it][R0] VAE:  92%|█████████▏| 194/212 [03:08<00:31,  1.75s/it][R0] VAE:  92%|█████████▏| 195/212 [03:12<00:35,  2.12s/it][R0] VAE:  92%|█████████▏| 196/212 [03:15<00:36,  2.28s/it][R0] VAE:  93%|█████████▎| 197/212 [03:18<00:36,  2.45s/it][R0] VAE:  93%|█████████▎| 198/212 [03:21<00:37,  2.67s/it][R0] VAE:  94%|█████████▍| 199/212 [03:24<00:36,  2.84s/it][R0] VAE:  94%|█████████▍| 200/212 [03:28<00:35,  2.95s/it][R0] VAE:  95%|█████████▍| 201/212 [03:31<00:33,  3.06s/it][R0] VAE:  95%|█████████▌| 202/212 [03:34<00:30,  3.05s/it][R0] VAE:  96%|█████████▌| 203/212 [03:37<00:26,  2.92s/it][R0] VAE:  96%|█████████▌| 204/212 [03:39<00:22,  2.87s/it][R0] VAE:  97%|█████████▋| 205/212 [03:43<00:21,  3.03s/it][R0] VAE:  97%|█████████▋| 206/212 [03:46<00:19,  3.18s/it][R0] VAE:  98%|█████████▊| 207/212 [03:51<00:18,  3.70s/it][R0] VAE:  98%|█████████▊| 208/212 [03:55<00:14,  3.57s/it][R0] VAE:  99%|█████████▊| 209/212 [03:57<00:10,  3.36s/it][R0] VAE:  99%|█████████▉| 210/212 [04:00<00:06,  3.29s/it][R0] VAE: 100%|█████████▉| 211/212 [04:03<00:03,  3.09s/it][R0] VAE: 100%|██████████| 212/212 [04:06<00:00,  2.88s/it]                                                             [VAE ERROR] PhysXNet/10005_basic_1: 
+  [VAE ERROR] PhysXNet/10005_basic_2: 
+  [VAE ERROR] PhysXNet/10005_senior_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10005_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10005_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10005_senior_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10012_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10012_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10012_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10023_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10026_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10035_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10035_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10035_senior_3: 
+  [VAE ERROR] PhysXNet_PhysXnet/10046_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10068_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10070_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10070_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10070_senior_3: 
+  [VAE ERROR] PhysXNet_PhysXnet/10076_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10090_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10092_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10128_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10128_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10128_senior_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10154_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10154_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10154_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10174_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10208_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10208_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10210_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10237_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10281_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10296_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10296_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10296_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10302_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10302_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10302_senior_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10304_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10308_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10430_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10464_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10464_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10483_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10499_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10520_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10538_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10605_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10787_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10837_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10909_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10928_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10951_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10964_basic_2: 
+[R0] JEPA:   0%|          | 0/212 [00:00<?, ?it/s][R0] JEPA:   5%|▌         | 11/212 [00:00<00:01, 108.54it/s]/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+[R0] JEPA:  10%|█         | 22/212 [00:17<02:59,  1.06it/s] [R0] JEPA:  15%|█▍        | 31/212 [00:21<02:08,  1.41it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_09_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47de00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_06_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  18%|█▊        | 38/212 [00:21<01:25,  2.02it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_09_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/orbit_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a4240] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x371be5c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x371be5c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  21%|██        | 44/212 [00:21<01:01,  2.75it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a2bad00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a2baf40] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a5a5980] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a5a5980] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/hemi_09_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_09_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/orbit_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/sweep_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/orbit_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/orbit_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10275_basic_0/sweep_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10275_basic_0/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_09_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_09_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10279_basic_0/orbit_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/orbit_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10279_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10279_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_13_nobg.mp4...[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a5a5dc0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3e8f9140] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3e8f9340] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3dc10f80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3dc10f80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3dc11340] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c5300] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c5540] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3e901b80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3e901b80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3e901f80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6cb800] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6cb800] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6cbc00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a699c00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a699c00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69a040] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a45c040] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a45c040] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a45c480] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a48b080] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a48b080] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a48b4c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b09c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b09c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b0d80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  23%|██▎       | 49/212 [00:21<00:45,  3.58it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b1180] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a5400] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a5400] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a5800] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a5bc0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a6000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6cc900] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6ccb00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6ccf00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6cd340] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a611c80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a611c80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6120c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6124c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a612900] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6d2900] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6d2900] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6d2d40] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6d3180] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6d3580] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/orbit_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_1/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_1/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/hemi_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/orbit_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/orbit_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/sweep_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_13_nobg.mp4...[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69c840] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69c840] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69cc80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69d0c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69d0c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47e840] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47e840] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47ec80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47f0c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a47f780] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69aa80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69acc0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69b100] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69b540] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69b980] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  25%|██▌       | 54/212 [00:21<00:33,  4.66it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a69bdc0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b69c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b6c00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b7040] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b7480] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b7840] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b7c80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a67d840] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a67d840] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a67dc80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a67e340] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a67e780] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a67ebc0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c2340] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c2780] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c2bc0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c2f80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_09_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c33c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c3800] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c3c40] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c4080] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c4740] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a613540] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a613980] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a613d80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6141c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a614580] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a614c40] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a615000] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a615440] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a615880] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10288_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10288_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10288_basic_0/hemi_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/orbit_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_09_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_09_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/orbit_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_02_nobg.mp4...[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a615cc0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6bec00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6bec00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/orbit_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6bf2c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/orbit_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6bf680] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6bfac0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  28%|██▊       | 59/212 [00:21<00:25,  6.06it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c0180] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c05c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c0a00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c0e40] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_1/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6c1200] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a7340] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a7340] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a7780] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a7e40] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a8280] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a8640] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/orbit_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a8a80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a8ec0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a9580] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a9940] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6a9d80] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b2d00] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b3140] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/sweep_02_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  31%|███       | 66/212 [00:21<00:16,  8.88it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b3580] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_3/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b39c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_3/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b4080] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b4440] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b4880] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b4f40] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b5300] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a6b5740] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3a4874c0] moov atom not found
+[11:47:55] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  36%|███▋      | 77/212 [00:21<00:09, 14.92it/s][R0] JEPA:  36%|███▋      | 77/212 [00:37<00:09, 14.92it/s][R0] JEPA:  40%|███▉      | 84/212 [00:43<02:00,  1.06it/s][R0] JEPA:  40%|████      | 85/212 [00:53<03:00,  1.42s/it][R0] JEPA:  40%|████      | 85/212 [01:07<03:00,  1.42s/it][R0] JEPA:  41%|████      | 87/212 [01:08<04:38,  2.22s/it][R0] JEPA:  42%|████▏     | 88/212 [01:11<04:47,  2.32s/it][R0] JEPA:  42%|████▏     | 88/212 [01:27<04:47,  2.32s/it][R0] JEPA:  43%|████▎     | 91/212 [01:33<07:28,  3.71s/it][R0] JEPA:  43%|████▎     | 92/212 [01:36<07:18,  3.66s/it][R0] JEPA:  43%|████▎     | 92/212 [01:47<07:18,  3.66s/it][R0] JEPA:  44%|████▍     | 94/212 [01:48<08:12,  4.18s/it][R0] JEPA:  45%|████▍     | 95/212 [01:53<08:25,  4.32s/it][R0] JEPA:  45%|████▍     | 95/212 [02:07<08:25,  4.32s/it][R0] JEPA:  46%|████▌     | 97/212 [02:12<11:26,  5.97s/it][R0] JEPA:  46%|████▌     | 98/212 [02:17<11:01,  5.80s/it][R0] JEPA:  47%|████▋     | 100/212 [02:21<08:14,  4.41s/it][R0] JEPA:  48%|████▊     | 101/212 [02:31<10:08,  5.48s/it][R0] JEPA:  48%|████▊     | 102/212 [02:39<11:11,  6.11s/it][R0] JEPA:  49%|████▊     | 103/212 [02:52<14:10,  7.80s/it][R0] JEPA:  49%|████▉     | 104/212 [02:58<12:56,  7.19s/it][R0] JEPA:  50%|████▉     | 105/212 [02:59<10:15,  5.75s/it][R0] JEPA:  50%|█████     | 106/212 [03:13<13:45,  7.79s/it][R0] JEPA:  50%|█████     | 107/212 [03:24<15:10,  8.68s/it][R0] JEPA:  51%|█████     | 108/212 [03:35<16:27,  9.50s/it][R0] JEPA:  51%|█████▏    | 109/212 [03:46<17:07,  9.97s/it][R0] JEPA:  52%|█████▏    | 110/212 [03:58<17:40, 10.40s/it][R0] JEPA:  52%|█████▏    | 111/212 [04:07<16:49,  9.99s/it][R0] JEPA:  53%|█████▎    | 112/212 [04:16<16:09,  9.69s/it][R0] JEPA:  53%|█████▎    | 113/212 [04:20<13:06,  7.95s/it][R0] JEPA:  54%|█████▍    | 114/212 [04:24<11:29,  7.03s/it][R0] JEPA:  54%|█████▍    | 115/212 [04:35<12:52,  7.97s/it][R0] JEPA:  55%|█████▍    | 116/212 [04:43<12:55,  8.08s/it][R0] JEPA:  55%|█████▌    | 117/212 [04:53<13:39,  8.62s/it][R0] JEPA:  56%|█████▌    | 118/212 [04:56<11:04,  7.06s/it][R0] JEPA:  56%|█████▌    | 119/212 [04:58<08:24,  5.42s/it][R0] JEPA:  57%|█████▋    | 120/212 [05:10<11:13,  7.32s/it][R0] JEPA:  57%|█████▋    | 121/212 [05:19<11:58,  7.89s/it][R0] JEPA:  58%|█████▊    | 122/212 [05:24<10:41,  7.13s/it][R0] JEPA:  58%|█████▊    | 123/212 [05:29<09:46,  6.59s/it][R0] JEPA:  59%|█████▉    | 125/212 [05:37<07:31,  5.19s/it][R0] JEPA:  59%|█████▉    | 126/212 [05:46<08:48,  6.14s/it][R0] JEPA:  60%|█████▉    | 127/212 [05:53<09:06,  6.43s/it][R0] JEPA:  60%|██████    | 128/212 [06:00<09:08,  6.52s/it][R0] JEPA:  61%|██████    | 129/212 [06:08<09:50,  7.11s/it][R0] JEPA:  61%|██████▏   | 130/212 [06:12<08:14,  6.03s/it][R0] JEPA:  62%|██████▏   | 131/212 [06:22<09:39,  7.16s/it][R0] JEPA:  62%|██████▏   | 132/212 [06:33<11:12,  8.40s/it][R0] JEPA:  63%|██████▎   | 133/212 [06:35<08:25,  6.40s/it][R0] JEPA:  63%|██████▎   | 134/212 [06:43<09:18,  7.16s/it][R0] JEPA:  64%|██████▎   | 135/212 [06:50<09:02,  7.05s/it][R0] JEPA:  64%|██████▍   | 136/212 [06:56<08:15,  6.52s/it][R0] JEPA:  65%|██████▍   | 137/212 [06:59<06:54,  5.53s/it][R0] JEPA:  65%|██████▌   | 138/212 [07:00<05:22,  4.36s/it][R0] JEPA:  66%|██████▌   | 139/212 [07:02<04:17,  3.53s/it][R0] JEPA:  66%|██████▌   | 140/212 [07:13<07:05,  5.90s/it][R0] JEPA:  67%|██████▋   | 141/212 [07:20<07:11,  6.08s/it][R0] JEPA:  67%|██████▋   | 142/212 [07:32<09:08,  7.84s/it][R0] JEPA:  67%|██████▋   | 143/212 [07:43<10:14,  8.91s/it][R0] JEPA:  68%|██████▊   | 144/212 [07:51<09:43,  8.59s/it][R0] JEPA:  68%|██████▊   | 145/212 [07:59<09:12,  8.25s/it][R0] JEPA:  69%|██████▉   | 147/212 [08:09<07:27,  6.88s/it][R0] JEPA:  70%|██████▉   | 148/212 [08:12<06:18,  5.92s/it][R0] JEPA:  71%|███████   | 150/212 [08:17<04:32,  4.40s/it][R0] JEPA:  71%|███████   | 151/212 [08:21<04:29,  4.42s/it][R0] JEPA:  72%|███████▏  | 152/212 [08:40<07:53,  7.89s/it]

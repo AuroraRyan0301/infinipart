@@ -1,0 +1,501 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+W0319 00:10:24.249000 1615753 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] 
+W0319 00:10:24.249000 1615753 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] *****************************************
+W0319 00:10:24.249000 1615753 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0319 00:10:24.249000 1615753 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] *****************************************
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+Number of parameters in VAE: 340.30M
+VAE loaded: 340.3M params from /mnt/data/yurh/PartPacker/pretrained/vae.pt
+[VAE Dataset] 1244 cached samples from /mnt/data_ssd/infinigen-sim/vae_cache
+[VAE Dataset] 1244 cached samples from /mnt/data_ssd/infinigen-sim/vae_cache
+
+Starting VAE finetuning:
+  Data: 1244 cached samples from /mnt/data_ssd/infinigen-sim/vae_cache
+  Batch: 4 x 2 GPUs = 8
+  Steps: 20000, LR: 1e-05
+  Output: /mnt/data_ssd/infinigen-sim/vae_finetune_v2
+
+/mnt/cpfs/yurh/Infinigen-Sim/finetune_vae.py:178: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+/mnt/cpfs/yurh/Infinigen-Sim/finetune_vae.py:178: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+  [1/20000] loss=0.4642 mse=0.2533 iou_fg=0.795 lr=2.00e-08 | 0.51 it/s ETA 653m
+  [50/20000] loss=0.4776 mse=0.2612 iou_fg=0.688 lr=1.00e-06 | 4.84 it/s ETA 69m
+  [100/20000] loss=0.4557 mse=0.2464 iou_fg=0.726 lr=2.00e-06 | 5.18 it/s ETA 64m
+  [150/20000] loss=0.4281 mse=0.2272 iou_fg=0.745 lr=3.00e-06 | 5.19 it/s ETA 64m
+  [200/20000] loss=0.4074 mse=0.2136 iou_fg=0.746 lr=4.00e-06 | 5.22 it/s ETA 63m
+  [250/20000] loss=0.3828 mse=0.1989 iou_fg=0.759 lr=5.00e-06 | 5.26 it/s ETA 63m
+  [300/20000] loss=0.3326 mse=0.1678 iou_fg=0.798 lr=6.00e-06 | 5.29 it/s ETA 62m
+  [350/20000] loss=0.3153 mse=0.1600 iou_fg=0.778 lr=7.00e-06 | 5.39 it/s ETA 61m
+  [400/20000] loss=0.2676 mse=0.1337 iou_fg=0.815 lr=8.00e-06 | 5.37 it/s ETA 61m
+  [450/20000] loss=0.2594 mse=0.1347 iou_fg=0.774 lr=9.00e-06 | 5.37 it/s ETA 61m
+  [500/20000] loss=0.2268 mse=0.1150 iou_fg=0.836 lr=1.00e-05 | 5.35 it/s ETA 61m
+  [550/20000] loss=0.2293 mse=0.1214 iou_fg=0.812 lr=1.00e-05 | 5.28 it/s ETA 61m
+  [600/20000] loss=0.2118 mse=0.1103 iou_fg=0.830 lr=1.00e-05 | 5.32 it/s ETA 61m
+  [650/20000] loss=0.1851 mse=0.0945 iou_fg=0.866 lr=1.00e-05 | 5.38 it/s ETA 60m
+  [700/20000] loss=0.1727 mse=0.0901 iou_fg=0.858 lr=1.00e-05 | 5.42 it/s ETA 59m
+  [750/20000] loss=0.1892 mse=0.1010 iou_fg=0.836 lr=1.00e-05 | 5.41 it/s ETA 59m
+  [800/20000] loss=0.1843 mse=0.0992 iou_fg=0.845 lr=9.99e-06 | 5.41 it/s ETA 59m
+  [850/20000] loss=0.1604 mse=0.0862 iou_fg=0.857 lr=9.99e-06 | 5.40 it/s ETA 59m
+  [900/20000] loss=0.1540 mse=0.0826 iou_fg=0.861 lr=9.99e-06 | 5.44 it/s ETA 58m
+  [950/20000] loss=0.1604 mse=0.0868 iou_fg=0.852 lr=9.99e-06 | 5.44 it/s ETA 58m
+  [1000/20000] loss=0.1443 mse=0.0782 iou_fg=0.849 lr=9.99e-06 | 5.48 it/s ETA 58m
+  [1050/20000] loss=0.1422 mse=0.0767 iou_fg=0.864 lr=9.98e-06 | 5.45 it/s ETA 58m
+  [1100/20000] loss=0.1579 mse=0.0864 iou_fg=0.862 lr=9.98e-06 | 5.44 it/s ETA 58m
+  [1150/20000] loss=0.1536 mse=0.0837 iou_fg=0.856 lr=9.98e-06 | 5.41 it/s ETA 58m
+  [1200/20000] loss=0.1390 mse=0.0765 iou_fg=0.878 lr=9.97e-06 | 5.40 it/s ETA 58m
+  [1250/20000] loss=0.1292 mse=0.0691 iou_fg=0.884 lr=9.97e-06 | 5.40 it/s ETA 58m
+  [1300/20000] loss=0.1333 mse=0.0726 iou_fg=0.877 lr=9.96e-06 | 5.43 it/s ETA 57m
+  [1350/20000] loss=0.1361 mse=0.0754 iou_fg=0.874 lr=9.96e-06 | 5.42 it/s ETA 57m
+  [1400/20000] loss=0.1168 mse=0.0630 iou_fg=0.883 lr=9.95e-06 | 5.42 it/s ETA 57m
+  [1450/20000] loss=0.1361 mse=0.0751 iou_fg=0.869 lr=9.95e-06 | 5.41 it/s ETA 57m
+  [1500/20000] loss=0.1266 mse=0.0699 iou_fg=0.883 lr=9.94e-06 | 5.41 it/s ETA 57m
+  [1550/20000] loss=0.1183 mse=0.0652 iou_fg=0.896 lr=9.94e-06 | 5.42 it/s ETA 57m
+  [1600/20000] loss=0.1311 mse=0.0721 iou_fg=0.866 lr=9.93e-06 | 5.41 it/s ETA 57m
+  [1650/20000] loss=0.1137 mse=0.0625 iou_fg=0.895 lr=9.92e-06 | 5.41 it/s ETA 57m
+  [1700/20000] loss=0.1310 mse=0.0727 iou_fg=0.873 lr=9.92e-06 | 5.40 it/s ETA 57m
+  [1750/20000] loss=0.1318 mse=0.0726 iou_fg=0.867 lr=9.91e-06 | 5.41 it/s ETA 56m
+  [1800/20000] loss=0.1299 mse=0.0719 iou_fg=0.880 lr=9.90e-06 | 5.41 it/s ETA 56m
+  [1850/20000] loss=0.1039 mse=0.0560 iou_fg=0.895 lr=9.89e-06 | 5.42 it/s ETA 56m
+  [1900/20000] loss=0.1130 mse=0.0638 iou_fg=0.896 lr=9.89e-06 | 5.41 it/s ETA 56m
+  [1950/20000] loss=0.1222 mse=0.0676 iou_fg=0.887 lr=9.88e-06 | 5.42 it/s ETA 56m
+  [2000/20000] loss=0.1101 mse=0.0620 iou_fg=0.891 lr=9.87e-06 | 5.42 it/s ETA 55m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_2000.pt
+  [2050/20000] loss=0.1095 mse=0.0600 iou_fg=0.900 lr=9.86e-06 | 5.40 it/s ETA 55m
+  [2100/20000] loss=0.1107 mse=0.0615 iou_fg=0.896 lr=9.85e-06 | 5.40 it/s ETA 55m
+  [2150/20000] loss=0.0987 mse=0.0542 iou_fg=0.896 lr=9.84e-06 | 5.38 it/s ETA 55m
+  [2200/20000] loss=0.1008 mse=0.0554 iou_fg=0.910 lr=9.83e-06 | 5.39 it/s ETA 55m
+  [2250/20000] loss=0.1063 mse=0.0592 iou_fg=0.899 lr=9.82e-06 | 5.38 it/s ETA 55m
+  [2300/20000] loss=0.1135 mse=0.0643 iou_fg=0.879 lr=9.81e-06 | 5.39 it/s ETA 55m
+  [2350/20000] loss=0.1099 mse=0.0602 iou_fg=0.893 lr=9.80e-06 | 5.39 it/s ETA 55m
+  [2400/20000] loss=0.0907 mse=0.0499 iou_fg=0.909 lr=9.79e-06 | 5.39 it/s ETA 54m
+  [2450/20000] loss=0.1091 mse=0.0602 iou_fg=0.893 lr=9.78e-06 | 5.40 it/s ETA 54m
+  [2500/20000] loss=0.1129 mse=0.0634 iou_fg=0.899 lr=9.77e-06 | 5.39 it/s ETA 54m
+  [2550/20000] loss=0.1039 mse=0.0574 iou_fg=0.895 lr=9.76e-06 | 5.38 it/s ETA 54m
+  [2600/20000] loss=0.1031 mse=0.0574 iou_fg=0.906 lr=9.74e-06 | 5.38 it/s ETA 54m
+  [2650/20000] loss=0.1170 mse=0.0662 iou_fg=0.881 lr=9.73e-06 | 5.39 it/s ETA 54m
+  [2700/20000] loss=0.0930 mse=0.0513 iou_fg=0.911 lr=9.72e-06 | 5.40 it/s ETA 53m
+  [2750/20000] loss=0.0908 mse=0.0495 iou_fg=0.918 lr=9.71e-06 | 5.41 it/s ETA 53m
+  [2800/20000] loss=0.0963 mse=0.0527 iou_fg=0.904 lr=9.69e-06 | 5.40 it/s ETA 53m
+  [2850/20000] loss=0.1034 mse=0.0578 iou_fg=0.900 lr=9.68e-06 | 5.40 it/s ETA 53m
+  [2900/20000] loss=0.0877 mse=0.0487 iou_fg=0.916 lr=9.67e-06 | 5.40 it/s ETA 53m
+  [2950/20000] loss=0.0978 mse=0.0544 iou_fg=0.898 lr=9.65e-06 | 5.41 it/s ETA 53m
+  [3000/20000] loss=0.0906 mse=0.0502 iou_fg=0.906 lr=9.64e-06 | 5.40 it/s ETA 53m
+  [3050/20000] loss=0.0941 mse=0.0520 iou_fg=0.912 lr=9.63e-06 | 5.41 it/s ETA 52m
+  [3100/20000] loss=0.0881 mse=0.0487 iou_fg=0.919 lr=9.61e-06 | 5.41 it/s ETA 52m
+  [3150/20000] loss=0.0879 mse=0.0490 iou_fg=0.909 lr=9.60e-06 | 5.41 it/s ETA 52m
+  [3200/20000] loss=0.0844 mse=0.0468 iou_fg=0.925 lr=9.58e-06 | 5.41 it/s ETA 52m
+  [3250/20000] loss=0.1077 mse=0.0601 iou_fg=0.888 lr=9.57e-06 | 5.42 it/s ETA 51m
+  [3300/20000] loss=0.0830 mse=0.0454 iou_fg=0.922 lr=9.55e-06 | 5.42 it/s ETA 51m
+  [3350/20000] loss=0.0844 mse=0.0465 iou_fg=0.920 lr=9.53e-06 | 5.43 it/s ETA 51m
+  [3400/20000] loss=0.1108 mse=0.0626 iou_fg=0.883 lr=9.52e-06 | 5.42 it/s ETA 51m
+  [3450/20000] loss=0.1002 mse=0.0563 iou_fg=0.906 lr=9.50e-06 | 5.42 it/s ETA 51m
+  [3500/20000] loss=0.0911 mse=0.0504 iou_fg=0.905 lr=9.48e-06 | 5.42 it/s ETA 51m
+  [3550/20000] loss=0.0854 mse=0.0471 iou_fg=0.920 lr=9.47e-06 | 5.42 it/s ETA 51m
+  [3600/20000] loss=0.0879 mse=0.0484 iou_fg=0.914 lr=9.45e-06 | 5.42 it/s ETA 50m
+  [3650/20000] loss=0.0865 mse=0.0480 iou_fg=0.899 lr=9.43e-06 | 5.42 it/s ETA 50m
+  [3700/20000] loss=0.1184 mse=0.0675 iou_fg=0.882 lr=9.42e-06 | 5.42 it/s ETA 50m
+  [3750/20000] loss=0.0925 mse=0.0520 iou_fg=0.910 lr=9.40e-06 | 5.42 it/s ETA 50m
+  [3800/20000] loss=0.0850 mse=0.0466 iou_fg=0.912 lr=9.38e-06 | 5.42 it/s ETA 50m
+  [3850/20000] loss=0.0872 mse=0.0483 iou_fg=0.907 lr=9.36e-06 | 5.42 it/s ETA 50m
+  [3900/20000] loss=0.0900 mse=0.0492 iou_fg=0.915 lr=9.34e-06 | 5.41 it/s ETA 50m
+  [3950/20000] loss=0.0889 mse=0.0497 iou_fg=0.914 lr=9.32e-06 | 5.42 it/s ETA 49m
+  [4000/20000] loss=0.0943 mse=0.0525 iou_fg=0.903 lr=9.30e-06 | 5.42 it/s ETA 49m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_4000.pt
+  [4050/20000] loss=0.0873 mse=0.0476 iou_fg=0.914 lr=9.28e-06 | 5.40 it/s ETA 49m
+  [4100/20000] loss=0.0829 mse=0.0458 iou_fg=0.922 lr=9.26e-06 | 5.40 it/s ETA 49m
+  [4150/20000] loss=0.0846 mse=0.0468 iou_fg=0.907 lr=9.24e-06 | 5.41 it/s ETA 49m
+  [4200/20000] loss=0.1055 mse=0.0595 iou_fg=0.899 lr=9.22e-06 | 5.41 it/s ETA 49m
+  [4250/20000] loss=0.0846 mse=0.0465 iou_fg=0.911 lr=9.20e-06 | 5.42 it/s ETA 48m
+  [4300/20000] loss=0.0789 mse=0.0434 iou_fg=0.917 lr=9.18e-06 | 5.42 it/s ETA 48m
+  [4350/20000] loss=0.0910 mse=0.0513 iou_fg=0.904 lr=9.16e-06 | 5.42 it/s ETA 48m
+  [4400/20000] loss=0.0885 mse=0.0493 iou_fg=0.899 lr=9.14e-06 | 5.42 it/s ETA 48m
+  [4450/20000] loss=0.0715 mse=0.0393 iou_fg=0.934 lr=9.12e-06 | 5.43 it/s ETA 48m
+  [4500/20000] loss=0.0883 mse=0.0490 iou_fg=0.920 lr=9.10e-06 | 5.43 it/s ETA 48m
+  [4550/20000] loss=0.0807 mse=0.0444 iou_fg=0.913 lr=9.08e-06 | 5.43 it/s ETA 47m
+  [4600/20000] loss=0.0860 mse=0.0479 iou_fg=0.913 lr=9.05e-06 | 5.43 it/s ETA 47m
+  [4650/20000] loss=0.0830 mse=0.0460 iou_fg=0.921 lr=9.03e-06 | 5.42 it/s ETA 47m
+  [4700/20000] loss=0.0915 mse=0.0507 iou_fg=0.901 lr=9.01e-06 | 5.42 it/s ETA 47m
+  [4750/20000] loss=0.0831 mse=0.0457 iou_fg=0.916 lr=8.99e-06 | 5.42 it/s ETA 47m
+  [4800/20000] loss=0.0926 mse=0.0517 iou_fg=0.911 lr=8.96e-06 | 5.42 it/s ETA 47m
+  [4850/20000] loss=0.1070 mse=0.0596 iou_fg=0.896 lr=8.94e-06 | 5.42 it/s ETA 47m
+  [4900/20000] loss=0.0880 mse=0.0489 iou_fg=0.904 lr=8.92e-06 | 5.43 it/s ETA 46m
+  [4950/20000] loss=0.0836 mse=0.0468 iou_fg=0.919 lr=8.89e-06 | 5.42 it/s ETA 46m
+  [5000/20000] loss=0.0898 mse=0.0506 iou_fg=0.912 lr=8.87e-06 | 5.42 it/s ETA 46m
+  [5050/20000] loss=0.0683 mse=0.0373 iou_fg=0.935 lr=8.84e-06 | 5.42 it/s ETA 46m
+  [5100/20000] loss=0.0797 mse=0.0433 iou_fg=0.916 lr=8.82e-06 | 5.43 it/s ETA 46m
+  [5150/20000] loss=0.0882 mse=0.0495 iou_fg=0.908 lr=8.80e-06 | 5.43 it/s ETA 46m
+  [5200/20000] loss=0.0873 mse=0.0484 iou_fg=0.908 lr=8.77e-06 | 5.43 it/s ETA 45m
+  [5250/20000] loss=0.0782 mse=0.0427 iou_fg=0.923 lr=8.75e-06 | 5.43 it/s ETA 45m
+  [5300/20000] loss=0.0784 mse=0.0435 iou_fg=0.919 lr=8.72e-06 | 5.43 it/s ETA 45m
+  [5350/20000] loss=0.1007 mse=0.0570 iou_fg=0.905 lr=8.69e-06 | 5.43 it/s ETA 45m
+  [5400/20000] loss=0.0787 mse=0.0436 iou_fg=0.921 lr=8.67e-06 | 5.43 it/s ETA 45m
+  [5450/20000] loss=0.0787 mse=0.0433 iou_fg=0.923 lr=8.64e-06 | 5.43 it/s ETA 45m
+  [5500/20000] loss=0.0818 mse=0.0453 iou_fg=0.912 lr=8.62e-06 | 5.43 it/s ETA 45m
+  [5550/20000] loss=0.0763 mse=0.0418 iou_fg=0.921 lr=8.59e-06 | 5.43 it/s ETA 44m
+  [5600/20000] loss=0.0798 mse=0.0445 iou_fg=0.909 lr=8.56e-06 | 5.43 it/s ETA 44m
+  [5650/20000] loss=0.0741 mse=0.0405 iou_fg=0.924 lr=8.54e-06 | 5.43 it/s ETA 44m
+  [5700/20000] loss=0.0869 mse=0.0487 iou_fg=0.923 lr=8.51e-06 | 5.43 it/s ETA 44m
+  [5750/20000] loss=0.0732 mse=0.0396 iou_fg=0.931 lr=8.48e-06 | 5.43 it/s ETA 44m
+  [5800/20000] loss=0.0750 mse=0.0413 iou_fg=0.931 lr=8.46e-06 | 5.43 it/s ETA 44m
+  [5850/20000] loss=0.0928 mse=0.0516 iou_fg=0.901 lr=8.43e-06 | 5.43 it/s ETA 43m
+  [5900/20000] loss=0.0812 mse=0.0451 iou_fg=0.917 lr=8.40e-06 | 5.42 it/s ETA 43m
+  [5950/20000] loss=0.0855 mse=0.0476 iou_fg=0.916 lr=8.37e-06 | 5.43 it/s ETA 43m
+  [6000/20000] loss=0.0773 mse=0.0419 iou_fg=0.918 lr=8.35e-06 | 5.43 it/s ETA 43m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_6000.pt
+  [6050/20000] loss=0.0654 mse=0.0358 iou_fg=0.942 lr=8.32e-06 | 5.41 it/s ETA 43m
+  [6100/20000] loss=0.0799 mse=0.0445 iou_fg=0.913 lr=8.29e-06 | 5.42 it/s ETA 43m
+  [6150/20000] loss=0.0885 mse=0.0494 iou_fg=0.904 lr=8.26e-06 | 5.42 it/s ETA 43m
+  [6200/20000] loss=0.0847 mse=0.0474 iou_fg=0.924 lr=8.23e-06 | 5.42 it/s ETA 42m
+  [6250/20000] loss=0.0752 mse=0.0415 iou_fg=0.914 lr=8.20e-06 | 5.42 it/s ETA 42m
+  [6300/20000] loss=0.0720 mse=0.0393 iou_fg=0.931 lr=8.17e-06 | 5.42 it/s ETA 42m
+  [6350/20000] loss=0.0839 mse=0.0469 iou_fg=0.914 lr=8.15e-06 | 5.42 it/s ETA 42m
+  [6400/20000] loss=0.0652 mse=0.0354 iou_fg=0.932 lr=8.12e-06 | 5.42 it/s ETA 42m
+  [6450/20000] loss=0.0801 mse=0.0443 iou_fg=0.914 lr=8.09e-06 | 5.42 it/s ETA 42m
+  [6500/20000] loss=0.0808 mse=0.0443 iou_fg=0.919 lr=8.06e-06 | 5.42 it/s ETA 41m
+  [6550/20000] loss=0.0861 mse=0.0481 iou_fg=0.918 lr=8.03e-06 | 5.42 it/s ETA 41m
+  [6600/20000] loss=0.0750 mse=0.0414 iou_fg=0.928 lr=8.00e-06 | 5.42 it/s ETA 41m
+  [6650/20000] loss=0.0719 mse=0.0396 iou_fg=0.927 lr=7.97e-06 | 5.42 it/s ETA 41m
+  [6700/20000] loss=0.0858 mse=0.0475 iou_fg=0.912 lr=7.94e-06 | 5.42 it/s ETA 41m
+  [6750/20000] loss=0.0684 mse=0.0372 iou_fg=0.928 lr=7.91e-06 | 5.42 it/s ETA 41m
+  [6800/20000] loss=0.0744 mse=0.0415 iou_fg=0.925 lr=7.87e-06 | 5.42 it/s ETA 41m
+  [6850/20000] loss=0.0754 mse=0.0422 iou_fg=0.930 lr=7.84e-06 | 5.42 it/s ETA 40m
+  [6900/20000] loss=0.0740 mse=0.0409 iou_fg=0.928 lr=7.81e-06 | 5.42 it/s ETA 40m
+  [6950/20000] loss=0.0673 mse=0.0366 iou_fg=0.931 lr=7.78e-06 | 5.42 it/s ETA 40m
+  [7000/20000] loss=0.0818 mse=0.0453 iou_fg=0.911 lr=7.75e-06 | 5.42 it/s ETA 40m
+  [7050/20000] loss=0.0820 mse=0.0457 iou_fg=0.916 lr=7.72e-06 | 5.42 it/s ETA 40m
+  [7100/20000] loss=0.0670 mse=0.0364 iou_fg=0.937 lr=7.69e-06 | 5.42 it/s ETA 40m
+  [7150/20000] loss=0.0672 mse=0.0370 iou_fg=0.928 lr=7.66e-06 | 5.42 it/s ETA 40m
+  [7200/20000] loss=0.0778 mse=0.0429 iou_fg=0.929 lr=7.62e-06 | 5.42 it/s ETA 39m
+  [7250/20000] loss=0.0744 mse=0.0407 iou_fg=0.929 lr=7.59e-06 | 5.42 it/s ETA 39m
+  [7300/20000] loss=0.0630 mse=0.0344 iou_fg=0.937 lr=7.56e-06 | 5.42 it/s ETA 39m
+  [7350/20000] loss=0.0725 mse=0.0398 iou_fg=0.918 lr=7.53e-06 | 5.42 it/s ETA 39m
+  [7400/20000] loss=0.0744 mse=0.0402 iou_fg=0.927 lr=7.49e-06 | 5.42 it/s ETA 39m
+  [7450/20000] loss=0.0752 mse=0.0412 iou_fg=0.925 lr=7.46e-06 | 5.43 it/s ETA 39m
+  [7500/20000] loss=0.0648 mse=0.0353 iou_fg=0.937 lr=7.43e-06 | 5.43 it/s ETA 38m
+  [7550/20000] loss=0.0686 mse=0.0375 iou_fg=0.917 lr=7.40e-06 | 5.43 it/s ETA 38m
+  [7600/20000] loss=0.0766 mse=0.0428 iou_fg=0.920 lr=7.36e-06 | 5.43 it/s ETA 38m
+  [7650/20000] loss=0.0774 mse=0.0424 iou_fg=0.923 lr=7.33e-06 | 5.44 it/s ETA 38m
+  [7700/20000] loss=0.0766 mse=0.0424 iou_fg=0.923 lr=7.30e-06 | 5.44 it/s ETA 38m
+  [7750/20000] loss=0.0784 mse=0.0435 iou_fg=0.918 lr=7.26e-06 | 5.44 it/s ETA 38m
+  [7800/20000] loss=0.0741 mse=0.0402 iou_fg=0.931 lr=7.23e-06 | 5.44 it/s ETA 37m
+  [7850/20000] loss=0.0701 mse=0.0383 iou_fg=0.923 lr=7.20e-06 | 5.44 it/s ETA 37m
+  [7900/20000] loss=0.0684 mse=0.0377 iou_fg=0.928 lr=7.16e-06 | 5.44 it/s ETA 37m
+  [7950/20000] loss=0.0699 mse=0.0385 iou_fg=0.931 lr=7.13e-06 | 5.45 it/s ETA 37m
+  [8000/20000] loss=0.0734 mse=0.0402 iou_fg=0.923 lr=7.10e-06 | 5.45 it/s ETA 37m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_8000.pt
+  [8050/20000] loss=0.0736 mse=0.0406 iou_fg=0.929 lr=7.06e-06 | 5.44 it/s ETA 37m
+  [8100/20000] loss=0.0726 mse=0.0399 iou_fg=0.932 lr=7.03e-06 | 5.44 it/s ETA 36m
+  [8150/20000] loss=0.0593 mse=0.0323 iou_fg=0.942 lr=6.99e-06 | 5.44 it/s ETA 36m
+  [8200/20000] loss=0.0865 mse=0.0477 iou_fg=0.916 lr=6.96e-06 | 5.44 it/s ETA 36m
+  [8250/20000] loss=0.0687 mse=0.0373 iou_fg=0.928 lr=6.93e-06 | 5.45 it/s ETA 36m
+  [8300/20000] loss=0.0629 mse=0.0346 iou_fg=0.930 lr=6.89e-06 | 5.45 it/s ETA 36m
+  [8350/20000] loss=0.0704 mse=0.0388 iou_fg=0.923 lr=6.86e-06 | 5.45 it/s ETA 36m
+  [8400/20000] loss=0.0800 mse=0.0444 iou_fg=0.915 lr=6.82e-06 | 5.45 it/s ETA 35m
+  [8450/20000] loss=0.0716 mse=0.0392 iou_fg=0.926 lr=6.79e-06 | 5.46 it/s ETA 35m
+  [8500/20000] loss=0.0652 mse=0.0359 iou_fg=0.934 lr=6.75e-06 | 5.46 it/s ETA 35m
+  [8550/20000] loss=0.0654 mse=0.0361 iou_fg=0.939 lr=6.72e-06 | 5.46 it/s ETA 35m
+  [8600/20000] loss=0.0849 mse=0.0474 iou_fg=0.910 lr=6.68e-06 | 5.46 it/s ETA 35m
+  [8650/20000] loss=0.0646 mse=0.0355 iou_fg=0.936 lr=6.65e-06 | 5.46 it/s ETA 35m
+  [8700/20000] loss=0.0569 mse=0.0302 iou_fg=0.942 lr=6.61e-06 | 5.46 it/s ETA 34m
+  [8750/20000] loss=0.0822 mse=0.0457 iou_fg=0.922 lr=6.58e-06 | 5.46 it/s ETA 34m
+  [8800/20000] loss=0.0716 mse=0.0389 iou_fg=0.923 lr=6.54e-06 | 5.47 it/s ETA 34m
+  [8850/20000] loss=0.0640 mse=0.0347 iou_fg=0.934 lr=6.51e-06 | 5.47 it/s ETA 34m
+  [8900/20000] loss=0.0824 mse=0.0457 iou_fg=0.915 lr=6.47e-06 | 5.47 it/s ETA 34m
+  [8950/20000] loss=0.0735 mse=0.0407 iou_fg=0.935 lr=6.44e-06 | 5.47 it/s ETA 34m
+  [9000/20000] loss=0.0713 mse=0.0391 iou_fg=0.927 lr=6.40e-06 | 5.47 it/s ETA 34m
+  [9050/20000] loss=0.0730 mse=0.0397 iou_fg=0.930 lr=6.36e-06 | 5.47 it/s ETA 33m
+  [9100/20000] loss=0.0647 mse=0.0354 iou_fg=0.938 lr=6.33e-06 | 5.47 it/s ETA 33m
+  [9150/20000] loss=0.0641 mse=0.0350 iou_fg=0.939 lr=6.29e-06 | 5.47 it/s ETA 33m
+  [9200/20000] loss=0.0687 mse=0.0379 iou_fg=0.931 lr=6.26e-06 | 5.47 it/s ETA 33m
+  [9250/20000] loss=0.0679 mse=0.0370 iou_fg=0.937 lr=6.22e-06 | 5.47 it/s ETA 33m
+  [9300/20000] loss=0.0739 mse=0.0409 iou_fg=0.926 lr=6.19e-06 | 5.47 it/s ETA 33m
+  [9350/20000] loss=0.0719 mse=0.0402 iou_fg=0.927 lr=6.15e-06 | 5.47 it/s ETA 32m
+  [9400/20000] loss=0.0792 mse=0.0436 iou_fg=0.922 lr=6.11e-06 | 5.47 it/s ETA 32m
+  [9450/20000] loss=0.0666 mse=0.0363 iou_fg=0.938 lr=6.08e-06 | 5.48 it/s ETA 32m
+  [9500/20000] loss=0.0651 mse=0.0354 iou_fg=0.937 lr=6.04e-06 | 5.48 it/s ETA 32m
+  [9550/20000] loss=0.0653 mse=0.0353 iou_fg=0.935 lr=6.01e-06 | 5.48 it/s ETA 32m
+  [9600/20000] loss=0.0702 mse=0.0387 iou_fg=0.926 lr=5.97e-06 | 5.48 it/s ETA 32m
+  [9650/20000] loss=0.0593 mse=0.0321 iou_fg=0.936 lr=5.93e-06 | 5.48 it/s ETA 31m
+  [9700/20000] loss=0.0747 mse=0.0407 iou_fg=0.926 lr=5.90e-06 | 5.49 it/s ETA 31m
+  [9750/20000] loss=0.0701 mse=0.0385 iou_fg=0.929 lr=5.86e-06 | 5.49 it/s ETA 31m
+  [9800/20000] loss=0.0853 mse=0.0475 iou_fg=0.903 lr=5.83e-06 | 5.49 it/s ETA 31m
+  [9850/20000] loss=0.0630 mse=0.0344 iou_fg=0.940 lr=5.79e-06 | 5.49 it/s ETA 31m
+  [9900/20000] loss=0.0723 mse=0.0400 iou_fg=0.926 lr=5.75e-06 | 5.49 it/s ETA 31m
+  [9950/20000] loss=0.0697 mse=0.0384 iou_fg=0.928 lr=5.72e-06 | 5.49 it/s ETA 31m
+  [10000/20000] loss=0.0621 mse=0.0341 iou_fg=0.938 lr=5.68e-06 | 5.49 it/s ETA 30m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_10000.pt
+  [10050/20000] loss=0.0696 mse=0.0379 iou_fg=0.929 lr=5.64e-06 | 5.49 it/s ETA 30m
+  [10100/20000] loss=0.0623 mse=0.0337 iou_fg=0.937 lr=5.61e-06 | 5.49 it/s ETA 30m
+  [10150/20000] loss=0.0601 mse=0.0325 iou_fg=0.943 lr=5.57e-06 | 5.49 it/s ETA 30m
+  [10200/20000] loss=0.0701 mse=0.0385 iou_fg=0.929 lr=5.54e-06 | 5.49 it/s ETA 30m
+  [10250/20000] loss=0.0712 mse=0.0393 iou_fg=0.930 lr=5.50e-06 | 5.49 it/s ETA 30m
+  [10300/20000] loss=0.0686 mse=0.0377 iou_fg=0.925 lr=5.46e-06 | 5.49 it/s ETA 29m
+  [10350/20000] loss=0.0699 mse=0.0381 iou_fg=0.928 lr=5.43e-06 | 5.49 it/s ETA 29m
+  [10400/20000] loss=0.0674 mse=0.0376 iou_fg=0.934 lr=5.39e-06 | 5.49 it/s ETA 29m
+  [10450/20000] loss=0.0603 mse=0.0328 iou_fg=0.939 lr=5.36e-06 | 5.49 it/s ETA 29m
+  [10500/20000] loss=0.0659 mse=0.0358 iou_fg=0.936 lr=5.32e-06 | 5.49 it/s ETA 29m
+  [10550/20000] loss=0.0578 mse=0.0309 iou_fg=0.942 lr=5.28e-06 | 5.49 it/s ETA 29m
+  [10600/20000] loss=0.0627 mse=0.0340 iou_fg=0.941 lr=5.25e-06 | 5.49 it/s ETA 29m
+  [10650/20000] loss=0.0694 mse=0.0380 iou_fg=0.931 lr=5.21e-06 | 5.49 it/s ETA 28m
+  [10700/20000] loss=0.0634 mse=0.0346 iou_fg=0.941 lr=5.17e-06 | 5.49 it/s ETA 28m
+  [10750/20000] loss=0.0635 mse=0.0343 iou_fg=0.938 lr=5.14e-06 | 5.49 it/s ETA 28m
+  [10800/20000] loss=0.0740 mse=0.0407 iou_fg=0.924 lr=5.10e-06 | 5.49 it/s ETA 28m
+  [10850/20000] loss=0.0704 mse=0.0392 iou_fg=0.931 lr=5.07e-06 | 5.49 it/s ETA 28m
+  [10900/20000] loss=0.0686 mse=0.0372 iou_fg=0.936 lr=5.03e-06 | 5.49 it/s ETA 28m
+  [10950/20000] loss=0.0579 mse=0.0317 iou_fg=0.944 lr=4.99e-06 | 5.49 it/s ETA 27m
+  [11000/20000] loss=0.0605 mse=0.0329 iou_fg=0.939 lr=4.96e-06 | 5.49 it/s ETA 27m
+  [11050/20000] loss=0.0784 mse=0.0431 iou_fg=0.924 lr=4.92e-06 | 5.49 it/s ETA 27m
+  [11100/20000] loss=0.0682 mse=0.0373 iou_fg=0.931 lr=4.89e-06 | 5.49 it/s ETA 27m
+  [11150/20000] loss=0.0716 mse=0.0399 iou_fg=0.927 lr=4.85e-06 | 5.49 it/s ETA 27m
+  [11200/20000] loss=0.0755 mse=0.0415 iou_fg=0.922 lr=4.81e-06 | 5.49 it/s ETA 27m
+  [11250/20000] loss=0.0683 mse=0.0377 iou_fg=0.936 lr=4.78e-06 | 5.49 it/s ETA 27m
+  [11300/20000] loss=0.0655 mse=0.0357 iou_fg=0.934 lr=4.74e-06 | 5.49 it/s ETA 26m
+  [11350/20000] loss=0.0607 mse=0.0329 iou_fg=0.942 lr=4.71e-06 | 5.49 it/s ETA 26m
+  [11400/20000] loss=0.0683 mse=0.0374 iou_fg=0.926 lr=4.67e-06 | 5.50 it/s ETA 26m
+  [11450/20000] loss=0.0697 mse=0.0384 iou_fg=0.928 lr=4.64e-06 | 5.49 it/s ETA 26m
+  [11500/20000] loss=0.0680 mse=0.0366 iou_fg=0.930 lr=4.60e-06 | 5.50 it/s ETA 26m
+  [11550/20000] loss=0.0765 mse=0.0425 iou_fg=0.931 lr=4.56e-06 | 5.49 it/s ETA 26m
+  [11600/20000] loss=0.0631 mse=0.0344 iou_fg=0.937 lr=4.53e-06 | 5.49 it/s ETA 25m
+  [11650/20000] loss=0.0625 mse=0.0341 iou_fg=0.936 lr=4.49e-06 | 5.49 it/s ETA 25m
+  [11700/20000] loss=0.0541 mse=0.0287 iou_fg=0.944 lr=4.46e-06 | 5.49 it/s ETA 25m
+  [11750/20000] loss=0.0797 mse=0.0442 iou_fg=0.916 lr=4.42e-06 | 5.50 it/s ETA 25m
+  [11800/20000] loss=0.0692 mse=0.0384 iou_fg=0.931 lr=4.39e-06 | 5.50 it/s ETA 25m
+  [11850/20000] loss=0.0670 mse=0.0368 iou_fg=0.929 lr=4.35e-06 | 5.50 it/s ETA 25m
+  [11900/20000] loss=0.0687 mse=0.0379 iou_fg=0.928 lr=4.32e-06 | 5.50 it/s ETA 25m
+  [11950/20000] loss=0.0654 mse=0.0358 iou_fg=0.938 lr=4.28e-06 | 5.49 it/s ETA 24m
+  [12000/20000] loss=0.0664 mse=0.0358 iou_fg=0.933 lr=4.25e-06 | 5.49 it/s ETA 24m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_12000.pt
+  [12050/20000] loss=0.0745 mse=0.0409 iou_fg=0.919 lr=4.21e-06 | 5.49 it/s ETA 24m
+  [12100/20000] loss=0.0642 mse=0.0352 iou_fg=0.941 lr=4.18e-06 | 5.49 it/s ETA 24m
+  [12150/20000] loss=0.0583 mse=0.0310 iou_fg=0.939 lr=4.14e-06 | 5.49 it/s ETA 24m
+  [12200/20000] loss=0.0721 mse=0.0402 iou_fg=0.934 lr=4.11e-06 | 5.49 it/s ETA 24m
+  [12250/20000] loss=0.0604 mse=0.0328 iou_fg=0.940 lr=4.07e-06 | 5.49 it/s ETA 24m
+  [12300/20000] loss=0.0713 mse=0.0386 iou_fg=0.934 lr=4.04e-06 | 5.49 it/s ETA 23m
+  [12350/20000] loss=0.0618 mse=0.0335 iou_fg=0.939 lr=4.01e-06 | 5.49 it/s ETA 23m
+  [12400/20000] loss=0.0653 mse=0.0351 iou_fg=0.934 lr=3.97e-06 | 5.49 it/s ETA 23m
+  [12450/20000] loss=0.0680 mse=0.0378 iou_fg=0.927 lr=3.94e-06 | 5.49 it/s ETA 23m
+  [12500/20000] loss=0.0632 mse=0.0342 iou_fg=0.934 lr=3.90e-06 | 5.49 it/s ETA 23m
+  [12550/20000] loss=0.0684 mse=0.0371 iou_fg=0.926 lr=3.87e-06 | 5.49 it/s ETA 23m
+  [12600/20000] loss=0.0664 mse=0.0364 iou_fg=0.935 lr=3.84e-06 | 5.50 it/s ETA 22m
+  [12650/20000] loss=0.0615 mse=0.0332 iou_fg=0.940 lr=3.80e-06 | 5.50 it/s ETA 22m
+  [12700/20000] loss=0.0782 mse=0.0436 iou_fg=0.917 lr=3.77e-06 | 5.50 it/s ETA 22m
+  [12750/20000] loss=0.0611 mse=0.0331 iou_fg=0.938 lr=3.74e-06 | 5.50 it/s ETA 22m
+  [12800/20000] loss=0.0737 mse=0.0407 iou_fg=0.924 lr=3.70e-06 | 5.50 it/s ETA 22m
+  [12850/20000] loss=0.0599 mse=0.0326 iou_fg=0.933 lr=3.67e-06 | 5.50 it/s ETA 22m
+  [12900/20000] loss=0.0593 mse=0.0322 iou_fg=0.937 lr=3.64e-06 | 5.50 it/s ETA 22m
+  [12950/20000] loss=0.0684 mse=0.0374 iou_fg=0.936 lr=3.60e-06 | 5.50 it/s ETA 21m
+  [13000/20000] loss=0.0599 mse=0.0325 iou_fg=0.943 lr=3.57e-06 | 5.50 it/s ETA 21m
+  [13050/20000] loss=0.0580 mse=0.0310 iou_fg=0.943 lr=3.54e-06 | 5.50 it/s ETA 21m
+  [13100/20000] loss=0.0563 mse=0.0309 iou_fg=0.944 lr=3.51e-06 | 5.50 it/s ETA 21m
+  [13150/20000] loss=0.0704 mse=0.0384 iou_fg=0.913 lr=3.47e-06 | 5.50 it/s ETA 21m
+  [13200/20000] loss=0.0691 mse=0.0373 iou_fg=0.927 lr=3.44e-06 | 5.50 it/s ETA 21m
+  [13250/20000] loss=0.0519 mse=0.0277 iou_fg=0.951 lr=3.41e-06 | 5.50 it/s ETA 20m
+  [13300/20000] loss=0.0599 mse=0.0325 iou_fg=0.935 lr=3.38e-06 | 5.50 it/s ETA 20m
+  [13350/20000] loss=0.0653 mse=0.0358 iou_fg=0.940 lr=3.34e-06 | 5.50 it/s ETA 20m
+  [13400/20000] loss=0.0643 mse=0.0347 iou_fg=0.938 lr=3.31e-06 | 5.50 it/s ETA 20m
+  [13450/20000] loss=0.0637 mse=0.0344 iou_fg=0.936 lr=3.28e-06 | 5.50 it/s ETA 20m
+  [13500/20000] loss=0.0740 mse=0.0411 iou_fg=0.927 lr=3.25e-06 | 5.50 it/s ETA 20m
+  [13550/20000] loss=0.0751 mse=0.0411 iou_fg=0.923 lr=3.22e-06 | 5.50 it/s ETA 20m
+  [13600/20000] loss=0.0595 mse=0.0322 iou_fg=0.939 lr=3.19e-06 | 5.50 it/s ETA 19m
+  [13650/20000] loss=0.0585 mse=0.0319 iou_fg=0.945 lr=3.16e-06 | 5.51 it/s ETA 19m
+  [13700/20000] loss=0.0715 mse=0.0394 iou_fg=0.926 lr=3.13e-06 | 5.51 it/s ETA 19m
+  [13750/20000] loss=0.0664 mse=0.0363 iou_fg=0.938 lr=3.09e-06 | 5.51 it/s ETA 19m
+  [13800/20000] loss=0.0608 mse=0.0331 iou_fg=0.927 lr=3.06e-06 | 5.51 it/s ETA 19m
+  [13850/20000] loss=0.0715 mse=0.0391 iou_fg=0.929 lr=3.03e-06 | 5.51 it/s ETA 19m
+  [13900/20000] loss=0.0635 mse=0.0349 iou_fg=0.940 lr=3.00e-06 | 5.51 it/s ETA 18m
+  [13950/20000] loss=0.0639 mse=0.0348 iou_fg=0.938 lr=2.97e-06 | 5.51 it/s ETA 18m
+  [14000/20000] loss=0.0647 mse=0.0354 iou_fg=0.932 lr=2.94e-06 | 5.51 it/s ETA 18m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_14000.pt
+  [14050/20000] loss=0.0628 mse=0.0338 iou_fg=0.936 lr=2.91e-06 | 5.51 it/s ETA 18m
+  [14100/20000] loss=0.0596 mse=0.0324 iou_fg=0.943 lr=2.88e-06 | 5.50 it/s ETA 18m
+  [14150/20000] loss=0.0576 mse=0.0304 iou_fg=0.933 lr=2.85e-06 | 5.51 it/s ETA 18m
+  [14200/20000] loss=0.0681 mse=0.0371 iou_fg=0.930 lr=2.83e-06 | 5.51 it/s ETA 18m
+  [14250/20000] loss=0.0642 mse=0.0347 iou_fg=0.936 lr=2.80e-06 | 5.51 it/s ETA 17m
+  [14300/20000] loss=0.0526 mse=0.0282 iou_fg=0.945 lr=2.77e-06 | 5.50 it/s ETA 17m
+  [14350/20000] loss=0.0693 mse=0.0379 iou_fg=0.925 lr=2.74e-06 | 5.51 it/s ETA 17m
+  [14400/20000] loss=0.0709 mse=0.0391 iou_fg=0.926 lr=2.71e-06 | 5.51 it/s ETA 17m
+  [14450/20000] loss=0.0544 mse=0.0294 iou_fg=0.948 lr=2.68e-06 | 5.51 it/s ETA 17m
+  [14500/20000] loss=0.0714 mse=0.0389 iou_fg=0.931 lr=2.65e-06 | 5.51 it/s ETA 17m
+  [14550/20000] loss=0.0693 mse=0.0376 iou_fg=0.932 lr=2.63e-06 | 5.51 it/s ETA 16m
+  [14600/20000] loss=0.0674 mse=0.0371 iou_fg=0.938 lr=2.60e-06 | 5.50 it/s ETA 16m
+  [14650/20000] loss=0.0566 mse=0.0305 iou_fg=0.939 lr=2.57e-06 | 5.50 it/s ETA 16m
+  [14700/20000] loss=0.0714 mse=0.0392 iou_fg=0.926 lr=2.54e-06 | 5.51 it/s ETA 16m
+  [14750/20000] loss=0.0797 mse=0.0443 iou_fg=0.919 lr=2.52e-06 | 5.50 it/s ETA 16m
+  [14800/20000] loss=0.0591 mse=0.0320 iou_fg=0.945 lr=2.49e-06 | 5.50 it/s ETA 16m
+  [14850/20000] loss=0.0614 mse=0.0332 iou_fg=0.933 lr=2.46e-06 | 5.50 it/s ETA 16m
+  [14900/20000] loss=0.0696 mse=0.0379 iou_fg=0.932 lr=2.44e-06 | 5.51 it/s ETA 15m
+  [14950/20000] loss=0.0608 mse=0.0329 iou_fg=0.940 lr=2.41e-06 | 5.51 it/s ETA 15m
+  [15000/20000] loss=0.0688 mse=0.0377 iou_fg=0.928 lr=2.38e-06 | 5.51 it/s ETA 15m
+  [15050/20000] loss=0.0682 mse=0.0376 iou_fg=0.929 lr=2.36e-06 | 5.51 it/s ETA 15m
+  [15100/20000] loss=0.0790 mse=0.0432 iou_fg=0.921 lr=2.33e-06 | 5.51 it/s ETA 15m
+  [15150/20000] loss=0.0664 mse=0.0365 iou_fg=0.929 lr=2.31e-06 | 5.51 it/s ETA 15m
+  [15200/20000] loss=0.0571 mse=0.0308 iou_fg=0.943 lr=2.28e-06 | 5.51 it/s ETA 15m
+  [15250/20000] loss=0.0681 mse=0.0374 iou_fg=0.933 lr=2.25e-06 | 5.51 it/s ETA 14m
+  [15300/20000] loss=0.0561 mse=0.0306 iou_fg=0.928 lr=2.23e-06 | 5.51 it/s ETA 14m
+  [15350/20000] loss=0.0727 mse=0.0395 iou_fg=0.928 lr=2.20e-06 | 5.51 it/s ETA 14m
+  [15400/20000] loss=0.0704 mse=0.0386 iou_fg=0.930 lr=2.18e-06 | 5.51 it/s ETA 14m
+  [15450/20000] loss=0.0587 mse=0.0318 iou_fg=0.943 lr=2.16e-06 | 5.51 it/s ETA 14m
+  [15500/20000] loss=0.0750 mse=0.0419 iou_fg=0.925 lr=2.13e-06 | 5.51 it/s ETA 14m
+  [15550/20000] loss=0.0537 mse=0.0292 iou_fg=0.943 lr=2.11e-06 | 5.51 it/s ETA 13m
+  [15600/20000] loss=0.0572 mse=0.0309 iou_fg=0.937 lr=2.08e-06 | 5.51 it/s ETA 13m
+  [15650/20000] loss=0.0558 mse=0.0295 iou_fg=0.945 lr=2.06e-06 | 5.51 it/s ETA 13m
+  [15700/20000] loss=0.0730 mse=0.0406 iou_fg=0.932 lr=2.04e-06 | 5.51 it/s ETA 13m
+  [15750/20000] loss=0.0709 mse=0.0384 iou_fg=0.921 lr=2.01e-06 | 5.51 it/s ETA 13m
+  [15800/20000] loss=0.0668 mse=0.0366 iou_fg=0.931 lr=1.99e-06 | 5.52 it/s ETA 13m
+  [15850/20000] loss=0.0600 mse=0.0331 iou_fg=0.942 lr=1.97e-06 | 5.52 it/s ETA 13m
+  [15900/20000] loss=0.0674 mse=0.0364 iou_fg=0.929 lr=1.95e-06 | 5.52 it/s ETA 12m
+  [15950/20000] loss=0.0662 mse=0.0362 iou_fg=0.937 lr=1.92e-06 | 5.52 it/s ETA 12m
+  [16000/20000] loss=0.0623 mse=0.0342 iou_fg=0.940 lr=1.90e-06 | 5.52 it/s ETA 12m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_16000.pt
+  [16050/20000] loss=0.0606 mse=0.0327 iou_fg=0.939 lr=1.88e-06 | 5.51 it/s ETA 12m
+  [16100/20000] loss=0.0764 mse=0.0422 iou_fg=0.929 lr=1.86e-06 | 5.51 it/s ETA 12m
+  [16150/20000] loss=0.0766 mse=0.0418 iou_fg=0.922 lr=1.84e-06 | 5.51 it/s ETA 12m
+  [16200/20000] loss=0.0574 mse=0.0311 iou_fg=0.930 lr=1.82e-06 | 5.51 it/s ETA 11m
+  [16250/20000] loss=0.0687 mse=0.0375 iou_fg=0.933 lr=1.80e-06 | 5.51 it/s ETA 11m
+  [16300/20000] loss=0.0554 mse=0.0300 iou_fg=0.942 lr=1.78e-06 | 5.51 it/s ETA 11m
+  [16350/20000] loss=0.0666 mse=0.0364 iou_fg=0.927 lr=1.76e-06 | 5.51 it/s ETA 11m
+  [16400/20000] loss=0.0626 mse=0.0335 iou_fg=0.936 lr=1.74e-06 | 5.51 it/s ETA 11m
+  [16450/20000] loss=0.0599 mse=0.0325 iou_fg=0.945 lr=1.72e-06 | 5.51 it/s ETA 11m
+  [16500/20000] loss=0.0610 mse=0.0331 iou_fg=0.928 lr=1.70e-06 | 5.52 it/s ETA 11m
+  [16550/20000] loss=0.0587 mse=0.0317 iou_fg=0.945 lr=1.68e-06 | 5.52 it/s ETA 10m
+  [16600/20000] loss=0.0801 mse=0.0446 iou_fg=0.921 lr=1.66e-06 | 5.52 it/s ETA 10m
+  [16650/20000] loss=0.0686 mse=0.0378 iou_fg=0.928 lr=1.64e-06 | 5.52 it/s ETA 10m
+  [16700/20000] loss=0.0517 mse=0.0278 iou_fg=0.949 lr=1.62e-06 | 5.52 it/s ETA 10m
+  [16750/20000] loss=0.0648 mse=0.0351 iou_fg=0.935 lr=1.60e-06 | 5.52 it/s ETA 10m
+  [16800/20000] loss=0.0696 mse=0.0380 iou_fg=0.930 lr=1.58e-06 | 5.52 it/s ETA 10m
+  [16850/20000] loss=0.0660 mse=0.0367 iou_fg=0.936 lr=1.57e-06 | 5.52 it/s ETA 10m
+  [16900/20000] loss=0.0706 mse=0.0383 iou_fg=0.927 lr=1.55e-06 | 5.52 it/s ETA 9m
+  [16950/20000] loss=0.0647 mse=0.0349 iou_fg=0.931 lr=1.53e-06 | 5.52 it/s ETA 9m
+  [17000/20000] loss=0.0647 mse=0.0355 iou_fg=0.935 lr=1.52e-06 | 5.52 it/s ETA 9m
+  [17050/20000] loss=0.0713 mse=0.0395 iou_fg=0.925 lr=1.50e-06 | 5.51 it/s ETA 9m
+  [17100/20000] loss=0.0750 mse=0.0409 iou_fg=0.917 lr=1.48e-06 | 5.51 it/s ETA 9m
+  [17150/20000] loss=0.0565 mse=0.0305 iou_fg=0.941 lr=1.47e-06 | 5.51 it/s ETA 9m
+  [17200/20000] loss=0.0602 mse=0.0325 iou_fg=0.940 lr=1.45e-06 | 5.51 it/s ETA 8m
+  [17250/20000] loss=0.0674 mse=0.0371 iou_fg=0.933 lr=1.43e-06 | 5.51 it/s ETA 8m
+  [17300/20000] loss=0.0552 mse=0.0297 iou_fg=0.947 lr=1.42e-06 | 5.51 it/s ETA 8m
+  [17350/20000] loss=0.0715 mse=0.0389 iou_fg=0.930 lr=1.40e-06 | 5.52 it/s ETA 8m
+  [17400/20000] loss=0.0672 mse=0.0366 iou_fg=0.929 lr=1.39e-06 | 5.52 it/s ETA 8m
+  [17450/20000] loss=0.0727 mse=0.0401 iou_fg=0.931 lr=1.37e-06 | 5.52 it/s ETA 8m
+  [17500/20000] loss=0.0660 mse=0.0363 iou_fg=0.926 lr=1.36e-06 | 5.52 it/s ETA 8m
+  [17550/20000] loss=0.0647 mse=0.0354 iou_fg=0.930 lr=1.35e-06 | 5.52 it/s ETA 7m
+  [17600/20000] loss=0.0631 mse=0.0340 iou_fg=0.928 lr=1.33e-06 | 5.52 it/s ETA 7m
+  [17650/20000] loss=0.0647 mse=0.0355 iou_fg=0.939 lr=1.32e-06 | 5.52 it/s ETA 7m
+  [17700/20000] loss=0.0546 mse=0.0295 iou_fg=0.950 lr=1.31e-06 | 5.52 it/s ETA 7m
+  [17750/20000] loss=0.0732 mse=0.0401 iou_fg=0.927 lr=1.29e-06 | 5.52 it/s ETA 7m
+  [17800/20000] loss=0.0706 mse=0.0383 iou_fg=0.924 lr=1.28e-06 | 5.52 it/s ETA 7m
+  [17850/20000] loss=0.0719 mse=0.0399 iou_fg=0.928 lr=1.27e-06 | 5.52 it/s ETA 6m
+  [17900/20000] loss=0.0610 mse=0.0332 iou_fg=0.938 lr=1.26e-06 | 5.52 it/s ETA 6m
+  [17950/20000] loss=0.0634 mse=0.0345 iou_fg=0.942 lr=1.24e-06 | 5.52 it/s ETA 6m
+  [18000/20000] loss=0.0677 mse=0.0368 iou_fg=0.932 lr=1.23e-06 | 5.52 it/s ETA 6m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_18000.pt
+  [18050/20000] loss=0.0563 mse=0.0303 iou_fg=0.946 lr=1.22e-06 | 5.52 it/s ETA 6m
+  [18100/20000] loss=0.0766 mse=0.0426 iou_fg=0.923 lr=1.21e-06 | 5.52 it/s ETA 6m
+  [18150/20000] loss=0.0619 mse=0.0339 iou_fg=0.925 lr=1.20e-06 | 5.52 it/s ETA 6m
+  [18200/20000] loss=0.0708 mse=0.0393 iou_fg=0.928 lr=1.19e-06 | 5.52 it/s ETA 5m
+  [18250/20000] loss=0.0613 mse=0.0333 iou_fg=0.935 lr=1.18e-06 | 5.52 it/s ETA 5m
+  [18300/20000] loss=0.0671 mse=0.0358 iou_fg=0.926 lr=1.17e-06 | 5.52 it/s ETA 5m
+  [18350/20000] loss=0.0614 mse=0.0334 iou_fg=0.937 lr=1.16e-06 | 5.52 it/s ETA 5m
+  [18400/20000] loss=0.0670 mse=0.0366 iou_fg=0.935 lr=1.15e-06 | 5.52 it/s ETA 5m
+  [18450/20000] loss=0.0637 mse=0.0344 iou_fg=0.939 lr=1.14e-06 | 5.52 it/s ETA 5m
+  [18500/20000] loss=0.0598 mse=0.0327 iou_fg=0.942 lr=1.13e-06 | 5.52 it/s ETA 5m
+  [18550/20000] loss=0.0626 mse=0.0339 iou_fg=0.940 lr=1.12e-06 | 5.52 it/s ETA 4m
+  [18600/20000] loss=0.0564 mse=0.0303 iou_fg=0.944 lr=1.11e-06 | 5.52 it/s ETA 4m
+  [18650/20000] loss=0.0579 mse=0.0313 iou_fg=0.944 lr=1.11e-06 | 5.52 it/s ETA 4m
+  [18700/20000] loss=0.0631 mse=0.0346 iou_fg=0.932 lr=1.10e-06 | 5.52 it/s ETA 4m
+  [18750/20000] loss=0.0624 mse=0.0341 iou_fg=0.934 lr=1.09e-06 | 5.52 it/s ETA 4m
+  [18800/20000] loss=0.0617 mse=0.0331 iou_fg=0.943 lr=1.08e-06 | 5.52 it/s ETA 4m
+  [18850/20000] loss=0.0589 mse=0.0319 iou_fg=0.940 lr=1.08e-06 | 5.52 it/s ETA 3m
+  [18900/20000] loss=0.0640 mse=0.0351 iou_fg=0.937 lr=1.07e-06 | 5.52 it/s ETA 3m
+  [18950/20000] loss=0.0617 mse=0.0335 iou_fg=0.939 lr=1.06e-06 | 5.52 it/s ETA 3m
+  [19000/20000] loss=0.0672 mse=0.0372 iou_fg=0.937 lr=1.06e-06 | 5.52 it/s ETA 3m
+  [19050/20000] loss=0.0582 mse=0.0313 iou_fg=0.944 lr=1.05e-06 | 5.52 it/s ETA 3m
+  [19100/20000] loss=0.0717 mse=0.0395 iou_fg=0.923 lr=1.05e-06 | 5.52 it/s ETA 3m
+  [19150/20000] loss=0.0612 mse=0.0333 iou_fg=0.938 lr=1.04e-06 | 5.52 it/s ETA 3m
+  [19200/20000] loss=0.0685 mse=0.0372 iou_fg=0.929 lr=1.04e-06 | 5.52 it/s ETA 2m
+  [19250/20000] loss=0.0529 mse=0.0282 iou_fg=0.945 lr=1.03e-06 | 5.52 it/s ETA 2m
+  [19300/20000] loss=0.0705 mse=0.0387 iou_fg=0.922 lr=1.03e-06 | 5.52 it/s ETA 2m
+  [19350/20000] loss=0.0661 mse=0.0362 iou_fg=0.933 lr=1.02e-06 | 5.52 it/s ETA 2m
+  [19400/20000] loss=0.0602 mse=0.0325 iou_fg=0.940 lr=1.02e-06 | 5.52 it/s ETA 2m
+  [19450/20000] loss=0.0739 mse=0.0410 iou_fg=0.930 lr=1.02e-06 | 5.52 it/s ETA 2m
+  [19500/20000] loss=0.0606 mse=0.0324 iou_fg=0.942 lr=1.01e-06 | 5.52 it/s ETA 2m
+  [19550/20000] loss=0.0625 mse=0.0338 iou_fg=0.937 lr=1.01e-06 | 5.52 it/s ETA 1m
+  [19600/20000] loss=0.0731 mse=0.0399 iou_fg=0.925 lr=1.01e-06 | 5.52 it/s ETA 1m
+  [19650/20000] loss=0.0632 mse=0.0342 iou_fg=0.937 lr=1.01e-06 | 5.52 it/s ETA 1m
+  [19700/20000] loss=0.0606 mse=0.0328 iou_fg=0.929 lr=1.01e-06 | 5.52 it/s ETA 1m
+  [19750/20000] loss=0.0613 mse=0.0331 iou_fg=0.932 lr=1.00e-06 | 5.52 it/s ETA 1m
+  [19800/20000] loss=0.0666 mse=0.0371 iou_fg=0.938 lr=1.00e-06 | 5.52 it/s ETA 1m
+  [19850/20000] loss=0.0693 mse=0.0385 iou_fg=0.930 lr=1.00e-06 | 5.52 it/s ETA 0m
+  [19900/20000] loss=0.0664 mse=0.0365 iou_fg=0.931 lr=1.00e-06 | 5.52 it/s ETA 0m
+  [19950/20000] loss=0.0645 mse=0.0350 iou_fg=0.937 lr=1.00e-06 | 5.52 it/s ETA 0m
+  [20000/20000] loss=0.0564 mse=0.0305 iou_fg=0.934 lr=1.00e-06 | 5.52 it/s ETA 0m
+  Saved: /mnt/data_ssd/infinigen-sim/vae_finetune_v2/vae_ft_step_20000.pt
+
+Done in 60.4m (20000 steps)

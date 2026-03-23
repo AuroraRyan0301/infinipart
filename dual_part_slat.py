@@ -111,8 +111,13 @@ class DualPartSLatModel(nn.Module):
         pretrained_slat: SLatFlowModel,
         vjepa_dim: int = 1408,
         vjepa_proj_layers: int = 2,
+        detach_cross_feats: bool = False,
+        per_block_exchange: bool = True,
+        cross_attn_start_block: int = 0,
     ):
         super().__init__()
+        self.detach_cross_feats = detach_cross_feats
+        self.per_block_exchange = per_block_exchange
 
         # Frozen pretrained backbone
         self.slat = pretrained_slat
@@ -130,7 +135,9 @@ class DualPartSLatModel(nn.Module):
             num_layers=vjepa_proj_layers,
         )
 
-        # New: Part cross-attention per block (trainable)
+        # New: Part cross-attention for ALL blocks (allocated upfront for progressive training)
+        # cross_attn_start_block controls which blocks are active (can be changed dynamically)
+        self.cross_attn_start_block = cross_attn_start_block
         self.part_cross_attns = nn.ModuleList([
             PartCrossAttention(
                 channels, num_heads,
@@ -175,7 +182,6 @@ class DualPartSLatModel(nn.Module):
             other_part_feats: [1, N_other, channels] — other part's hidden features
         """
         h = self.slat.input_layer(x)
-        from trellis2.modules.utils import manual_cast
         h = manual_cast(h, self.slat.dtype)
         t_emb = self.slat.t_embedder(t)
         if self.slat.share_mod:
@@ -190,10 +196,11 @@ class DualPartSLatModel(nn.Module):
         for i, block in enumerate(self.slat.blocks):
             # Original block: self-attn + image cross-attn + MLP (frozen)
             h = block(h, t_emb, cond)
-            # New: part cross-attention (trainable)
-            h_float = manual_cast(h, torch.float32)
-            h_float = self.part_cross_attns[i](h_float, other_part_feats)
-            h = manual_cast(h_float, self.slat.dtype)
+            # New: part cross-attention (trainable) — only for active blocks
+            if i >= self.cross_attn_start_block:
+                h_float = manual_cast(h, torch.float32)
+                h_float = self.part_cross_attns[i](h_float, other_part_feats)
+                h = manual_cast(h_float, self.slat.dtype)
 
         h = manual_cast(h, x.dtype)
         h = h.replace(F.layer_norm(h.feats, h.feats.shape[-1:]))
@@ -207,40 +214,75 @@ class DualPartSLatModel(nn.Module):
         t: torch.Tensor,
         vjepa_feats: torch.Tensor,
     ) -> Tuple[SparseTensor, SparseTensor]:
-        """Forward pass for both parts simultaneously.
+        """Forward pass for both parts.
 
-        Args:
-            x_part0: SparseTensor — noisy latent for part0
-            x_part1: SparseTensor — noisy latent for part1
-            t: [B] — timestep
-            vjepa_feats: [B, 10240, 1408] — raw VJEPA features
-
-        Returns:
-            (pred_part0, pred_part1): predicted velocity for each part
+        If per_block_exchange=True: both parts go through blocks in parallel,
+        exchanging features after each block.
+        If per_block_exchange=False: extract shallow features once, then
+        forward each part independently (faster, less expressive).
         """
         # Project VJEPA features
         cond = self.vjepa_proj(vjepa_feats)  # [B, T, 1024]
 
-        # Get intermediate features of both parts for cross-attention
-        # First pass: extract features from both parts (using frozen backbone)
-        # We need the hidden states after each block for part cross-attention
-        # For simplicity: use detached features from a quick forward pass
-        with torch.no_grad():
-            # Get part0 hidden features for part1 to attend to
-            h0 = self.slat.input_layer(x_part0)
-            from trellis2.modules.utils import manual_cast
-            h0 = manual_cast(h0, self.slat.dtype)
-            part0_feats = h0.feats.unsqueeze(0).float()  # [1, N0, channels]
+        if not self.per_block_exchange:
+            # Legacy: shallow feature extraction + independent forward
+            with torch.no_grad():
+                h0 = self.slat.input_layer(x_part0)
+                h0 = manual_cast(h0, self.slat.dtype)
+                part0_feats = h0.feats.unsqueeze(0).float()
+                h1 = self.slat.input_layer(x_part1)
+                h1 = manual_cast(h1, self.slat.dtype)
+                part1_feats = h1.feats.unsqueeze(0).float()
+            pred0 = self.forward_single_part(x_part0, t, cond, part1_feats)
+            pred1 = self.forward_single_part(x_part1, t, cond, part0_feats)
+            return pred0, pred1
 
-            h1 = self.slat.input_layer(x_part1)
-            h1 = manual_cast(h1, self.slat.dtype)
-            part1_feats = h1.feats.unsqueeze(0).float()  # [1, N1, channels]
+        # Per-block exchange mode
+        h0 = self.slat.input_layer(x_part0)
+        h0 = manual_cast(h0, self.slat.dtype)
+        h1 = self.slat.input_layer(x_part1)
+        h1 = manual_cast(h1, self.slat.dtype)
 
-        # Forward both parts with part cross-attention
-        pred_part0 = self.forward_single_part(x_part0, t, cond, part1_feats)
-        pred_part1 = self.forward_single_part(x_part1, t, cond, part0_feats)
+        t_emb = self.slat.t_embedder(t)
+        if self.slat.share_mod:
+            t_emb = self.slat.adaLN_modulation(t_emb)
+        t_emb = manual_cast(t_emb, self.slat.dtype)
+        cond = manual_cast(cond, self.slat.dtype)
 
-        return pred_part0, pred_part1
+        if self.slat.pe_mode == "ape":
+            pe0 = self.slat.pos_embedder(h0.coords[:, 1:])
+            h0 = h0 + manual_cast(pe0, self.slat.dtype)
+            pe1 = self.slat.pos_embedder(h1.coords[:, 1:])
+            h1 = h1 + manual_cast(pe1, self.slat.dtype)
+
+        for i, block in enumerate(self.slat.blocks):
+            h0 = block(h0, t_emb, cond)
+            h1 = block(h1, t_emb, cond)
+
+            # Part cross-attention only for active blocks
+            if i >= self.cross_attn_start_block:
+                h0_ctx = h0.feats.unsqueeze(0).float()
+                h1_ctx = h1.feats.unsqueeze(0).float()
+                if self.detach_cross_feats:
+                    h0_ctx = h0_ctx.detach()
+                    h1_ctx = h1_ctx.detach()
+
+                h0_float = manual_cast(h0, torch.float32)
+                h1_float = manual_cast(h1, torch.float32)
+                h0_float = self.part_cross_attns[i](h0_float, h1_ctx)
+                h1_float = self.part_cross_attns[i](h1_float, h0_ctx)
+                h0 = manual_cast(h0_float, self.slat.dtype)
+                h1 = manual_cast(h1_float, self.slat.dtype)
+
+        h0 = manual_cast(h0, x_part0.dtype)
+        h0 = h0.replace(F.layer_norm(h0.feats, h0.feats.shape[-1:]))
+        h0 = self.slat.out_layer(h0)
+
+        h1 = manual_cast(h1, x_part1.dtype)
+        h1 = h1.replace(F.layer_norm(h1.feats, h1.feats.shape[-1:]))
+        h1 = self.slat.out_layer(h1)
+
+        return h0, h1
 
     def trainable_parameters(self):
         """Return only trainable parameters (for optimizer)."""
@@ -260,30 +302,33 @@ class DualPartSLatModel(nn.Module):
 # Loading utilities
 # ================================================================
 
-def load_pretrained_slat(ckpt_dir="/mnt/data/yurh/TRELLIS.2-4B", device="cuda:0"):
-    """Load pretrained Shape SLat Flow Model from TRELLIS 2 checkpoint."""
-    import json
+def load_pretrained_slat(ckpt_dir="/mnt/cpfs/yurh/TRELLIS.2-4B", device="cuda:0",
+                         resolution="512"):
+    """Load pretrained Shape SLat Flow Model from TRELLIS 2 checkpoint.
 
-    # Load config
-    config_path = os.path.join(TRELLIS_ROOT, "configs/gen/slat_flow_img2shape_dit_1_3B_512_bf16.json")
+    Args:
+        resolution: "512" or "1024". Only difference is RoPE resolution param (32 vs 64).
+    """
+    import json
+    from safetensors.torch import load_file
+
+    ckpt_name = f"slat_flow_img2shape_dit_1_3B_{resolution}_bf16"
+
+    # Load config from checkpoint json (has exact model args)
+    config_path = os.path.join(ckpt_dir, f"ckpts/{ckpt_name}.json")
+    if not os.path.exists(config_path):
+        config_path = os.path.join(TRELLIS_ROOT, f"configs/gen/{ckpt_name}.json")
     with open(config_path) as f:
         config = json.load(f)
 
-    model_args = config["models"]["denoiser"]["args"]
-
-    # Build model
+    model_args = config.get("args", config.get("models", {}).get("denoiser", {}).get("args", config))
     slat = SLatFlowModel(**model_args)
 
-    # Load weights
-    ckpt_path = os.path.join(ckpt_dir, "ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors")
-    if not os.path.exists(ckpt_path):
-        # Try alternative paths
-        ckpt_path = os.path.join(ckpt_dir, "ckpts/slat_flow_img2shape_dit_1_3B_512_bf16_ema.safetensors")
+    ckpt_path = os.path.join(ckpt_dir, f"ckpts/{ckpt_name}.safetensors")
     if os.path.exists(ckpt_path):
-        from safetensors.torch import load_file
         state_dict = load_file(ckpt_path)
         slat.load_state_dict(state_dict, strict=False)
-        print(f"Loaded SLat weights from {ckpt_path}")
+        print(f"Loaded SLat {resolution} weights from {ckpt_path}")
     else:
         print(f"WARNING: No checkpoint found at {ckpt_path}, using random init")
 
@@ -291,7 +336,7 @@ def load_pretrained_slat(ckpt_dir="/mnt/data/yurh/TRELLIS.2-4B", device="cuda:0"
     return slat
 
 
-def load_slat_decoder(ckpt_dir="/mnt/data/yurh/TRELLIS.2-4B", device="cuda:0"):
+def load_slat_decoder(ckpt_dir="/mnt/cpfs/yurh/TRELLIS.2-4B", device="cuda:0"):
     """Load pretrained SLat Decoder."""
     import json
 
@@ -314,7 +359,7 @@ def load_slat_decoder(ckpt_dir="/mnt/data/yurh/TRELLIS.2-4B", device="cuda:0"):
     return decoder
 
 
-def load_slat_encoder(ckpt_dir="/mnt/data/yurh/TRELLIS.2-4B", device="cuda:0"):
+def load_slat_encoder(ckpt_dir="/mnt/cpfs/yurh/TRELLIS.2-4B", device="cuda:0"):
     """Load pretrained SLat Encoder (for encoding GT OBJs to GT SLat)."""
     import json
 
@@ -338,16 +383,26 @@ def load_slat_encoder(ckpt_dir="/mnt/data/yurh/TRELLIS.2-4B", device="cuda:0"):
     return encoder
 
 
-def build_dual_part_model(ckpt_dir="/mnt/data/yurh/TRELLIS.2-4B", device="cuda:0"):
-    """Build DualPartSLatModel with pretrained backbone."""
-    slat = load_pretrained_slat(ckpt_dir, device)
-    model = DualPartSLatModel(slat).to(device)
-    print(f"DualPartSLatModel: {model.num_total_params()/1e6:.0f}M total, "
-          f"{model.num_trainable_params()/1e6:.0f}M trainable")
+def build_dual_part_model(ckpt_dir="/mnt/cpfs/yurh/TRELLIS.2-4B", device="cuda:0",
+                          detach_cross_feats=False, per_block_exchange=True,
+                          resolution="512", cross_attn_start_block=0):
+    """Build DualPartSLatModel with pretrained backbone.
+
+    Args:
+        resolution: "512" or "1024" — which pretrained flow model to wrap.
+        cross_attn_start_block: only add part cross-attn from this block onward (0=all, 20=last 10).
+    """
+    slat = load_pretrained_slat(ckpt_dir, device, resolution=resolution)
+    model = DualPartSLatModel(slat, detach_cross_feats=detach_cross_feats,
+                              per_block_exchange=per_block_exchange,
+                              cross_attn_start_block=cross_attn_start_block).to(device)
+    print(f"DualPartSLatModel ({resolution}, cross_attn from block {cross_attn_start_block}): "
+          f"{model.num_total_params()/1e6:.0f}M total, {model.num_trainable_params()/1e6:.0f}M trainable")
     return model
 
 
 if __name__ == "__main__":
     # Quick test
-    model = build_dual_part_model()
-    print("Model built successfully")
+    model_lr = build_dual_part_model(resolution="512")
+    model_hr = build_dual_part_model(resolution="1024")
+    print("Both models built successfully")

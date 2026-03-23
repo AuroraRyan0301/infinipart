@@ -1,0 +1,5 @@
+2026/03/23 20:27:56 NOTICE: Config file "/root/.config/rclone/rclone.conf" not found - using defaults
+Transferred:   	         0 / 0 Bytes, -, 0 Bytes/s, ETA -
+Elapsed time:         5.0sTransferred:   	         0 / 0 Bytes, -, 0 Bytes/s, ETA -
+Elapsed time:        10.0sTransferred:   	         0 / 0 Bytes, -, 0 Bytes/s, ETA -
+Elapsed time:        11.5s

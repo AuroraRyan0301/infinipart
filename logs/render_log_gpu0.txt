@@ -1,0 +1,708 @@
+[GPU0] Rendering output/AppliancePhysXMobilityFactory/100282/metadata.json (all animodes)...
+Rendering AppliancePhysXMobilityFactory/100282
+  Animodes: ['basic_0', 'basic_1', 'senior_0']
+--- Animode: basic_0 ---
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-14.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0192 sec |   0.0191 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-14.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-9.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0055 sec |   0.0055 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-9.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-12.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0428 sec |   0.0427 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-12.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-10.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0058 sec |   0.0058 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-10.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-11.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0091 sec |   0.0091 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-11.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-13.obj'...
+Progress:  33.33%    (  0.0052 sec |   0.0040 sec) Done, building geometries (verts:100 faces:100 materials: 2 smoothgroups:0) ...
+Progress:  66.67%Progress: 100.00%  (  0.0071 sec |   0.0071 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-13.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-25.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0098 sec |   0.0097 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-25.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-26.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0089 sec |   0.0088 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-26.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-27.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0084 sec |   0.0084 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-27.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0001 sec |   0.0001 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-28.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0086 sec |   0.0084 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-28.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-30.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0064 sec |   0.0064 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-30.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-3.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0075 sec |   0.0074 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-3.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-4.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0080 sec |   0.0080 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-4.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-6.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0075 sec |   0.0075 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-6.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0002 sec |   0.0002 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-29.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0096 sec |   0.0094 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-29.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-24.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0074 sec |   0.0073 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-24.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-21.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0057 sec |   0.0057 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-21.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-36.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0084 sec |   0.0084 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-36.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-41.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0062 sec |   0.0062 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-41.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-22.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0078 sec |   0.0078 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-22.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-33.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0080 sec |   0.0080 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-33.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-16.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0902 sec |   0.0902 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-16.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-8.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0301 sec |   0.0301 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-8.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-35.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0071 sec |   0.0069 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-35.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-39.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0092 sec |   0.0092 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-39.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-5.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0075 sec |   0.0075 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-5.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-37.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0103 sec |   0.0103 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-37.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-38.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0081 sec |   0.0081 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-38.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-18.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0065 sec |   0.0065 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-18.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-17.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0074 sec |   0.0074 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-17.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-42.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0062 sec |   0.0062 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-42.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-20.obj'...
+Progress:  66.67%Progress: 100.00%  (  0.0102 sec |   0.0102 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/100282/textured_objs/original-20.obj'
+Progress: 100.00%Progress: 100.00%
+[GPU0] Rendering output/ElectronicsPhysXMobilityFactory/100064/metadata.json (all animodes)...
+Saved: '/tmp/infinipart_probe_jc9quhfz/v00_f0001.png'
+Saved: '/tmp/infinipart_probe_jc9quhfz/v00_f0021.png'
+Saved: '/tmp/infinipart_probe_jc9quhfz/v00_f0040.png'
+Saved: '/tmp/infinipart_probe_jc9quhfz/v00_f0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0011.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0012.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0013.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0014.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0015.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0016.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0017.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0018.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0019.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0020.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0021.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0022.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0023.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0024.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0025.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0026.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0027.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0028.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0029.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0030.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0031.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0032.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0033.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0034.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0035.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0036.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0037.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0038.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0039.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0040.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0041.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0042.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0043.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0044.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0045.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0046.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0047.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0048.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0049.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0050.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0051.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0052.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0053.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0054.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0055.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0056.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0057.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0058.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0059.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_00_nobg/frame_0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0011.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0012.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0013.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0014.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0015.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0016.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0017.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0018.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0019.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0020.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0021.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0022.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0023.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0024.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0025.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0026.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0027.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0028.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0029.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0030.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0031.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0032.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0033.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0034.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0035.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/ElectronicsPhysXMobilityFactory/100064/basic_0/hemi_01_nobg/frame_0036.png'
+[GPU0] Rendering output/OpticalPhysXMobilityFactory/101284/metadata.json (all animodes)...
+Rendering OpticalPhysXMobilityFactory/101284
+  Animodes: ['basic_0', 'basic_1', 'senior_0']
+--- Animode: basic_0 ---
+Progress:  66.67%Progress: 100.00%  (  0.0068 sec |   0.0067 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-10.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0052 sec |   0.0052 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-8.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0296 sec |   0.0296 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-4.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0048 sec |   0.0048 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-9.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0123 sec |   0.0123 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-5.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0052 sec |   0.0052 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-11.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0154 sec |   0.0154 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-3.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0258 sec |   0.0258 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-2.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0183 sec |   0.0183 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-6.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0134 sec |   0.0134 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-7.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0852 sec |   0.0852 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/101284/textured_objs/original-1.obj'
+Progress: 100.00%Progress: 100.00%
+Saved: '/tmp/infinipart_probe_iodq0n4r/v00_f0001.png'
+Saved: '/tmp/infinipart_probe_iodq0n4r/v00_f0021.png'
+Saved: '/tmp/infinipart_probe_iodq0n4r/v00_f0040.png'
+Saved: '/tmp/infinipart_probe_iodq0n4r/v00_f0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0011.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0012.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0013.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0014.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0015.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0016.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0017.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0018.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0019.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0020.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0021.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0022.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0023.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0024.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0025.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0026.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0027.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0028.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0029.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0030.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0031.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0032.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0033.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0034.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0035.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0036.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0037.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0038.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0039.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0040.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0041.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0042.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0043.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0044.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0045.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0046.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0047.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0048.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0049.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0050.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0051.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0052.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0053.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0054.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0055.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0056.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0057.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0058.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0059.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_00_nobg/frame_0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/OpticalPhysXMobilityFactory/101284/basic_0/hemi_01_nobg/frame_0011.png'
+[GPU0] Rendering output/WastePhysXMobilityFactory/102153/metadata.json (all animodes)...
+Rendering WastePhysXMobilityFactory/102153
+  Animodes: ['basic_0', 'basic_1', 'basic_2', 'senior_0', 'senior_1', 'senior_2']
+--- Animode: basic_0 ---
+Progress:  66.67%Progress: 100.00%  (  0.0273 sec |   0.0272 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-29.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0310 sec |   0.0309 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-28.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0486 sec |   0.0485 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-32.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0113 sec |   0.0113 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-31.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0127 sec |   0.0127 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-10.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0061 sec |   0.0060 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-11.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0166 sec |   0.0166 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-24.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0066 sec |   0.0066 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-25.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0058 sec |   0.0057 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-26.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0043 sec |   0.0042 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-21.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0046 sec |   0.0045 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-22.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0078 sec |   0.0078 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-4.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0081 sec |   0.0081 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-3.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0098 sec |   0.0098 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-2.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0150 sec |   0.0150 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-16.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0057 sec |   0.0056 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-8.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0047 sec |   0.0046 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-13.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0045 sec |   0.0045 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-9.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0333 sec |   0.0333 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-5.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0081 sec |   0.0081 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-6.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0092 sec |   0.0092 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-15.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%  (  0.0139 sec |   0.0139 sec) Finished importing: '/mnt/cpfs/yurh/dataset3D/Partnet/102153/textured_objs/original-23.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:  66.67%Progress: 100.00%Blender 3.6.0 (hash c7fc78b81ecb built 2023-06-27 08:23:50)
+Saved: '/tmp/infinipart_probe_up53mp6b/v00_f0001.png'
+Saved: '/tmp/infinipart_probe_up53mp6b/v00_f0021.png'
+Saved: '/tmp/infinipart_probe_up53mp6b/v00_f0040.png'
+Saved: '/tmp/infinipart_probe_up53mp6b/v00_f0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0011.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0012.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0013.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0014.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0015.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0016.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0017.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0018.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0019.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0020.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0021.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0022.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0023.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0024.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0025.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0026.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0027.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0028.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0029.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0030.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0031.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0032.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0033.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0034.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0035.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0036.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0037.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0038.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0039.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0040.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0041.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0042.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0043.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0044.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0045.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0046.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0047.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/WastePhysXMobilityFactory/102153/basic_0/hemi_00_nobg/frame_0048.png'
+[GPU0] Rendering output/cabinet/1001/metadata.json (all animodes)...
+Rendering cabinet/1001
+  Animodes: ['basic_0', 'basic_1', 'senior_0']
+--- Animode: basic_0 ---
+Progress:   0.00%(  0.0001 sec |   0.0001 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/right_door_base_with_right_door_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/right_door_base_with_right_door_0.obj':b'map_Ns textures/right_door_base_with_right_door_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0566 sec |   0.0566 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/right_door_base_with_right_door_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/left_door_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/left_door_0.obj':b'map_Ns textures/left_door_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0295 sec |   0.0295 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/left_door_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_0.obj':b'map_Ns textures/cabinet_base_base_with_right_door_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1085 sec |   0.1085 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_1.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_1.obj':b'map_Ns textures/cabinet_base_base_with_right_door_1_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0909 sec |   0.0909 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_1.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_2.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_2.obj':b'map_Ns textures/cabinet_base_base_with_right_door_2_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0251 sec |   0.0251 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_2.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_3.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_3.obj':b'map_Ns textures/cabinet_base_base_with_right_door_3_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0236 sec |   0.0236 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_3.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_4.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/cabinet/1001/assets/cabinet_base_base_with_right_door_4.obj':b'map_Ns textures/cabinet_base_base_with_right_door_4_ROUGHNESS.png' (ignored)
+Saved: '/tmp/infinipart_probe_42b_thoz/v00_f0001.png'
+Saved: '/tmp/infinipart_probe_42b_thoz/v00_f0021.png'
+Saved: '/tmp/infinipart_probe_42b_thoz/v00_f0040.png'
+Saved: '/tmp/infinipart_probe_42b_thoz/v00_f0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0011.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0012.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0013.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0014.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0015.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0016.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0017.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0018.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0019.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0020.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0021.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0022.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0023.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0024.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0025.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0026.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0027.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0028.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0029.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0030.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0031.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0032.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0033.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0034.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0035.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0036.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0037.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0038.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0039.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0040.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0041.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0042.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0043.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0044.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0045.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0046.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0047.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0048.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0049.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0050.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0051.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0052.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0053.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0054.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0055.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0056.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0057.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0058.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0059.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_00_nobg/frame_0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_01_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_01_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_01_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_01_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_01_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_01_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/cabinet/1001/basic_0/hemi_01_nobg/frame_0007.png'
+[GPU0] Rendering output/drawer/1001/metadata.json (all animodes)...
+Rendering drawer/1001
+  Animodes: ['basic_0', 'basic_1', 'basic_2', 'custom_0_separation', 'custom_1_flip', 'custom_2_separation', 'custom_3_flip', 'custom_4_separation', 'custom_5_flip', 'senior_0', 'senior_1', 'senior_2']
+--- Animode: basic_0 ---
+Progress:   0.00%(  0.0001 sec |   0.0001 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_0.obj':b'map_Ns textures/drawer_door_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0308 sec |   0.0308 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_1.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_1.obj':b'map_Ns textures/drawer_door_1_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0440 sec |   0.0440 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_1.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_2.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_2.obj':b'map_Ns textures/drawer_door_2_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0226 sec |   0.0226 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_2.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_3.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_3.obj':b'map_Ns textures/drawer_door_3_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0238 sec |   0.0238 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_3.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_4.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_4.obj':b'map_Ns textures/drawer_door_4_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0249 sec |   0.0248 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_4.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_5.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_5.obj':b'map_Ns textures/drawer_door_5_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0293 sec |   0.0292 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_door_5.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_0.obj':b'map_Ns textures/drawer_base_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0372 sec |   0.0372 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_1.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_1.obj':b'map_Ns textures/drawer_base_1_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0514 sec |   0.0514 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_1.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_2.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/drawer/1001/assets/drawer_base_2.obj':b'map_Ns textures/drawer_base_2_ROUGHNESS.png' (ignored)
+Saved: '/tmp/infinipart_probe_dyr_cg16/v00_f0001.png'
+Saved: '/tmp/infinipart_probe_dyr_cg16/v00_f0021.png'
+Saved: '/tmp/infinipart_probe_dyr_cg16/v00_f0040.png'
+Saved: '/tmp/infinipart_probe_dyr_cg16/v00_f0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0011.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0012.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0013.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0014.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0015.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0016.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0017.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0018.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0019.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0020.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0021.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0022.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0023.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0024.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0025.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0026.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0027.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0028.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0029.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0030.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0031.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0032.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0033.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0034.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0035.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0036.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0037.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0038.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0039.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0040.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0041.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0042.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0043.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0044.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0045.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0046.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0047.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0048.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0049.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0050.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0051.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0052.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0053.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0054.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0055.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0056.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0057.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0058.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/drawer/1001/basic_0/hemi_00_nobg/frame_0059.png'
+[GPU0] Rendering output/oven/1001/metadata.json (all animodes)...
+Rendering oven/1001
+  Animodes: ['basic_0', 'basic_1', 'basic_2', 'basic_3', 'senior_0', 'senior_1', 'senior_2']
+--- Animode: basic_0 ---
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_oven_with_door_door handle_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_oven_with_door_door handle_0.obj':b'map_Ns textures/oven_door_oven_with_door_door handle_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1260 sec |   0.1260 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_oven_with_door_door handle_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_0.obj':b'map_Ns textures/oven_door_door_oven_with_door_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0210 sec |   0.0209 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0002 sec |   0.0002 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_1.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_1.obj':b'map_Ns textures/oven_door_door_oven_with_door_1_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0214 sec |   0.0212 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_1.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_2.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_2.obj':b'map_Ns textures/oven_door_door_oven_with_door_2_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0201 sec |   0.0200 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_door_door_oven_with_door_2.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_0.obj':b'map_Ns textures/oven_drawer_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0201 sec |   0.0201 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_1.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_1.obj':b'map_Ns textures/oven_drawer_1_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0192 sec |   0.0192 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_1.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_2.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_2.obj':b'map_Ns textures/oven_drawer_2_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0231 sec |   0.0230 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_2.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_3.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_3.obj':b'map_Ns textures/oven_drawer_3_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.0203 sec |   0.0203 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven_drawer_3.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0002 sec |   0.0002 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_0.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1445 sec |   0.1443 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_0.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_1.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_1.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_1_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1624 sec |   0.1624 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_1.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_2.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_2.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_2_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1032 sec |   0.1031 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_2.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_3.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_3.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_3_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1771 sec |   0.1770 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_3.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_4.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_4.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_4_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1769 sec |   0.1769 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_4.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_5.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_5.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_5_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1037 sec |   0.1037 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_5.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0001 sec |   0.0001 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_6.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_6.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_6_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1587 sec |   0.1585 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_6.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_7.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_7.obj':b'map_Ns textures/oven rack_oven_base_oven_with_door_7_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%  (  0.1783 sec |   0.1783 sec) Finished importing: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/oven rack_oven_base_oven_with_door_7.obj'
+Progress: 100.00%Progress: 100.00%
+Progress:   0.00%(  0.0000 sec |   0.0000 sec) Importing OBJ '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/drawer base_oven_base_oven_with_door_0.obj'...
+Progress:  33.33%WARNING: '/mnt/cpfs/yurh/Infinigen-Sim/sim_exports/urdf/oven/1001/assets/drawer base_oven_base_oven_with_door_0.obj':b'map_Ns textures/drawer base_oven_base_oven_with_door_0_ROUGHNESS.png' (ignored)
+Progress:  66.67%Progress: 100.00%Blender 3.6.0 (hash c7fc78b81ecb built 2023-06-27 08:23:50)
+Saved: '/tmp/infinipart_probe_ulbh03na/v00_f0001.png'
+Saved: '/tmp/infinipart_probe_ulbh03na/v00_f0021.png'
+Saved: '/tmp/infinipart_probe_ulbh03na/v00_f0040.png'
+Saved: '/tmp/infinipart_probe_ulbh03na/v00_f0060.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0001.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0002.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0003.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0004.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0005.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0006.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0007.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0008.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0009.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0010.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0011.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0012.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0013.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0014.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0015.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0016.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0017.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0018.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0019.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0020.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0021.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0022.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0023.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0024.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0025.png'
+Saved: '/mnt/cpfs/yurh/Infinigen-Sim/output/oven/1001/basic_0/hemi_00_nobg/frame_0026.png'
+[GPU0] ALL DONE

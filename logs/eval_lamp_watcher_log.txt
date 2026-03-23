@@ -1,0 +1,21 @@
+[SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
+[ATTENTION] Using backend: flash_attn
+Watching /mnt/data_ssd/infinigen-sim/slat_overfit_long for new checkpoints...
+
+New checkpoint: step_9000.pt
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+  Eval step 9000: done → ./output/slat_overfit_long_eval/step_9000_pred.png
+
+New checkpoint: step_12000.pt
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+  Eval step 12000: done → ./output/slat_overfit_long_eval/step_12000_pred.png
+Traceback (most recent call last):
+  File "/mnt/cpfs/yurh/Infinigen-Sim/eval_lamp_watcher.py", line 168, in <module>
+    main()
+  File "/mnt/cpfs/yurh/Infinigen-Sim/eval_lamp_watcher.py", line 142, in main
+    ckpts = sorted([f for f in os.listdir(CKPT_DIR) if f.startswith("step_") and f.endswith(".pt")])
+FileNotFoundError: [Errno 2] No such file or directory: '/mnt/data_ssd/infinigen-sim/slat_overfit_long'

@@ -1,0 +1,58 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+W0317 17:26:32.013000 1482823 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] 
+W0317 17:26:32.013000 1482823 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] *****************************************
+W0317 17:26:32.013000 1482823 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0317 17:26:32.013000 1482823 /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/distributed/run.py:792] *****************************************
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[Manifest] Loaded from /mnt/data_ssd/infinigen-sim/manifest.json
+
+======================================================================
+Multi-Category DDP: VJEPA2 Only
+  Conditioning: VJEPA2 [10240, 1408] -> proj -> [10240, 1536]
+  Categories: ['PhysXMobility', 'PhysXNet', 'PhysXNet_PhysXnet', 'box', 'cabinet', 'dishwasher', 'door', 'door_handle', 'drawer', 'faucet', 'lamp', 'microwave', 'oven', 'pepper_grinder', 'plier', 'refrigerator', 'soap_dispenser', 'stovetop', 'toaster', 'trash', 'window']
+  GPUs: 2, batch_size/GPU: 16
+  Grad accum: 1
+  Effective batch size: 32
+  Training samples: 14960
+  Test samples: 4317 (every 4th view)
+  Steps: 60000, LR: 0.0001
+  Data root: /mnt/data_ssd/infinigen-sim
+  Output dir: /mnt/data_ssd/infinigen-sim/train_output
+  Manifest: /mnt/data_ssd/infinigen-sim/manifest.json (fixed dataset)
+======================================================================
+
+  PhysXMobility: 98 train, 25 test views
+  PhysXNet: 205 train, 69 test views
+  PhysXNet_PhysXnet: 5476 train, 1872 test views
+  box: 1457 train, 292 test views
+  cabinet: 328 train, 69 test views
+  dishwasher: 1030 train, 241 test views
+  door: 160 train, 36 test views
+  door_handle: 150 train, 34 test views
+  drawer: 921 train, 236 test views
+  faucet: 509 train, 149 test views
+  lamp: 210 train, 64 test views
+  microwave: 557 train, 156 test views
+  oven: 498 train, 150 test views
+  pepper_grinder: 72 train, 19 test views
+  plier: 75 train, 20 test views
+  refrigerator: 391 train, 107 test views
+  soap_dispenser: 257 train, 67 test views
+  stovetop: 727 train, 230 test views
+  toaster: 903 train, 239 test views
+  trash: 130 train, 35 test views
+  window: 806 train, 207 test views
+
+  Eval subset: 16 train, 16 test
+  DataLoader: 14960 samples, 4 workers, batch=16
+DiT: 1249.5M | proj: 2164224 | Total: 1251.7M
+[Resume] Step 22000, lr=1.74e-05
+Training:   0%|          | 0/38000 [00:00<?, ?it/s]/mnt/cpfs/yurh/PartPacker/train_partnet_vjepa_ddp.py:952: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+/mnt/cpfs/yurh/PartPacker/train_partnet_vjepa_ddp.py:952: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+Training:   0%|          | 0/38000 [00:09<?, ?it/s, loss=0.4288, lr=1.74e-05]Training:   0%|          | 1/38000 [00:09<101:12:46,  9.59s/it, loss=0.4288, lr=1.74e-05]Training:   0%|          | 1/38000 [00:18<101:12:46,  9.59s/it, loss=0.4246, lr=1.74e-05]Training:   0%|          | 2/38000 [00:18<96:43:20,  9.16s/it, loss=0.4246, lr=1.74e-05] Training:   0%|          | 2/38000 [00:27<96:43:20,  9.16s/it, loss=0.5562, lr=1.74e-05]Training:   0%|          | 3/38000 [00:27<95:18:26,  9.03s/it, loss=0.5562, lr=1.74e-05]Training:   0%|          | 3/38000 [00:36<95:18:26,  9.03s/it, loss=0.5024, lr=1.74e-05]Training:   0%|          | 4/38000 [00:36<94:37:28,  8.97s/it, loss=0.5024, lr=1.74e-05]Training:   0%|          | 4/38000 [00:45<94:37:28,  8.97s/it, loss=0.4049, lr=1.74e-05]Training:   0%|          | 5/38000 [00:45<94:13:18,  8.93s/it, loss=0.4049, lr=1.74e-05]Training:   0%|          | 5/38000 [00:53<94:13:18,  8.93s/it, loss=0.4027, lr=1.74e-05]Training:   0%|          | 6/38000 [00:53<93:59:49,  8.91s/it, loss=0.4027, lr=1.74e-05]Training:   0%|          | 6/38000 [01:02<93:59:49,  8.91s/it, loss=0.5206, lr=1.74e-05]Training:   0%|          | 7/38000 [01:02<93:52:43,  8.90s/it, loss=0.5206, lr=1.74e-05]Training:   0%|          | 7/38000 [01:11<93:52:43,  8.90s/it, loss=0.5605, lr=1.73e-05]Training:   0%|          | 8/38000 [01:11<93:48:46,  8.89s/it, loss=0.5605, lr=1.73e-05]Training:   0%|          | 8/38000 [01:20<93:48:46,  8.89s/it, loss=0.5861, lr=1.73e-05]Training:   0%|          | 9/38000 [01:20<93:57:48,  8.90s/it, loss=0.5861, lr=1.73e-05]Training:   0%|          | 9/38000 [01:29<93:57:48,  8.90s/it, loss=0.4779, lr=1.73e-05]Training:   0%|          | 10/38000 [01:29<93:53:10,  8.90s/it, loss=0.4779, lr=1.73e-05]Training:   0%|          | 10/38000 [01:38<93:53:10,  8.90s/it, loss=0.4913, lr=1.73e-05]Training:   0%|          | 11/38000 [01:38<93:48:14,  8.89s/it, loss=0.4913, lr=1.73e-05]Training:   0%|          | 11/38000 [01:47<93:48:14,  8.89s/it, loss=0.4859, lr=1.73e-05]Training:   0%|          | 12/38000 [01:47<93:45:43,  8.89s/it, loss=0.4859, lr=1.73e-05]Training:   0%|          | 12/38000 [01:56<93:45:43,  8.89s/it, loss=0.6053, lr=1.73e-05]Training:   0%|          | 13/38000 [01:56<93:44:53,  8.88s/it, loss=0.6053, lr=1.73e-05]Training:   0%|          | 13/38000 [02:05<93:44:53,  8.88s/it, loss=0.5584, lr=1.73e-05]Training:   0%|          | 14/38000 [02:05<93:57:07,  8.90s/it, loss=0.5584, lr=1.73e-05]Training:   0%|          | 14/38000 [02:13<93:57:07,  8.90s/it, loss=0.4130, lr=1.73e-05]Training:   0%|          | 15/38000 [02:13<93:47:47,  8.89s/it, loss=0.4130, lr=1.73e-05]Training:   0%|          | 15/38000 [02:22<93:47:47,  8.89s/it, loss=0.5595, lr=1.73e-05]Training:   0%|          | 16/38000 [02:22<93:45:05,  8.89s/it, loss=0.5595, lr=1.73e-05]Training:   0%|          | 16/38000 [02:31<93:45:05,  8.89s/it, loss=0.5381, lr=1.73e-05]Training:   0%|          | 17/38000 [02:31<93:43:16,  8.88s/it, loss=0.5381, lr=1.73e-05]Training:   0%|          | 17/38000 [02:40<93:43:16,  8.88s/it, loss=0.4562, lr=1.73e-05]Training:   0%|          | 18/38000 [02:40<93:45:04,  8.89s/it, loss=0.4562, lr=1.73e-05]Training:   0%|          | 18/38000 [02:49<93:45:04,  8.89s/it, loss=0.5832, lr=1.73e-05]Training:   0%|          | 19/38000 [02:49<93:47:04,  8.89s/it, loss=0.5832, lr=1.73e-05]Training:   0%|          | 19/38000 [02:58<93:47:04,  8.89s/it, loss=0.5593, lr=1.73e-05]Training:   0%|          | 20/38000 [02:58<93:43:42,  8.88s/it, loss=0.5593, lr=1.73e-05]

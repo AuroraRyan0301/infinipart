@@ -24,9 +24,9 @@ _SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 _DATA_DIR = os.environ.get("DATA_DIR", os.path.dirname(_SCRIPT_DIR))
 
 PHYSXNET_BASE = os.environ.get("PHYSXNET_BASE",
-    "/mnt/data/fulian/dataset/PhysXNet/version_1")
+    "/mnt/cpfs/fulian/dataset/PhysXNet/version_1")
 PHYSX_MOBILITY_BASE = os.environ.get("PHYSXMOB_BASE",
-    "/mnt/data/fulian/dataset/PhysX_mobility")
+    "/mnt/cpfs/fulian/dataset/PhysX_mobility")
 INFINIGEN_SIM_BASE = _SCRIPT_DIR
 
 

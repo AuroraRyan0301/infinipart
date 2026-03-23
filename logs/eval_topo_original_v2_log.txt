@@ -1,0 +1,111 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Sampled 201 inference tasks (67 animodes, 43 objects)
+Total inference tasks: 201
+
+Loading models on cuda:0...
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+Loaded VAE from pretrained/vae.pt
+Number of parameters in DiT: 1249.51M
+Original PartPacker loaded (DINOv2-giant + DiT + VAE)
+Number of parameters in VAE: 340.30M
+VAE loaded
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/numba/np/ufunc/parallel.py:373: NumbaWarning: The TBB threading layer requires TBB version 2021 update 6 or later i.e., TBB_INTERFACE_VERSION >= 12060. Found TBB_INTERFACE_VERSION = 12050. The TBB threading layer is disabled.
+  warnings.warn(problem)
+  [1/201] mse_best=2.0415 topo=0% topo_l=0% p0cc=15.0 p1cc=1.0 | 0.1 it/s, ETA 46m | skip=0
+  [10/201] mse_best=1.9918 topo=0% topo_l=50% p0cc=5.6 p1cc=2.0 | 0.1 it/s, ETA 32m | skip=0
+  [20/201] mse_best=1.9456 topo=30% topo_l=70% p0cc=2.1 p1cc=1.6 | 0.1 it/s, ETA 30m | skip=0
+  [30/201] mse_best=2.0413 topo=50% topo_l=90% p0cc=1.2 p1cc=1.2 | 0.1 it/s, ETA 28m | skip=0
+  [40/201] mse_best=2.0722 topo=50% topo_l=90% p0cc=1.2 p1cc=1.4 | 0.1 it/s, ETA 26m | skip=0
+  [50/201] mse_best=1.9824 topo=20% topo_l=80% p0cc=1.1 p1cc=1.3 | 0.1 it/s, ETA 25m | skip=0
+  [60/201] mse_best=2.0620 topo=10% topo_l=50% p0cc=1.5 p1cc=1.9 | 0.1 it/s, ETA 23m | skip=0
+  [70/201] mse_best=1.8924 topo=10% topo_l=90% p0cc=1.4 p1cc=1.4 | 0.1 it/s, ETA 22m | skip=0
+  [80/201] mse_best=2.0488 topo=20% topo_l=90% p0cc=1.9 p1cc=1.4 | 0.1 it/s, ETA 20m | skip=0
+  [90/201] mse_best=1.9631 topo=30% topo_l=40% p0cc=1.7 p1cc=2.0 | 0.1 it/s, ETA 18m | skip=0
+  [100/201] mse_best=2.0916 topo=30% topo_l=40% p0cc=1.3 p1cc=2.2 | 0.1 it/s, ETA 17m | skip=0
+  [110/201] mse_best=1.9991 topo=30% topo_l=40% p0cc=1.4 p1cc=1.3 | 0.1 it/s, ETA 15m | skip=0
+  [120/201] mse_best=2.1490 topo=0% topo_l=40% p0cc=2.5 p1cc=2.5 | 0.1 it/s, ETA 13m | skip=0
+  [124] ERROR PhysXNet_PhysXnet/10296_senior_2: Ran out of input
+  [125] ERROR PhysXNet_PhysXnet/10296_senior_2: Ran out of input
+  [126] ERROR PhysXNet_PhysXnet/10296_senior_2: Ran out of input
+  [127] ERROR PhysXNet_PhysXnet/10296_senior_1: Ran out of input
+  [128] ERROR PhysXNet_PhysXnet/10296_senior_1: Ran out of input
+  [129] ERROR PhysXNet_PhysXnet/10296_senior_1: Ran out of input
+  [130/201] mse_best=2.0828 topo=10% topo_l=50% p0cc=2.5 p1cc=1.9 | 0.1 it/s, ETA 11m | skip=6
+  [140/201] mse_best=2.0598 topo=40% topo_l=40% p0cc=1.6 p1cc=1.3 | 0.1 it/s, ETA 10m | skip=6
+  [150/201] mse_best=2.1299 topo=10% topo_l=70% p0cc=1.5 p1cc=1.9 | 0.1 it/s, ETA 8m | skip=6
+  [160/201] mse_best=2.0267 topo=10% topo_l=80% p0cc=2.0 p1cc=1.5 | 0.1 it/s, ETA 6m | skip=6
+  [170/201] mse_best=2.0587 topo=10% topo_l=30% p0cc=5.5 p1cc=1.6 | 0.1 it/s, ETA 5m | skip=6
+  [180/201] mse_best=1.8797 topo=30% topo_l=50% p0cc=2.2 p1cc=1.0 | 0.1 it/s, ETA 3m | skip=6
+  [190/201] mse_best=1.9189 topo=40% topo_l=50% p0cc=2.2 p1cc=1.7 | 0.1 it/s, ETA 2m | skip=6
+  [200/201] mse_best=1.9871 topo=0% topo_l=70% p0cc=1.4 p1cc=2.2 | 0.1 it/s, ETA 0m | skip=6
+
+Done in 31.8m (195 results, 6 skipped)
+
+======================================================================
+  Mode: original
+  Samples: 195 (195 with OBJ, 65 animodes, 11 categories)
+  MSE best: 2.0147
+
+  --- CC Means ---
+                     p0       p1
+    OBJ (true)     7.77     4.72
+        GT VAE     2.17     1.69
+          Pred     2.05     1.65
+
+  --- Topo Accuracy (Pred vs Reference) ---
+     Reference    Exact       ±1   CC err
+        vs OBJ   12.3%   32.3%     9.61
+     vs GT VAE   22.1%   61.0%     2.66
+
+  --- VAE Roundtrip Distortion (GT VAE vs OBJ) ---
+     Exact       ±1   CC err
+    13.8%   26.2%     9.86
+
+  Per-category:
+  Category                 N     MSE  vsOBJ%  vsVAE%   OBJ_cc   Pred_cc
+  PhysXMobility            3  2.1366      0%     0% 11.0/1.0   2.7/1.7
+  PhysXNet                 3  2.0199     67%     0%  2.0/1.0   3.3/1.7
+  PhysXNet_PhysXnet      129  2.0180     17%    22%  4.0/3.2   1.7/1.6
+  box                      6  1.9404      0%    17% 44.0/9.0   1.2/1.3
+  cabinet                 15  1.9085      0%    13% 20.2/15.6   3.3/2.1
+  dishwasher               6  2.1731      0%     0% 15.0/7.0   2.7/3.0
+  door                    12  1.9230      0%    42% 2.0/10.2   1.9/1.5
+  door_handle              6  1.9903      0%    33%  3.0/2.0   2.0/1.5
+  drawer                   6  2.1862      0%     0% 16.0/2.0   8.3/2.0
+  microwave                6  2.0308      0%    33% 13.5/2.5   1.3/1.5
+  refrigerator             3  2.1498      0%   100% 28.0/4.0   1.0/1.0
+======================================================================
+
+Results saved to: eval_topo_original_v2.json

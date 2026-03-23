@@ -1,0 +1,828 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+
+============================================================
+Loading VAE model...
+============================================================
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+[VAE] Loaded from /mnt/data/yurh/PartPacker/pretrained/vae.pt
+
+============================================================
+Loading V-JEPA2 model...
+============================================================
+[VJEPA2] Loaded ViT-g: 1012M params, 81 frames -> 10240 tokens
+
+[Iter 1] Found 244 new animodes (1941 videos), 1682 already done
+[R0/1] Processing 244 animodes
+[R0] VAE:   0%|          | 0/244 [00:00<?, ?it/s][R0] VAE:   0%|          | 1/244 [00:02<11:50,  2.92s/it][R0] VAE:   1%|          | 2/244 [00:05<11:41,  2.90s/it][R0] VAE:   1%|          | 3/244 [00:08<11:51,  2.95s/it][R0] VAE:   3%|▎         | 7/244 [00:11<04:56,  1.25s/it][R0] VAE:   3%|▎         | 8/244 [00:14<06:22,  1.62s/it][R0] VAE:   4%|▍         | 10/244 [00:16<05:45,  1.48s/it][R0] VAE:   5%|▌         | 13/244 [00:19<04:35,  1.19s/it][R0] VAE:   6%|▌         | 14/244 [00:22<06:10,  1.61s/it][R0] VAE:   6%|▌         | 15/244 [00:25<06:39,  1.74s/it][R0] VAE:   7%|▋         | 17/244 [00:28<06:16,  1.66s/it][R0] VAE:   7%|▋         | 18/244 [00:30<07:01,  1.87s/it][R0] VAE:   8%|▊         | 20/244 [00:34<06:56,  1.86s/it][R0] VAE:   9%|▊         | 21/244 [00:37<07:59,  2.15s/it][R0] VAE:   9%|▉         | 22/244 [00:40<08:39,  2.34s/it][R0] VAE:   9%|▉         | 23/244 [00:44<09:47,  2.66s/it][R0] VAE:  11%|█▏        | 28/244 [00:46<04:29,  1.25s/it][R0] VAE:  14%|█▍        | 35/244 [00:49<02:45,  1.27it/s][R0] VAE:  16%|█▌        | 39/244 [00:52<02:37,  1.30it/s][R0] VAE:  16%|█▋        | 40/244 [00:55<03:20,  1.02it/s][R0] VAE:  17%|█▋        | 42/244 [00:58<03:39,  1.09s/it][R0] VAE:  18%|█▊        | 43/244 [01:00<04:21,  1.30s/it][R0] VAE:  19%|█▉        | 47/244 [01:04<03:39,  1.12s/it][R0] VAE:  20%|█▉        | 48/244 [01:08<04:58,  1.52s/it][R0] VAE:  25%|██▍       | 60/244 [01:11<01:53,  1.62it/s][R0] VAE:  25%|██▌       | 61/244 [01:13<02:20,  1.30it/s][R0] VAE:  26%|██▌       | 63/244 [01:16<02:36,  1.15it/s][R0] VAE:  31%|███       | 76/244 [01:21<01:34,  1.78it/s][R0] VAE:  34%|███▎      | 82/244 [01:24<01:28,  1.83it/s][R0] VAE:  34%|███▍      | 83/244 [01:26<01:45,  1.53it/s][R0] VAE:  35%|███▌      | 86/244 [01:30<02:00,  1.31it/s][R0] VAE:  37%|███▋      | 90/244 [01:33<01:56,  1.32it/s][R0] VAE:  43%|████▎     | 106/244 [01:36<00:56,  2.44it/s][R0] VAE:  51%|█████     | 124/244 [01:39<00:34,  3.45it/s][R0] VAE:  51%|█████     | 125/244 [01:42<00:45,  2.62it/s][R0] VAE:  52%|█████▏    | 126/244 [01:44<00:59,  1.99it/s][R0] VAE:  55%|█████▍    | 133/244 [01:47<00:53,  2.09it/s][R0] VAE:  55%|█████▍    | 134/244 [01:50<01:10,  1.56it/s][R0] VAE:  55%|█████▌    | 135/244 [01:53<01:32,  1.18it/s][R0] VAE:  56%|█████▌    | 137/244 [01:57<01:55,  1.08s/it][R0] VAE:  58%|█████▊    | 141/244 [02:00<01:35,  1.08it/s][R0] VAE:  71%|███████   | 173/244 [02:03<00:17,  3.96it/s][R0] VAE:  75%|███████▌  | 184/244 [02:07<00:16,  3.63it/s][R0] VAE:  76%|███████▌  | 185/244 [02:11<00:25,  2.32it/s][R0] VAE:  77%|███████▋  | 188/244 [02:12<00:23,  2.36it/s][R0] VAE:  80%|███████▉  | 194/244 [02:14<00:18,  2.71it/s][R0] VAE:  84%|████████▎ | 204/244 [02:17<00:13,  2.88it/s][R0] VAE:  86%|████████▌ | 209/244 [02:18<00:11,  2.95it/s][R0] VAE:  97%|█████████▋| 236/244 [02:20<00:01,  6.56it/s][R0] VAE:  98%|█████████▊| 238/244 [02:23<00:01,  3.87it/s][R0] VAE:  98%|█████████▊| 239/244 [02:26<00:01,  2.61it/s][R0] VAE:  98%|█████████▊| 240/244 [02:30<00:02,  1.78it/s][R0] VAE:  99%|█████████▉| 241/244 [02:33<00:02,  1.32it/s][R0] VAE:  99%|█████████▉| 242/244 [02:36<00:02,  1.01s/it]                                                             [VAE ERROR] PhysXNet/10005_basic_1: 
+  [VAE ERROR] PhysXNet/10005_basic_2: 
+  [VAE ERROR] PhysXNet/10005_senior_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10005_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10005_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10005_senior_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10012_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10012_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10012_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10023_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10026_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10035_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10035_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10046_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10068_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10070_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10070_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10070_senior_3: 
+  [VAE ERROR] PhysXNet_PhysXnet/10076_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10128_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10128_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10128_senior_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10174_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10208_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10208_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10210_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10237_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10281_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10296_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10296_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10296_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10302_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10302_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10302_senior_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10304_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10308_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10430_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10464_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10464_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10483_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10499_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10520_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10538_senior_0: 
+  [VAE ERROR] PhysXNet_PhysXnet/10605_senior_0: 
+[R0] JEPA:   0%|          | 0/244 [00:00<?, ?it/s][R0] JEPA:   0%|          | 1/244 [00:00<00:32,  7.43it/s]/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+[R0] JEPA:   2%|▏         | 4/244 [00:15<16:22,  4.09s/it][R0] JEPA:   2%|▏         | 5/244 [00:17<13:49,  3.47s/it][R0] JEPA:   2%|▏         | 6/244 [00:23<16:41,  4.21s/it][R0] JEPA:   4%|▎         | 9/244 [00:37<17:26,  4.45s/it][R0] JEPA:   4%|▍         | 10/244 [00:37<13:50,  3.55s/it][R0] JEPA:   5%|▍         | 11/244 [00:41<14:04,  3.62s/it][R0] JEPA:   5%|▍         | 12/244 [00:47<16:35,  4.29s/it][R0] JEPA:   7%|▋         | 16/244 [00:59<13:15,  3.49s/it][R0] JEPA:   7%|▋         | 17/244 [00:59<10:59,  2.90s/it][R0] JEPA:   8%|▊         | 19/244 [01:09<13:31,  3.61s/it][R0] JEPA:   8%|▊         | 20/244 [01:25<22:14,  5.96s/it][R0] JEPA:   9%|▊         | 21/244 [01:40<29:39,  7.98s/it][R0] JEPA:   9%|▉         | 22/244 [01:56<36:36,  9.89s/it][R0] JEPA:   9%|▉         | 23/244 [01:58<29:09,  7.92s/it][R0] JEPA:  10%|▉         | 24/244 [02:08<30:25,  8.30s/it][R0] JEPA:  10%|█         | 25/244 [02:14<28:19,  7.76s/it][R0] JEPA:  11%|█         | 26/244 [02:16<22:24,  6.17s/it][R0] JEPA:  11%|█         | 27/244 [02:30<30:28,  8.42s/it][R0] JEPA:  12%|█▏        | 29/244 [02:39<23:56,  6.68s/it][R0] JEPA:  12%|█▏        | 30/244 [02:41<19:48,  5.55s/it][R0] JEPA:  13%|█▎        | 31/244 [02:52<24:09,  6.81s/it][R0] JEPA:  13%|█▎        | 32/244 [02:59<24:36,  6.97s/it][R0] JEPA:  14%|█▎        | 33/244 [03:10<28:43,  8.17s/it][R0] JEPA:  14%|█▍        | 34/244 [03:18<28:17,  8.08s/it][R0] JEPA:  15%|█▍        | 36/244 [03:29<24:13,  6.99s/it][R0] JEPA:  15%|█▌        | 37/244 [03:41<27:37,  8.01s/it][R0] JEPA:  16%|█▌        | 38/244 [03:43<22:24,  6.52s/it][R0] JEPA:  16%|█▌        | 39/244 [03:49<21:31,  6.30s/it][R0] JEPA:  17%|█▋        | 41/244 [04:00<20:27,  6.05s/it][R0] JEPA:  17%|█▋        | 42/244 [04:04<18:44,  5.57s/it][R0] JEPA:  18%|█▊        | 44/244 [04:08<13:44,  4.12s/it][R0] JEPA:  18%|█▊        | 45/244 [04:12<13:38,  4.11s/it][R0] JEPA:  19%|█▉        | 46/244 [04:16<13:26,  4.07s/it][R0] JEPA:  19%|█▉        | 47/244 [04:32<23:42,  7.22s/it][R0] JEPA:  20%|█▉        | 48/244 [04:41<25:18,  7.75s/it][R0] JEPA:  20%|██        | 49/244 [04:53<28:12,  8.68s/it][R0] JEPA:  20%|██        | 50/244 [05:05<31:16,  9.67s/it][R0] JEPA:  21%|██        | 51/244 [05:08<25:26,  7.91s/it][R0] JEPA:  21%|██▏       | 52/244 [05:21<29:18,  9.16s/it][R0] JEPA:  22%|██▏       | 53/244 [05:33<32:00, 10.06s/it][R0] JEPA:  22%|██▏       | 54/244 [05:38<27:19,  8.63s/it][R0] JEPA:  23%|██▎       | 55/244 [05:47<27:23,  8.69s/it][R0] JEPA:  23%|██▎       | 56/244 [05:54<25:36,  8.17s/it][R0] JEPA:  23%|██▎       | 57/244 [06:06<29:08,  9.35s/it][R0] JEPA:  24%|██▍       | 58/244 [06:15<28:54,  9.33s/it][R0] JEPA:  24%|██▍       | 59/244 [06:19<23:25,  7.60s/it][R0] JEPA:  25%|██▌       | 62/244 [06:26<14:03,  4.64s/it][R0] JEPA:  26%|██▌       | 64/244 [06:35<13:58,  4.66s/it][R0] JEPA:  27%|██▋       | 65/244 [06:39<13:17,  4.45s/it][R0] JEPA:  27%|██▋       | 66/244 [06:50<17:38,  5.95s/it][R0] JEPA:  27%|██▋       | 67/244 [06:52<14:36,  4.95s/it][R0] JEPA:  28%|██▊       | 68/244 [07:03<19:12,  6.55s/it][R0] JEPA:  28%|██▊       | 69/244 [07:08<18:09,  6.22s/it][R0] JEPA:  29%|██▊       | 70/244 [07:10<14:31,  5.01s/it][R0] JEPA:  29%|██▉       | 71/244 [07:12<11:53,  4.12s/it][R0] JEPA:  30%|██▉       | 72/244 [07:14<09:55,  3.46s/it][R0] JEPA:  30%|██▉       | 73/244 [07:22<14:07,  4.95s/it][R0] JEPA:  30%|███       | 74/244 [07:24<11:18,  3.99s/it][R0] JEPA:  31%|███       | 75/244 [07:34<16:34,  5.88s/it][R0] JEPA:  31%|███       | 76/244 [07:47<21:38,  7.73s/it][R0] JEPA:  32%|███▏      | 77/244 [07:53<20:52,  7.50s/it][R0] JEPA:  32%|███▏      | 78/244 [08:02<21:41,  7.84s/it][R0] JEPA:  32%|███▏      | 79/244 [08:14<25:02,  9.10s/it][R0] JEPA:  33%|███▎      | 80/244 [08:16<18:46,  6.87s/it][R0] JEPA:  33%|███▎      | 81/244 [08:26<21:32,  7.93s/it][R0] JEPA:  34%|███▍      | 83/244 [08:28<12:30,  4.66s/it][R0] JEPA:  34%|███▍      | 84/244 [08:30<10:34,  3.96s/it][R0] JEPA:  35%|███▍      | 85/244 [08:32<08:59,  3.39s/it][R0] JEPA:  36%|███▌      | 87/244 [08:37<08:04,  3.09s/it][R0] JEPA:  36%|███▌      | 88/244 [08:47<12:29,  4.80s/it][R0] JEPA:  36%|███▋      | 89/244 [08:58<15:58,  6.18s/it][R0] JEPA:  37%|███▋      | 91/244 [08:59<10:06,  3.97s/it][R0] JEPA:  38%|███▊      | 92/244 [09:01<08:38,  3.41s/it][R0] JEPA:  38%|███▊      | 93/244 [09:10<11:53,  4.72s/it][R0] JEPA:  39%|███▊      | 94/244 [09:17<13:14,  5.30s/it][R0] JEPA:  39%|███▉      | 95/244 [09:25<15:30,  6.24s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_09_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  39%|███▉      | 96/244 [09:26<11:14,  4.56s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:29] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_06_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  40%|███▉      | 97/244 [09:30<10:47,  4.41s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:33] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_05_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  41%|████      | 99/244 [09:40<11:40,  4.83s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:44] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:44] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:44] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:44] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:44] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_09_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:44] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc8b140] moov atom not found
+[10:35:44] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  41%|████▏     | 101/244 [09:42<07:50,  3.29s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc03200] moov atom not found
+[10:35:45] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/orbit_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:45] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc03200] moov atom not found
+[10:35:45] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc03200] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc03200] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc03200] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc03200] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/hemi_09_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_09_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/orbit_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/sweep_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_1/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_1/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/orbit_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10273_senior_2/orbit_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10273/senior_2/orbit_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10275_basic_0/sweep_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10275_basic_0/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10275/basic_0/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_09_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_09_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10278_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10278/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10279_basic_0/orbit_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/orbit_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10279_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10279_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10279/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1028_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1028/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10280_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10280/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/hemi_13_nobg.mp4...[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_05_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  43%|████▎     | 105/244 [09:42<03:37,  1.57s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb01780] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3caf33c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb7e940] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb7e940] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb1ec40] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb1ee40] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb23d80] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb23d80] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd18140] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd18140] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbe8ac0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbe8ac0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbd4a40] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbd4a40] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb042c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb042c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc874c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc874c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccefb00] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccefb00] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb84300] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb84300] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb844c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  45%|████▌     | 110/244 [09:42<01:49,  1.22it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccb6680] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccb6680] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccb6a80] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3da05a40] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3da05e80] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb750c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb752c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cceb6c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cceb6c0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cceba80] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbba580] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbba580] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/orbit_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_0/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_0/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_1/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_basic_1/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/basic_1/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/hemi_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/orbit_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10281_senior_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10281/senior_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10282_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10282/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10283_basic_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10283/basic_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10284_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10284/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/orbit_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/sweep_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10285_basic_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10285/basic_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/hemi_13_nobg.mp4...[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbba740] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbbab80] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cafc240] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cafc400] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cafc640] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb41f40] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb41f40] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb42100] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_15_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb42540] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb7d440] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb7d440] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb7d800] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb7dc00] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccafd00] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccafec0] moov atom not found
+[10:35:46] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  47%|████▋     | 114/244 [09:42<01:09,  1.87it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc213c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  48%|████▊     | 117/244 [09:50<02:13,  1.05s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd02200] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc526c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc526c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbb4140] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_09_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbb4140] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbb4580] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc07a40] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc07c00] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccb0080] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccb0080] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cafd7c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cafd7c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cafdc00] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc53280] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cc534c0] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb71480] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb71480] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb71640] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_02_nobg.mp4, Invalid data found when processing input
+
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10286_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10286/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/hemi_15_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/hemi_15_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10287_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10287/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10288_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10288_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10288_basic_0/hemi_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10288/basic_0/hemi_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/1029_basic_0/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/1029/basic_0/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/orbit_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10290_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10290/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/hemi_09_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/hemi_09_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/orbit_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10291_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10291/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10292_basic_0/sweep_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10292/basic_0/sweep_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_02_nobg.mp4...[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb71880] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb71c40] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb46b40] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/orbit_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb46d00] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/orbit_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb46f40] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/sweep_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb47300] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/sweep_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccf0840] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccf0840] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccf0c00] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_13_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  50%|████▉     | 121/244 [09:50<01:26,  1.43it/s][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccf1040] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_1/sweep_05_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3ccf1480] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_03_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd16780] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd16940] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_12_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd16d80] moov atom not found
+[10:35:53] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd25c00] moov atom not found
+[10:36:01] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd159c0] moov atom not found
+[10:36:01] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/hemi_10_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd159c0] moov atom not found
+[10:36:01] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/orbit_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd159c0] moov atom not found
+[10:36:01] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd159c0] moov atom not found
+[10:36:01] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/sweep_05_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  51%|█████     | 124/244 [09:59<02:41,  1.35s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd53b00] moov atom not found
+[10:36:06] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/hemi_11_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd53b00] moov atom not found
+[10:36:06] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/orbit_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd53b00] moov atom not found
+[10:36:06] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/orbit_06_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd53b00] moov atom not found
+[10:36:06] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/sweep_01_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd53b00] moov atom not found
+[10:36:06] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/sweep_02_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  52%|█████▏    | 127/244 [10:03<02:33,  1.31s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cbce400] moov atom not found
+[10:36:06] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_3/hemi_00_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cb27300] moov atom not found
+[10:36:06] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_3/hemi_12_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  53%|█████▎    | 129/244 [10:05<02:21,  1.23s/it][mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd15040] moov atom not found
+[10:36:08] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_02_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd15040] moov atom not found
+[10:36:08] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd15040] moov atom not found
+[10:36:08] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_08_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd15040] moov atom not found
+[10:36:08] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_14_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd15040] moov atom not found
+[10:36:08] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/orbit_04_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd15040] moov atom not found
+[10:36:08] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/orbit_07_nobg.mp4, Invalid data found when processing input
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x3cd15040] moov atom not found
+[10:36:08] /github/workspace/src/video/video_reader.cc:83: ERROR opening: /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/sweep_00_nobg.mp4, Invalid data found when processing input
+[R0] JEPA:  54%|█████▎    | 131/244 [10:14<03:44,  1.99s/it][R0] JEPA:  54%|█████▍    | 132/244 [10:24<06:00,  3.22s/it][R0] JEPA:  55%|█████▍    | 134/244 [10:28<05:07,  2.79s/it][R0] JEPA:  56%|█████▌    | 136/244 [10:35<05:29,  3.05s/it][R0] JEPA:  57%|█████▋    | 138/244 [10:40<05:12,  2.95s/it][R0] JEPA:  57%|█████▋    | 139/244 [10:44<05:18,  3.04s/it][R0] JEPA:  57%|█████▋    | 140/244 [10:46<04:50,  2.79s/it][R0] JEPA:  58%|█████▊    | 142/244 [10:49<04:07,  2.43s/it][R0] JEPA:  59%|█████▊    | 143/244 [11:00<06:56,  4.13s/it][R0] JEPA:  59%|█████▉    | 144/244 [11:07<07:57,  4.77s/it][R0] JEPA:  59%|█████▉    | 145/244 [11:17<10:07,  6.14s/it][R0] JEPA:  60%|█████▉    | 146/244 [11:30<12:38,  7.74s/it][R0] JEPA:  60%|██████    | 147/244 [11:31<09:52,  6.10s/it][R0] JEPA:  61%|██████    | 148/244 [11:40<10:45,  6.72s/it][R0] JEPA:  61%|██████    | 149/244 [11:41<08:20,  5.26s/it][R0] JEPA:  61%|██████▏   | 150/244 [11:53<11:16,  7.20s/it][R0] JEPA:  62%|██████▏   | 151/244 [12:04<12:37,  8.14s/it][R0] JEPA:  62%|██████▏   | 152/244 [12:16<14:16,  9.31s/it][R0] JEPA:  63%|██████▎   | 153/244 [12:19<11:30,  7.59s/it][R0] JEPA:  63%|██████▎   | 154/244 [12:23<09:35,  6.39s/it][R0] JEPA:  64%|██████▎   | 155/244 [12:35<11:55,  8.04s/it][R0] JEPA:  64%|██████▍   | 156/244 [12:38<09:52,  6.73s/it][R0] JEPA:  64%|██████▍   | 157/244 [12:46<10:00,  6.90s/it][R0] JEPA:  65%|██████▍   | 158/244 [12:58<12:07,  8.46s/it][R0] JEPA:  65%|██████▌   | 159/244 [13:05<11:17,  7.97s/it][R0] JEPA:  66%|██████▌   | 160/244 [13:12<10:44,  7.67s/it][R0] JEPA:  66%|██████▌   | 161/244 [13:22<11:49,  8.55s/it][R0] JEPA:  66%|██████▋   | 162/244 [13:33<12:35,  9.22s/it][R0] JEPA:  67%|██████▋   | 163/244 [13:37<10:13,  7.57s/it][R0] JEPA:  67%|██████▋   | 164/244 [13:49<12:03,  9.04s/it][R0] JEPA:  68%|██████▊   | 165/244 [13:56<11:04,  8.41s/it][R0] JEPA:  68%|██████▊   | 166/244 [14:05<10:59,  8.45s/it][R0] JEPA:  68%|██████▊   | 167/244 [14:10<09:42,  7.57s/it][R0] JEPA:  69%|██████▉   | 168/244 [14:23<11:25,  9.02s/it][R0] JEPA:  69%|██████▉   | 169/244 [14:30<10:35,  8.48s/it][R0] JEPA:  70%|██████▉   | 170/244 [14:33<08:40,  7.03s/it][R0] JEPA:  70%|███████   | 171/244 [14:42<09:09,  7.53s/it][R0] JEPA:  70%|███████   | 172/244 [14:51<09:20,  7.78s/it][R0] JEPA:  71%|███████▏  | 174/244 [15:01<07:50,  6.72s/it][R0] JEPA:  72%|███████▏  | 175/244 [15:09<07:50,  6.83s/it][R0] JEPA:  72%|███████▏  | 176/244 [15:21<09:19,  8.23s/it][R0] JEPA:  73%|███████▎  | 177/244 [15:33<10:27,  9.37s/it][R0] JEPA:  73%|███████▎  | 178/244 [15:35<07:58,  7.25s/it][R0] JEPA:  73%|███████▎  | 179/244 [15:42<07:44,  7.14s/it][R0] JEPA:  74%|███████▍  | 180/244 [15:49<07:35,  7.12s/it][R0] JEPA:  74%|███████▍  | 181/244 [15:56<07:24,  7.06s/it][R0] JEPA:  75%|███████▍  | 182/244 [16:01<06:40,  6.46s/it][R0] JEPA:  75%|███████▌  | 183/244 [16:08<06:44,  6.63s/it][R0] JEPA:  76%|███████▌  | 185/244 [16:13<04:45,  4.84s/it][R0] JEPA:  76%|███████▌  | 186/244 [16:24<06:03,  6.26s/it][R0] JEPA:  77%|███████▋  | 187/244 [16:35<07:03,  7.42s/it][R0] JEPA:  77%|███████▋  | 188/244 [16:38<05:55,  6.35s/it][R0] JEPA:  77%|███████▋  | 189/244 [16:45<05:58,  6.52s/it][R0] JEPA:  78%|███████▊  | 190/244 [16:52<06:04,  6.75s/it][R0] JEPA:  78%|███████▊  | 191/244 [17:03<06:55,  7.84s/it][R0] JEPA:  79%|███████▊  | 192/244 [17:12<07:03,  8.15s/it][R0] JEPA:  79%|███████▉  | 193/244 [17:21<07:06,  8.37s/it][R0] JEPA:  80%|███████▉  | 195/244 [17:26<04:40,  5.72s/it][R0] JEPA:  80%|████████  | 196/244 [17:35<05:18,  6.63s/it][R0] JEPA:  81%|████████  | 197/244 [17:42<05:16,  6.74s/it][R0] JEPA:  81%|████████  | 198/244 [17:53<05:54,  7.71s/it][R0] JEPA:  82%|████████▏ | 199/244 [17:57<04:59,  6.64s/it][R0] JEPA:  82%|████████▏ | 200/244 [18:04<04:58,  6.78s/it][R0] JEPA:  82%|████████▏ | 201/244 [18:09<04:31,  6.32s/it][R0] JEPA:  83%|████████▎ | 202/244 [18:11<03:29,  4.99s/it][R0] JEPA:  83%|████████▎ | 203/244 [18:12<02:45,  4.04s/it][R0] JEPA:  84%|████████▍ | 205/244 [18:16<01:55,  2.97s/it][R0] JEPA:  84%|████████▍ | 206/244 [18:25<02:52,  4.53s/it][R0] JEPA:  85%|████████▍ | 207/244 [18:36<03:44,  6.07s/it][R0] JEPA:  85%|████████▌ | 208/244 [18:41<03:33,  5.93s/it][R0] JEPA:  86%|████████▌ | 210/244 [18:52<03:12,  5.67s/it][R0] JEPA:  86%|████████▋ | 211/244 [18:56<02:53,  5.25s/it][R0] JEPA:  87%|████████▋ | 212/244 [19:03<03:04,  5.75s/it][R0] JEPA:  87%|████████▋ | 213/244 [19:07<02:40,  5.19s/it][R0] JEPA:  88%|████████▊ | 214/244 [19:08<02:07,  4.24s/it][R0] JEPA:  88%|████████▊ | 215/244 [19:10<01:43,  3.56s/it][R0] JEPA:  89%|████████▊ | 216/244 [19:19<02:19,  5.00s/it][R0] JEPA:  89%|████████▉ | 217/244 [19:21<01:49,  4.06s/it][R0] JEPA:  89%|████████▉ | 218/244 [19:29<02:19,  5.35s/it][R0] JEPA:  90%|████████▉ | 219/244 [19:33<02:00,  4.81s/it][R0] JEPA:  90%|█████████ | 220/244 [19:45<02:51,  7.13s/it][R0] JEPA:  91%|█████████ | 221/244 [19:58<03:20,  8.73s/it][R0] JEPA:  91%|█████████ | 222/244 [20:08<03:23,  9.24s/it][R0] JEPA:  91%|█████████▏| 223/244 [20:18<03:21,  9.60s/it][R0] JEPA:  92%|█████████▏| 224/244 [20:26<02:58,  8.91s/it][R0] JEPA:  92%|█████████▏| 225/244 [20:35<02:50,  8.96s/it][R0] JEPA:  93%|█████████▎| 226/244 [20:37<02:03,  6.84s/it][R0] JEPA:  93%|█████████▎| 227/244 [20:49<02:24,  8.48s/it][R0] JEPA:  93%|█████████▎| 228/244 [21:01<02:33,  9.59s/it][R0] JEPA:  94%|█████████▍| 229/244 [21:12<02:28,  9.90s/it][R0] JEPA:  94%|█████████▍| 230/244 [21:22<02:21, 10.12s/it][R0] JEPA:  95%|█████████▍| 231/244 [21:31<02:05,  9.67s/it][R0] JEPA:  95%|█████████▌| 232/244 [21:40<01:53,  9.48s/it][R0] JEPA:  95%|█████████▌| 233/244 [21:46<01:31,  8.28s/it][R0] JEPA:  96%|█████████▌| 234/244 [21:48<01:03,  6.37s/it][R0] JEPA:  96%|█████████▋| 235/244 [21:58<01:09,  7.71s/it][R0] JEPA:  97%|█████████▋| 236/244 [21:59<00:43,  5.45s/it][R0] JEPA:  97%|█████████▋| 237/244 [22:08<00:46,  6.61s/it][R0] JEPA:  98%|█████████▊| 238/244 [22:22<00:53,  8.91s/it][R0] JEPA:  98%|█████████▊| 239/244 [22:36<00:52, 10.45s/it][R0] JEPA:  98%|█████████▊| 240/244 [22:51<00:46, 11.62s/it][R0] JEPA:  99%|█████████▉| 241/244 [23:03<00:35, 11.85s/it][R0] JEPA:  99%|█████████▉| 242/244 [23:17<00:24, 12.45s/it][R0] JEPA: 100%|█████████▉| 243/244 [23:28<00:11, 11.94s/it][R0] JEPA: 100%|██████████| 244/244 [23:38<00:00, 11.45s/it]                                                            
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/orbit_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/orbit_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/orbit_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/orbit_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10293_basic_0/sweep_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10293/basic_0/sweep_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_basic_0/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_basic_0/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_basic_0/hemi_13_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_0/hemi_13_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_basic_1/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/basic_1/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_senior_0/hemi_03_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_03_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_senior_0/hemi_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_senior_0/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10294_senior_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10294/senior_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_basic_1/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_basic_1/hemi_10_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/hemi_10_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_basic_1/orbit_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/orbit_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_basic_1/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_basic_1/sweep_05_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/basic_1/sweep_05_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_senior_2/hemi_11_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/hemi_11_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_senior_2/orbit_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/orbit_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_senior_2/orbit_06_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/orbit_06_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_senior_2/sweep_01_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/sweep_01_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_senior_2/sweep_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_2/sweep_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_senior_3/hemi_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_3/hemi_00_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10296_senior_3/hemi_12_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10296/senior_3/hemi_12_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10298_senior_0/hemi_02_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_02_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10298_senior_0/hemi_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10298_senior_0/hemi_08_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_08_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10298_senior_0/hemi_14_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/hemi_14_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10298_senior_0/orbit_04_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/orbit_04_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10298_senior_0/orbit_07_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/orbit_07_nobg.mp4...
+  [JEPA ERROR] PhysXNet_PhysXnet/10298_senior_0/sweep_00_nobg.mp4: Error reading /mnt/cpfs/yurh/Infinigen-Sim/precompute_output/PhysXNet_PhysXnet/10298/senior_0/sweep_00_nobg.mp4...
+[Watch] Scan complete. Waiting 300s...
+
+[Iter 2] Found 17 new animodes (134 videos), 1926 already done
+[R0/1] Processing 17 animodes
+[R0] VAE:   0%|          | 0/17 [00:00<?, ?it/s][R0] VAE:   6%|▌         | 1/17 [00:03<00:54,  3.39s/it][R0] VAE:  12%|█▏        | 2/17 [00:07<00:52,  3.53s/it][R0] VAE:  18%|█▊        | 3/17 [00:10<00:46,  3.33s/it][R0] VAE:  24%|██▎       | 4/17 [00:13<00:44,  3.46s/it][R0] VAE:  29%|██▉       | 5/17 [00:17<00:41,  3.44s/it][R0] VAE:  35%|███▌      | 6/17 [00:20<00:36,  3.36s/it][R0] VAE:  41%|████      | 7/17 [00:23<00:33,  3.32s/it][R0] VAE:  47%|████▋     | 8/17 [00:26<00:29,  3.32s/it][R0] VAE:  53%|█████▎    | 9/17 [00:30<00:27,  3.38s/it][R0] VAE:  59%|█████▉    | 10/17 [00:34<00:25,  3.64s/it][R0] VAE:  65%|██████▍   | 11/17 [00:38<00:22,  3.69s/it][R0] VAE:  71%|███████   | 12/17 [00:42<00:18,  3.76s/it][R0] VAE:  76%|███████▋  | 13/17 [00:45<00:14,  3.57s/it][R0] VAE:  82%|████████▏ | 14/17 [00:48<00:10,  3.43s/it][R0] VAE:  88%|████████▊ | 15/17 [00:51<00:06,  3.39s/it][R0] VAE:  94%|█████████▍| 16/17 [00:55<00:03,  3.36s/it][R0] VAE: 100%|██████████| 17/17 [00:58<00:00,  3.26s/it]                                                           [VAE ERROR] PhysXNet_PhysXnet/10035_senior_3: 
+  [VAE ERROR] PhysXNet_PhysXnet/10090_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10092_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10154_basic_1: 
+  [VAE ERROR] PhysXNet_PhysXnet/10154_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10154_senior_0: 
+[R0] JEPA:   0%|          | 0/17 [00:00<?, ?it/s][R0] JEPA:   6%|▌         | 1/17 [00:13<03:39, 13.73s/it][R0] JEPA:  12%|█▏        | 2/17 [00:27<03:29, 13.99s/it][R0] JEPA:  18%|█▊        | 3/17 [00:42<03:18, 14.17s/it][R0] JEPA:  24%|██▎       | 4/17 [00:55<03:01, 13.99s/it][R0] JEPA:  29%|██▉       | 5/17 [01:10<02:50, 14.21s/it][R0] JEPA:  35%|███▌      | 6/17 [01:25<02:40, 14.59s/it][R0] JEPA:  41%|████      | 7/17 [01:39<02:23, 14.31s/it][R0] JEPA:  47%|████▋     | 8/17 [01:54<02:09, 14.35s/it][R0] JEPA:  53%|█████▎    | 9/17 [02:08<01:55, 14.41s/it][R0] JEPA:  59%|█████▉    | 10/17 [02:23<01:40, 14.42s/it][R0] JEPA:  65%|██████▍   | 11/17 [02:36<01:24, 14.12s/it][R0] JEPA:  71%|███████   | 12/17 [02:51<01:11, 14.25s/it][R0] JEPA:  76%|███████▋  | 13/17 [03:06<00:57, 14.50s/it][R0] JEPA:  82%|████████▏ | 14/17 [03:20<00:43, 14.41s/it][R0] JEPA:  88%|████████▊ | 15/17 [03:33<00:28, 14.14s/it][R0] JEPA:  94%|█████████▍| 16/17 [03:48<00:14, 14.27s/it][R0] JEPA: 100%|██████████| 17/17 [03:59<00:00, 13.30s/it]                                                          [Watch] Scan complete. Waiting 300s...
+
+[Iter 3] Found 5 new animodes (40 videos), 1943 already done
+[R0/1] Processing 5 animodes
+[R0] VAE:   0%|          | 0/5 [00:00<?, ?it/s][R0] VAE:  20%|██        | 1/5 [00:03<00:14,  3.62s/it][R0] VAE:  40%|████      | 2/5 [00:06<00:10,  3.38s/it][R0] VAE:  60%|██████    | 3/5 [00:09<00:06,  3.26s/it][R0] VAE:  80%|████████  | 4/5 [00:13<00:03,  3.30s/it][R0] VAE: 100%|██████████| 5/5 [00:16<00:00,  3.17s/it]                                                       [R0] JEPA:   0%|          | 0/5 [00:00<?, ?it/s][R0] JEPA:  20%|██        | 1/5 [00:12<00:50, 12.69s/it][R0] JEPA:  40%|████      | 2/5 [00:25<00:37, 12.47s/it][R0] JEPA:  60%|██████    | 3/5 [00:37<00:24, 12.48s/it][R0] JEPA:  80%|████████  | 4/5 [00:49<00:12, 12.42s/it][R0] JEPA: 100%|██████████| 5/5 [01:03<00:00, 12.76s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 4] Found 4 new animodes (19 videos), 1948 already done
+[R0/1] Processing 4 animodes
+[R0] VAE:   0%|          | 0/4 [00:00<?, ?it/s][R0] VAE:  25%|██▌       | 1/4 [00:02<00:07,  2.43s/it][R0] VAE:  50%|█████     | 2/4 [00:07<00:08,  4.20s/it][R0] VAE:  75%|███████▌  | 3/4 [00:13<00:04,  4.69s/it][R0] VAE: 100%|██████████| 4/4 [00:16<00:00,  3.99s/it]                                                       [R0] JEPA:   0%|          | 0/4 [00:00<?, ?it/s][R0] JEPA:  25%|██▌       | 1/4 [00:13<00:41, 13.75s/it][R0] JEPA:  50%|█████     | 2/4 [00:27<00:27, 13.59s/it][R0] JEPA:  75%|███████▌  | 3/4 [00:28<00:08,  8.12s/it][R0] JEPA: 100%|██████████| 4/4 [00:32<00:00,  6.16s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 5] Found 6 new animodes (43 videos), 1952 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:04<00:23,  4.63s/it][R0] VAE:  33%|███▎      | 2/6 [00:08<00:15,  3.93s/it][R0] VAE:  50%|█████     | 3/6 [00:11<00:10,  3.65s/it][R0] VAE:  67%|██████▋   | 4/6 [00:14<00:06,  3.46s/it][R0] VAE:  83%|████████▎ | 5/6 [00:17<00:03,  3.28s/it][R0] VAE: 100%|██████████| 6/6 [00:20<00:00,  3.19s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:13<01:09, 13.96s/it][R0] JEPA:  33%|███▎      | 2/6 [00:27<00:54, 13.71s/it][R0] JEPA:  50%|█████     | 3/6 [00:41<00:41, 13.69s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:55<00:27, 13.82s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:08<00:13, 13.74s/it][R0] JEPA: 100%|██████████| 6/6 [01:13<00:00, 10.74s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 6] Found 7 new animodes (50 videos), 1958 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:16,  2.82s/it][R0] VAE:  29%|██▊       | 2/7 [00:06<00:16,  3.27s/it][R0] VAE:  43%|████▎     | 3/7 [00:13<00:19,  4.79s/it][R0] VAE:  57%|█████▋    | 4/7 [00:19<00:16,  5.66s/it][R0] VAE:  71%|███████▏  | 5/7 [00:27<00:12,  6.18s/it][R0] VAE:  86%|████████▌ | 6/7 [00:30<00:05,  5.14s/it][R0] VAE: 100%|██████████| 7/7 [00:33<00:00,  4.46s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:23, 13.98s/it][R0] JEPA:  29%|██▊       | 2/7 [00:27<01:09, 13.97s/it][R0] JEPA:  43%|████▎     | 3/7 [00:42<00:56, 14.03s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:55<00:41, 13.78s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:02<00:22, 11.47s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:16<00:12, 12.14s/it][R0] JEPA: 100%|██████████| 7/7 [01:26<00:00, 11.50s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 7] Found 6 new animodes (45 videos), 1965 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:03<00:16,  3.24s/it][R0] VAE:  33%|███▎      | 2/6 [00:06<00:11,  3.00s/it][R0] VAE:  50%|█████     | 3/6 [00:08<00:08,  2.79s/it][R0] VAE:  67%|██████▋   | 4/6 [00:11<00:05,  2.76s/it][R0] VAE:  83%|████████▎ | 5/6 [00:14<00:02,  2.77s/it][R0] VAE: 100%|██████████| 6/6 [00:17<00:00,  3.05s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:12<01:04, 12.96s/it][R0] JEPA:  33%|███▎      | 2/6 [00:26<00:53, 13.49s/it][R0] JEPA:  50%|█████     | 3/6 [00:39<00:39, 13.32s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:53<00:26, 13.29s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:01<00:11, 11.41s/it][R0] JEPA: 100%|██████████| 6/6 [01:14<00:00, 12.01s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 8] Found 7 new animodes (50 videos), 1971 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:15,  2.58s/it][R0] VAE:  29%|██▊       | 2/7 [00:04<00:12,  2.47s/it][R0] VAE:  43%|████▎     | 3/7 [00:07<00:10,  2.52s/it][R0] VAE:  57%|█████▋    | 4/7 [00:09<00:07,  2.48s/it][R0] VAE:  71%|███████▏  | 5/7 [00:13<00:05,  2.68s/it][R0] VAE:  86%|████████▌ | 6/7 [00:15<00:02,  2.76s/it][R0] VAE: 100%|██████████| 7/7 [00:18<00:00,  2.79s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:22, 13.68s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:06, 13.22s/it][R0] JEPA:  43%|████▎     | 3/7 [00:40<00:54, 13.51s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:54<00:41, 13.70s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:07<00:27, 13.61s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:21<00:13, 13.55s/it][R0] JEPA: 100%|██████████| 7/7 [01:24<00:00, 10.25s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 9] Found 8 new animodes (55 videos), 1978 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:03<00:23,  3.34s/it][R0] VAE:  25%|██▌       | 2/8 [00:07<00:22,  3.72s/it][R0] VAE:  38%|███▊      | 3/8 [00:11<00:19,  3.83s/it][R0] VAE:  50%|█████     | 4/8 [00:14<00:14,  3.51s/it][R0] VAE:  62%|██████▎   | 5/8 [00:17<00:10,  3.40s/it][R0] VAE:  75%|███████▌  | 6/8 [00:21<00:06,  3.49s/it][R0] VAE:  88%|████████▊ | 7/8 [00:24<00:03,  3.39s/it][R0] VAE: 100%|██████████| 8/8 [00:27<00:00,  3.29s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:13<01:34, 13.52s/it][R0] JEPA:  25%|██▌       | 2/8 [00:27<01:23, 14.00s/it][R0] JEPA:  38%|███▊      | 3/8 [00:41<01:10, 14.00s/it][R0] JEPA:  50%|█████     | 4/8 [00:56<00:56, 14.07s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:09<00:42, 14.02s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:23<00:27, 13.92s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:29<00:11, 11.16s/it][R0] JEPA: 100%|██████████| 8/8 [01:35<00:00,  9.72s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 10] Found 7 new animodes (54 videos), 1986 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:15,  2.62s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:13,  2.64s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.86s/it][R0] VAE:  57%|█████▋    | 4/7 [00:10<00:08,  2.74s/it][R0] VAE:  71%|███████▏  | 5/7 [00:13<00:05,  2.78s/it][R0] VAE:  86%|████████▌ | 6/7 [00:16<00:02,  2.92s/it][R0] VAE: 100%|██████████| 7/7 [00:20<00:00,  3.13s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:14<01:25, 14.22s/it][R0] JEPA:  29%|██▊       | 2/7 [00:27<01:09, 13.81s/it][R0] JEPA:  43%|████▎     | 3/7 [00:41<00:55, 13.93s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:51<00:37, 12.38s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:05<00:25, 12.77s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:19<00:13, 13.10s/it][R0] JEPA: 100%|██████████| 7/7 [01:32<00:00, 13.29s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 11] Found 7 new animodes (56 videos), 1993 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:03<00:19,  3.18s/it][R0] VAE:  29%|██▊       | 2/7 [00:06<00:17,  3.46s/it][R0] VAE:  43%|████▎     | 3/7 [00:09<00:13,  3.29s/it][R0] VAE:  57%|█████▋    | 4/7 [00:13<00:09,  3.32s/it][R0] VAE:  71%|███████▏  | 5/7 [00:15<00:06,  3.08s/it][R0] VAE:  86%|████████▌ | 6/7 [00:18<00:02,  2.89s/it][R0] VAE: 100%|██████████| 7/7 [00:20<00:00,  2.74s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:12<01:17, 12.86s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:05, 13.18s/it][R0] JEPA:  43%|████▎     | 3/7 [00:39<00:53, 13.32s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:53<00:40, 13.60s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:07<00:27, 13.80s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:21<00:13, 13.86s/it][R0] JEPA: 100%|██████████| 7/7 [01:35<00:00, 13.83s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 12] Found 7 new animodes (53 videos), 2000 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:14,  2.48s/it][R0] VAE:  29%|██▊       | 2/7 [00:04<00:12,  2.50s/it][R0] VAE:  43%|████▎     | 3/7 [00:07<00:10,  2.53s/it][R0] VAE:  57%|█████▋    | 4/7 [00:09<00:07,  2.43s/it][R0] VAE:  71%|███████▏  | 5/7 [00:12<00:04,  2.49s/it][R0] VAE:  86%|████████▌ | 6/7 [00:14<00:02,  2.44s/it][R0] VAE: 100%|██████████| 7/7 [00:17<00:00,  2.46s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:19, 13.23s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:05, 13.14s/it][R0] JEPA:  43%|████▎     | 3/7 [00:39<00:52, 13.10s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:52<00:39, 13.08s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:05<00:26, 13.13s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:18<00:13, 13.12s/it][R0] JEPA: 100%|██████████| 7/7 [01:26<00:00, 11.51s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 13] Found 8 new animodes (61 videos), 2007 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:02<00:16,  2.34s/it][R0] VAE:  25%|██▌       | 2/8 [00:05<00:16,  2.70s/it][R0] VAE:  38%|███▊      | 3/8 [00:07<00:12,  2.48s/it][R0] VAE:  50%|█████     | 4/8 [00:09<00:09,  2.41s/it][R0] VAE:  62%|██████▎   | 5/8 [00:12<00:07,  2.40s/it][R0] VAE:  75%|███████▌  | 6/8 [00:15<00:05,  2.57s/it][R0] VAE:  88%|████████▊ | 7/8 [00:17<00:02,  2.64s/it][R0] VAE: 100%|██████████| 8/8 [00:20<00:00,  2.75s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:13<01:33, 13.35s/it][R0] JEPA:  25%|██▌       | 2/8 [00:26<01:20, 13.35s/it][R0] JEPA:  38%|███▊      | 3/8 [00:40<01:06, 13.33s/it][R0] JEPA:  50%|█████     | 4/8 [00:53<00:53, 13.31s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:06<00:39, 13.32s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:20<00:26, 13.34s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:33<00:13, 13.35s/it][R0] JEPA: 100%|██████████| 8/8 [01:41<00:00, 11.74s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 14] Found 8 new animodes (53 videos), 2015 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:02<00:16,  2.34s/it][R0] VAE:  25%|██▌       | 2/8 [00:04<00:14,  2.40s/it][R0] VAE:  38%|███▊      | 3/8 [00:07<00:11,  2.39s/it][R0] VAE:  50%|█████     | 4/8 [00:09<00:09,  2.39s/it][R0] VAE:  62%|██████▎   | 5/8 [00:12<00:07,  2.56s/it][R0] VAE:  75%|███████▌  | 6/8 [00:15<00:05,  2.61s/it][R0] VAE:  88%|████████▊ | 7/8 [00:17<00:02,  2.63s/it][R0] VAE: 100%|██████████| 8/8 [00:20<00:00,  2.61s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:13<01:34, 13.53s/it][R0] JEPA:  25%|██▌       | 2/8 [00:26<01:20, 13.40s/it][R0] JEPA:  38%|███▊      | 3/8 [00:40<01:06, 13.31s/it][R0] JEPA:  50%|█████     | 4/8 [00:46<00:42, 10.69s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:00<00:35, 11.67s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:13<00:24, 12.20s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:26<00:12, 12.54s/it][R0] JEPA: 100%|██████████| 8/8 [01:28<00:00,  9.08s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 15] Found 6 new animodes (45 videos), 2023 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:11,  2.25s/it][R0] VAE:  33%|███▎      | 2/6 [00:04<00:09,  2.35s/it][R0] VAE:  50%|█████     | 3/6 [00:07<00:07,  2.39s/it][R0] VAE:  67%|██████▋   | 4/6 [00:10<00:05,  2.62s/it][R0] VAE:  83%|████████▎ | 5/6 [00:12<00:02,  2.71s/it][R0] VAE: 100%|██████████| 6/6 [00:15<00:00,  2.59s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:13<01:06, 13.23s/it][R0] JEPA:  33%|███▎      | 2/6 [00:26<00:53, 13.25s/it][R0] JEPA:  50%|█████     | 3/6 [00:39<00:39, 13.25s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:52<00:26, 13.17s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:05<00:13, 13.16s/it][R0] JEPA: 100%|██████████| 6/6 [01:14<00:00, 11.50s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 16] Found 7 new animodes (49 videos), 2029 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:14,  2.43s/it][R0] VAE:  29%|██▊       | 2/7 [00:04<00:12,  2.41s/it][R0] VAE:  43%|████▎     | 3/7 [00:07<00:09,  2.41s/it][R0] VAE:  57%|█████▋    | 4/7 [00:09<00:07,  2.37s/it][R0] VAE:  71%|███████▏  | 5/7 [00:12<00:05,  2.57s/it][R0] VAE:  86%|████████▌ | 6/7 [00:15<00:02,  2.67s/it][R0] VAE: 100%|██████████| 7/7 [00:17<00:00,  2.56s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:19, 13.31s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:05, 13.12s/it][R0] JEPA:  43%|████▎     | 3/7 [00:39<00:52, 13.10s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:52<00:39, 13.10s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:05<00:26, 13.14s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:17<00:12, 12.57s/it][R0] JEPA: 100%|██████████| 7/7 [01:20<00:00,  9.52s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 17] Found 8 new animodes (58 videos), 2036 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:03<00:22,  3.27s/it][R0] VAE:  25%|██▌       | 2/8 [00:06<00:18,  3.10s/it][R0] VAE:  38%|███▊      | 3/8 [00:09<00:15,  3.04s/it][R0] VAE:  50%|█████     | 4/8 [00:12<00:12,  3.14s/it][R0] VAE:  62%|██████▎   | 5/8 [00:16<00:10,  3.43s/it][R0] VAE:  75%|███████▌  | 6/8 [00:20<00:07,  3.62s/it][R0] VAE:  88%|████████▊ | 7/8 [00:24<00:03,  3.86s/it][R0] VAE: 100%|██████████| 8/8 [00:28<00:00,  3.90s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:12<01:29, 12.81s/it][R0] JEPA:  25%|██▌       | 2/8 [00:25<01:17, 12.85s/it][R0] JEPA:  38%|███▊      | 3/8 [00:38<01:04, 12.95s/it][R0] JEPA:  50%|█████     | 4/8 [00:50<00:49, 12.29s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:02<00:37, 12.47s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:15<00:25, 12.63s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:28<00:12, 12.77s/it][R0] JEPA: 100%|██████████| 8/8 [01:33<00:00, 10.25s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 18] Found 5 new animodes (40 videos), 2044 already done
+[R0/1] Processing 5 animodes
+[R0] VAE:   0%|          | 0/5 [00:00<?, ?it/s][R0] VAE:  20%|██        | 1/5 [00:03<00:13,  3.30s/it][R0] VAE:  40%|████      | 2/5 [00:06<00:09,  3.13s/it][R0] VAE:  60%|██████    | 3/5 [00:10<00:06,  3.39s/it][R0] VAE:  80%|████████  | 4/5 [00:14<00:03,  3.72s/it][R0] VAE: 100%|██████████| 5/5 [00:18<00:00,  3.74s/it]                                                       [R0] JEPA:   0%|          | 0/5 [00:00<?, ?it/s][R0] JEPA:  20%|██        | 1/5 [00:12<00:51, 12.95s/it][R0] JEPA:  40%|████      | 2/5 [00:25<00:38, 12.90s/it][R0] JEPA:  60%|██████    | 3/5 [00:38<00:25, 12.74s/it][R0] JEPA:  80%|████████  | 4/5 [00:51<00:12, 12.80s/it][R0] JEPA: 100%|██████████| 5/5 [01:04<00:00, 12.86s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 19] Found 7 new animodes (49 videos), 2049 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:03<00:18,  3.04s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:14,  2.99s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.97s/it][R0] VAE:  57%|█████▋    | 4/7 [00:11<00:08,  3.00s/it][R0] VAE:  71%|███████▏  | 5/7 [00:14<00:05,  2.97s/it][R0] VAE:  86%|████████▌ | 6/7 [00:17<00:02,  2.88s/it][R0] VAE: 100%|██████████| 7/7 [00:20<00:00,  2.81s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:18, 13.08s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:04, 12.99s/it][R0] JEPA:  43%|████▎     | 3/7 [00:39<00:52, 13.02s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:52<00:39, 13.08s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:05<00:26, 13.07s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:18<00:13, 13.10s/it][R0] JEPA: 100%|██████████| 7/7 [01:20<00:00,  9.35s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 20] Found 7 new animodes (52 videos), 2056 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:03<00:19,  3.32s/it][R0] VAE:  29%|██▊       | 2/7 [00:06<00:17,  3.53s/it][R0] VAE:  43%|████▎     | 3/7 [00:10<00:13,  3.30s/it][R0] VAE:  57%|█████▋    | 4/7 [00:12<00:09,  3.09s/it][R0] VAE:  71%|███████▏  | 5/7 [00:15<00:05,  2.93s/it][R0] VAE:  86%|████████▌ | 6/7 [00:18<00:02,  2.91s/it][R0] VAE: 100%|██████████| 7/7 [00:20<00:00,  2.78s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:12<01:16, 12.78s/it][R0] JEPA:  29%|██▊       | 2/7 [00:25<01:03, 12.79s/it][R0] JEPA:  43%|████▎     | 3/7 [00:38<00:51, 12.81s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:46<00:32, 10.92s/it][R0] JEPA:  71%|███████▏  | 5/7 [00:59<00:23, 11.58s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:12<00:12, 12.02s/it][R0] JEPA: 100%|██████████| 7/7 [01:23<00:00, 11.76s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 21] Found 7 new animodes (49 videos), 2063 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:16,  2.75s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:14,  2.83s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.75s/it][R0] VAE:  57%|█████▋    | 4/7 [00:10<00:07,  2.49s/it][R0] VAE:  71%|███████▏  | 5/7 [00:12<00:04,  2.48s/it][R0] VAE:  86%|████████▌ | 6/7 [00:15<00:02,  2.42s/it][R0] VAE: 100%|██████████| 7/7 [00:17<00:00,  2.42s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:12<01:16, 12.79s/it][R0] JEPA:  29%|██▊       | 2/7 [00:25<01:04, 12.83s/it][R0] JEPA:  43%|████▎     | 3/7 [00:38<00:51, 12.89s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:51<00:38, 12.83s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:04<00:25, 12.84s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:17<00:12, 12.84s/it][R0] JEPA: 100%|██████████| 7/7 [01:18<00:00,  9.17s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 22] Found 6 new animodes (48 videos), 2070 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:11,  2.32s/it][R0] VAE:  33%|███▎      | 2/6 [00:05<00:10,  2.56s/it][R0] VAE:  50%|█████     | 3/6 [00:07<00:07,  2.46s/it][R0] VAE:  67%|██████▋   | 4/6 [00:10<00:05,  2.58s/it][R0] VAE:  83%|████████▎ | 5/6 [00:12<00:02,  2.56s/it][R0] VAE: 100%|██████████| 6/6 [00:15<00:00,  2.58s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:12<01:04, 12.87s/it][R0] JEPA:  33%|███▎      | 2/6 [00:25<00:51, 12.85s/it][R0] JEPA:  50%|█████     | 3/6 [00:38<00:38, 12.89s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:51<00:25, 12.86s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:04<00:12, 12.94s/it][R0] JEPA: 100%|██████████| 6/6 [01:17<00:00, 12.93s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 23] Found 6 new animodes (42 videos), 2076 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:12,  2.44s/it][R0] VAE:  33%|███▎      | 2/6 [00:04<00:09,  2.42s/it][R0] VAE:  50%|█████     | 3/6 [00:07<00:07,  2.46s/it][R0] VAE:  67%|██████▋   | 4/6 [00:09<00:04,  2.48s/it][R0] VAE:  83%|████████▎ | 5/6 [00:12<00:02,  2.52s/it][R0] VAE: 100%|██████████| 6/6 [00:14<00:00,  2.52s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:13<01:05, 13.14s/it][R0] JEPA:  33%|███▎      | 2/6 [00:26<00:52, 13.10s/it][R0] JEPA:  50%|█████     | 3/6 [00:39<00:39, 13.17s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:52<00:26, 13.23s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:06<00:13, 13.28s/it][R0] JEPA: 100%|██████████| 6/6 [01:09<00:00,  9.90s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 24] Found 7 new animodes (49 videos), 2082 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:15,  2.63s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:13,  2.69s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.90s/it][R0] VAE:  57%|█████▋    | 4/7 [00:11<00:08,  2.94s/it][R0] VAE:  71%|███████▏  | 5/7 [00:14<00:05,  2.88s/it][R0] VAE:  86%|████████▌ | 6/7 [00:17<00:02,  2.89s/it][R0] VAE: 100%|██████████| 7/7 [00:20<00:00,  2.92s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:18, 13.16s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:05, 13.12s/it][R0] JEPA:  43%|████▎     | 3/7 [00:39<00:52, 13.14s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:52<00:39, 13.14s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:05<00:26, 13.17s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:18<00:13, 13.17s/it][R0] JEPA: 100%|██████████| 7/7 [01:20<00:00,  9.39s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 25] Found 7 new animodes (42 videos), 2089 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:16,  2.82s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:14,  2.86s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.85s/it][R0] VAE:  57%|█████▋    | 4/7 [00:11<00:08,  2.83s/it][R0] VAE:  71%|███████▏  | 5/7 [00:13<00:05,  2.70s/it][R0] VAE:  86%|████████▌ | 6/7 [00:16<00:02,  2.67s/it][R0] VAE: 100%|██████████| 7/7 [00:19<00:00,  2.64s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:19, 13.19s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:05, 13.12s/it][R0] JEPA:  43%|████▎     | 3/7 [00:27<00:31,  7.88s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:40<00:28,  9.63s/it][R0] JEPA:  71%|███████▏  | 5/7 [00:53<00:21, 10.85s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:06<00:11, 11.64s/it][R0] JEPA: 100%|██████████| 7/7 [01:07<00:00,  8.35s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 26] Found 4 new animodes (32 videos), 2096 already done
+[R0/1] Processing 4 animodes
+[R0] VAE:   0%|          | 0/4 [00:00<?, ?it/s][R0] VAE:  25%|██▌       | 1/4 [00:02<00:07,  2.53s/it][R0] VAE:  50%|█████     | 2/4 [00:05<00:05,  2.52s/it][R0] VAE:  75%|███████▌  | 3/4 [00:08<00:02,  2.78s/it][R0] VAE: 100%|██████████| 4/4 [00:11<00:00,  2.84s/it]                                                       [R0] JEPA:   0%|          | 0/4 [00:00<?, ?it/s][R0] JEPA:  25%|██▌       | 1/4 [00:12<00:38, 12.90s/it][R0] JEPA:  50%|█████     | 2/4 [00:25<00:25, 12.98s/it][R0] JEPA:  75%|███████▌  | 3/4 [00:38<00:12, 13.00s/it][R0] JEPA: 100%|██████████| 4/4 [00:51<00:00, 12.99s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 27] Found 7 new animodes (51 videos), 2100 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:14,  2.39s/it][R0] VAE:  29%|██▊       | 2/7 [00:04<00:11,  2.30s/it][R0] VAE:  43%|████▎     | 3/7 [00:06<00:09,  2.33s/it][R0] VAE:  57%|█████▋    | 4/7 [00:09<00:07,  2.38s/it][R0] VAE:  71%|███████▏  | 5/7 [00:12<00:05,  2.54s/it][R0] VAE:  86%|████████▌ | 6/7 [00:14<00:02,  2.42s/it][R0] VAE: 100%|██████████| 7/7 [00:16<00:00,  2.31s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:18, 13.06s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:05, 13.15s/it][R0] JEPA:  43%|████▎     | 3/7 [00:39<00:52, 13.09s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:52<00:39, 13.07s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:05<00:26, 13.07s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:18<00:13, 13.08s/it][R0] JEPA: 100%|██████████| 7/7 [01:23<00:00, 10.40s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 28] Found 8 new animodes (57 videos), 2107 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:02<00:17,  2.49s/it][R0] VAE:  25%|██▌       | 2/8 [00:05<00:16,  2.81s/it][R0] VAE:  38%|███▊      | 3/8 [00:08<00:14,  2.85s/it][R0] VAE:  50%|█████     | 4/8 [00:11<00:11,  2.85s/it][R0] VAE:  62%|██████▎   | 5/8 [00:14<00:08,  2.93s/it][R0] VAE:  75%|███████▌  | 6/8 [00:16<00:05,  2.68s/it][R0] VAE:  88%|████████▊ | 7/8 [00:18<00:02,  2.53s/it][R0] VAE: 100%|██████████| 8/8 [00:21<00:00,  2.46s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:12<01:30, 12.97s/it][R0] JEPA:  25%|██▌       | 2/8 [00:25<01:17, 12.94s/it][R0] JEPA:  38%|███▊      | 3/8 [00:38<01:04, 12.91s/it][R0] JEPA:  50%|█████     | 4/8 [00:51<00:51, 12.96s/it][R0] JEPA:  62%|██████▎   | 5/8 [00:56<00:30, 10.04s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:09<00:21, 11.00s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:22<00:11, 11.62s/it][R0] JEPA: 100%|██████████| 8/8 [01:32<00:00, 10.99s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 29] Found 6 new animodes (45 videos), 2115 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:11,  2.23s/it][R0] VAE:  33%|███▎      | 2/6 [00:05<00:11,  2.78s/it][R0] VAE:  50%|█████     | 3/6 [00:08<00:08,  2.91s/it][R0] VAE:  67%|██████▋   | 4/6 [00:11<00:05,  2.90s/it][R0] VAE:  83%|████████▎ | 5/6 [00:14<00:03,  3.03s/it][R0] VAE: 100%|██████████| 6/6 [00:18<00:00,  3.21s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:13<01:06, 13.27s/it][R0] JEPA:  33%|███▎      | 2/6 [00:26<00:53, 13.27s/it][R0] JEPA:  50%|█████     | 3/6 [00:39<00:40, 13.33s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:53<00:26, 13.29s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:06<00:13, 13.31s/it][R0] JEPA: 100%|██████████| 6/6 [01:14<00:00, 11.60s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 30] Found 6 new animodes (48 videos), 2121 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:14,  2.90s/it][R0] VAE:  33%|███▎      | 2/6 [00:05<00:10,  2.68s/it][R0] VAE:  50%|█████     | 3/6 [00:08<00:08,  2.71s/it][R0] VAE:  67%|██████▋   | 4/6 [00:10<00:05,  2.70s/it][R0] VAE:  83%|████████▎ | 5/6 [00:13<00:02,  2.69s/it][R0] VAE: 100%|██████████| 6/6 [00:16<00:00,  2.67s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:12<01:03, 12.79s/it][R0] JEPA:  33%|███▎      | 2/6 [00:25<00:51, 12.83s/it][R0] JEPA:  50%|█████     | 3/6 [00:38<00:38, 12.88s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:51<00:25, 12.95s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:04<00:13, 13.00s/it][R0] JEPA: 100%|██████████| 6/6 [01:17<00:00, 13.07s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 31] Found 8 new animodes (53 videos), 2127 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:02<00:17,  2.49s/it][R0] VAE:  25%|██▌       | 2/8 [00:04<00:14,  2.45s/it][R0] VAE:  38%|███▊      | 3/8 [00:07<00:12,  2.49s/it][R0] VAE:  50%|█████     | 4/8 [00:10<00:10,  2.63s/it][R0] VAE:  62%|██████▎   | 5/8 [00:13<00:08,  2.78s/it][R0] VAE:  75%|███████▌  | 6/8 [00:16<00:05,  2.82s/it][R0] VAE:  88%|████████▊ | 7/8 [00:17<00:02,  2.26s/it][R0] VAE: 100%|██████████| 8/8 [00:19<00:00,  2.29s/it]                                                         [VAE ERROR] PhysXNet_PhysXnet/10787_senior_0: 
+[R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:13<01:34, 13.49s/it][R0] JEPA:  25%|██▌       | 2/8 [00:27<01:21, 13.55s/it][R0] JEPA:  38%|███▊      | 3/8 [00:40<01:07, 13.50s/it][R0] JEPA:  50%|█████     | 4/8 [00:54<00:54, 13.54s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:07<00:40, 13.48s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:21<00:27, 13.50s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:24<00:10, 10.06s/it][R0] JEPA: 100%|██████████| 8/8 [01:28<00:00,  8.41s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 32] Found 6 new animodes (42 videos), 2135 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:12,  2.40s/it][R0] VAE:  33%|███▎      | 2/6 [00:04<00:09,  2.40s/it][R0] VAE:  50%|█████     | 3/6 [00:06<00:06,  2.28s/it][R0] VAE:  67%|██████▋   | 4/6 [00:09<00:04,  2.26s/it][R0] VAE:  83%|████████▎ | 5/6 [00:11<00:02,  2.23s/it][R0] VAE: 100%|██████████| 6/6 [00:13<00:00,  2.32s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:12<01:03, 12.74s/it][R0] JEPA:  33%|███▎      | 2/6 [00:25<00:51, 12.94s/it][R0] JEPA:  50%|█████     | 3/6 [00:38<00:38, 12.98s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:51<00:25, 12.97s/it][R0] JEPA:  83%|████████▎ | 5/6 [00:55<00:09,  9.47s/it][R0] JEPA: 100%|██████████| 6/6 [01:08<00:00, 10.66s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 33] Found 6 new animodes (45 videos), 2141 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:13,  2.66s/it][R0] VAE:  33%|███▎      | 2/6 [00:04<00:09,  2.46s/it][R0] VAE:  50%|█████     | 3/6 [00:07<00:07,  2.45s/it][R0] VAE:  67%|██████▋   | 4/6 [00:09<00:04,  2.38s/it][R0] VAE:  83%|████████▎ | 5/6 [00:11<00:02,  2.35s/it][R0] VAE: 100%|██████████| 6/6 [00:14<00:00,  2.41s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:13<01:05, 13.13s/it][R0] JEPA:  33%|███▎      | 2/6 [00:26<00:52, 13.05s/it][R0] JEPA:  50%|█████     | 3/6 [00:39<00:39, 13.01s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:48<00:23, 11.77s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:02<00:12, 12.24s/it][R0] JEPA: 100%|██████████| 6/6 [01:13<00:00, 11.97s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 34] Found 8 new animodes (53 videos), 2147 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:02<00:18,  2.67s/it][R0] VAE:  25%|██▌       | 2/8 [00:06<00:18,  3.15s/it][R0] VAE:  38%|███▊      | 3/8 [00:09<00:16,  3.29s/it][R0] VAE:  50%|█████     | 4/8 [00:13<00:13,  3.49s/it][R0] VAE:  62%|██████▎   | 5/8 [00:16<00:10,  3.49s/it][R0] VAE:  75%|███████▌  | 6/8 [00:19<00:06,  3.27s/it][R0] VAE:  88%|████████▊ | 7/8 [00:22<00:03,  3.16s/it][R0] VAE: 100%|██████████| 8/8 [00:25<00:00,  3.01s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:13<01:34, 13.47s/it][R0] JEPA:  25%|██▌       | 2/8 [00:26<01:20, 13.44s/it][R0] JEPA:  38%|███▊      | 3/8 [00:40<01:06, 13.38s/it][R0] JEPA:  50%|█████     | 4/8 [00:53<00:53, 13.27s/it][R0] JEPA:  62%|██████▎   | 5/8 [00:56<00:29,  9.69s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:10<00:21, 10.94s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:23<00:11, 11.68s/it][R0] JEPA: 100%|██████████| 8/8 [01:28<00:00,  9.54s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 35] Found 6 new animodes (45 videos), 2155 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:03<00:15,  3.05s/it][R0] VAE:  33%|███▎      | 2/6 [00:06<00:12,  3.23s/it][R0] VAE:  50%|█████     | 3/6 [00:09<00:09,  3.10s/it][R0] VAE:  67%|██████▋   | 4/6 [00:13<00:06,  3.38s/it][R0] VAE:  83%|████████▎ | 5/6 [00:16<00:03,  3.43s/it][R0] VAE: 100%|██████████| 6/6 [00:20<00:00,  3.48s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:12<01:04, 12.85s/it][R0] JEPA:  33%|███▎      | 2/6 [00:25<00:51, 12.98s/it][R0] JEPA:  50%|█████     | 3/6 [00:38<00:38, 12.92s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:51<00:25, 12.86s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:04<00:12, 12.88s/it][R0] JEPA: 100%|██████████| 6/6 [01:12<00:00, 11.26s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 36] Found 6 new animodes (45 videos), 2161 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:12,  2.57s/it][R0] VAE:  33%|███▎      | 2/6 [00:04<00:09,  2.42s/it][R0] VAE:  50%|█████     | 3/6 [00:07<00:07,  2.40s/it][R0] VAE:  67%|██████▋   | 4/6 [00:09<00:04,  2.38s/it][R0] VAE:  83%|████████▎ | 5/6 [00:12<00:02,  2.39s/it][R0] VAE: 100%|██████████| 6/6 [00:14<00:00,  2.36s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:12<01:04, 12.81s/it][R0] JEPA:  33%|███▎      | 2/6 [00:25<00:51, 12.90s/it][R0] JEPA:  50%|█████     | 3/6 [00:38<00:39, 13.01s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:52<00:26, 13.07s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:05<00:13, 13.08s/it][R0] JEPA: 100%|██████████| 6/6 [01:13<00:00, 11.49s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 37] Found 6 new animodes (44 videos), 2167 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:02<00:12,  2.45s/it][R0] VAE:  33%|███▎      | 2/6 [00:04<00:09,  2.45s/it][R0] VAE:  50%|█████     | 3/6 [00:07<00:07,  2.35s/it][R0] VAE:  67%|██████▋   | 4/6 [00:09<00:04,  2.31s/it][R0] VAE:  83%|████████▎ | 5/6 [00:10<00:01,  1.88s/it][R0] VAE: 100%|██████████| 6/6 [00:13<00:00,  2.19s/it]                                                         [VAE ERROR] PhysXNet_PhysXnet/10837_senior_0: 
+[R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:12<01:04, 12.97s/it][R0] JEPA:  33%|███▎      | 2/6 [00:26<00:52, 13.06s/it][R0] JEPA:  50%|█████     | 3/6 [00:39<00:39, 13.08s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:52<00:26, 13.05s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:05<00:13, 13.07s/it][R0] JEPA: 100%|██████████| 6/6 [01:11<00:00, 10.84s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 38] Found 8 new animodes (55 videos), 2173 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:02<00:19,  2.86s/it][R0] VAE:  25%|██▌       | 2/8 [00:05<00:16,  2.83s/it][R0] VAE:  38%|███▊      | 3/8 [00:08<00:13,  2.78s/it][R0] VAE:  50%|█████     | 4/8 [00:11<00:11,  2.89s/it][R0] VAE:  62%|██████▎   | 5/8 [00:13<00:08,  2.75s/it][R0] VAE:  75%|███████▌  | 6/8 [00:16<00:05,  2.65s/it][R0] VAE:  88%|████████▊ | 7/8 [00:18<00:02,  2.61s/it][R0] VAE: 100%|██████████| 8/8 [00:21<00:00,  2.49s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:13<01:32, 13.23s/it][R0] JEPA:  25%|██▌       | 2/8 [00:26<01:19, 13.30s/it][R0] JEPA:  38%|███▊      | 3/8 [00:39<01:06, 13.34s/it][R0] JEPA:  50%|█████     | 4/8 [00:44<00:40, 10.02s/it][R0] JEPA:  62%|██████▎   | 5/8 [00:57<00:33, 11.12s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:11<00:23, 11.96s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:24<00:12, 12.40s/it][R0] JEPA: 100%|██████████| 8/8 [01:31<00:00, 10.57s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 39] Found 8 new animodes (55 videos), 2181 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:03<00:21,  3.03s/it][R0] VAE:  25%|██▌       | 2/8 [00:06<00:18,  3.06s/it][R0] VAE:  38%|███▊      | 3/8 [00:09<00:14,  2.99s/it][R0] VAE:  50%|█████     | 4/8 [00:12<00:12,  3.04s/it][R0] VAE:  62%|██████▎   | 5/8 [00:14<00:08,  2.78s/it][R0] VAE:  75%|███████▌  | 6/8 [00:16<00:05,  2.63s/it][R0] VAE:  88%|████████▊ | 7/8 [00:19<00:02,  2.59s/it][R0] VAE: 100%|██████████| 8/8 [00:21<00:00,  2.56s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:13<01:35, 13.70s/it][R0] JEPA:  25%|██▌       | 2/8 [00:27<01:22, 13.72s/it][R0] JEPA:  38%|███▊      | 3/8 [00:41<01:08, 13.67s/it][R0] JEPA:  50%|█████     | 4/8 [00:47<00:43, 10.97s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:01<00:35, 11.93s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:15<00:25, 12.56s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:29<00:12, 12.99s/it][R0] JEPA: 100%|██████████| 8/8 [01:34<00:00, 10.49s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 40] Found 4 new animodes (32 videos), 2189 already done
+[R0/1] Processing 4 animodes
+[R0] VAE:   0%|          | 0/4 [00:00<?, ?it/s][R0] VAE:  25%|██▌       | 1/4 [00:02<00:06,  2.33s/it][R0] VAE:  50%|█████     | 2/4 [00:04<00:04,  2.31s/it][R0] VAE:  75%|███████▌  | 3/4 [00:06<00:02,  2.32s/it][R0] VAE: 100%|██████████| 4/4 [00:10<00:00,  2.76s/it]                                                       [R0] JEPA:   0%|          | 0/4 [00:00<?, ?it/s][R0] JEPA:  25%|██▌       | 1/4 [00:12<00:38, 12.89s/it][R0] JEPA:  50%|█████     | 2/4 [00:25<00:25, 12.83s/it][R0] JEPA:  75%|███████▌  | 3/4 [00:38<00:12, 12.94s/it][R0] JEPA: 100%|██████████| 4/4 [00:51<00:00, 12.92s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 41] Found 8 new animodes (57 videos), 2193 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:03<00:21,  3.10s/it][R0] VAE:  25%|██▌       | 2/8 [00:06<00:18,  3.14s/it][R0] VAE:  38%|███▊      | 3/8 [00:09<00:15,  3.10s/it][R0] VAE:  50%|█████     | 4/8 [00:12<00:12,  3.20s/it][R0] VAE:  62%|██████▎   | 5/8 [00:15<00:08,  2.96s/it][R0] VAE:  75%|███████▌  | 6/8 [00:18<00:05,  2.90s/it][R0] VAE:  88%|████████▊ | 7/8 [00:20<00:02,  2.91s/it][R0] VAE: 100%|██████████| 8/8 [00:23<00:00,  2.69s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:12<01:29, 12.74s/it][R0] JEPA:  25%|██▌       | 2/8 [00:25<01:16, 12.75s/it][R0] JEPA:  38%|███▊      | 3/8 [00:38<01:04, 12.88s/it][R0] JEPA:  50%|█████     | 4/8 [00:48<00:46, 11.62s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:01<00:36, 12.08s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:14<00:24, 12.37s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:26<00:12, 12.52s/it][R0] JEPA: 100%|██████████| 8/8 [01:31<00:00, 10.09s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 42] Found 6 new animodes (41 videos), 2201 already done
+[R0/1] Processing 6 animodes
+[R0] VAE:   0%|          | 0/6 [00:00<?, ?it/s][R0] VAE:  17%|█▋        | 1/6 [00:03<00:15,  3.07s/it][R0] VAE:  33%|███▎      | 2/6 [00:06<00:12,  3.11s/it][R0] VAE:  50%|█████     | 3/6 [00:08<00:08,  2.78s/it][R0] VAE:  67%|██████▋   | 4/6 [00:10<00:05,  2.55s/it][R0] VAE:  83%|████████▎ | 5/6 [00:13<00:02,  2.54s/it][R0] VAE: 100%|██████████| 6/6 [00:15<00:00,  2.54s/it]                                                       [R0] JEPA:   0%|          | 0/6 [00:00<?, ?it/s][R0] JEPA:  17%|█▋        | 1/6 [00:13<01:06, 13.24s/it][R0] JEPA:  33%|███▎      | 2/6 [00:26<00:53, 13.27s/it][R0] JEPA:  50%|█████     | 3/6 [00:39<00:39, 13.22s/it][R0] JEPA:  67%|██████▋   | 4/6 [00:53<00:26, 13.33s/it][R0] JEPA:  83%|████████▎ | 5/6 [01:06<00:13, 13.29s/it][R0] JEPA: 100%|██████████| 6/6 [01:08<00:00,  9.33s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 43] Found 7 new animodes (50 videos), 2207 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:02<00:14,  2.49s/it][R0] VAE:  29%|██▊       | 2/7 [00:04<00:11,  2.34s/it][R0] VAE:  43%|████▎     | 3/7 [00:06<00:09,  2.26s/it][R0] VAE:  57%|█████▋    | 4/7 [00:09<00:06,  2.26s/it][R0] VAE:  71%|███████▏  | 5/7 [00:11<00:04,  2.40s/it][R0] VAE:  86%|████████▌ | 6/7 [00:14<00:02,  2.47s/it][R0] VAE: 100%|██████████| 7/7 [00:17<00:00,  2.57s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:19, 13.31s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:06, 13.35s/it][R0] JEPA:  43%|████▎     | 3/7 [00:39<00:52, 13.09s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:51<00:37, 12.50s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:02<00:24, 12.19s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:12<00:11, 11.51s/it][R0] JEPA: 100%|██████████| 7/7 [01:17<00:00,  9.20s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 44] Found 2 new animodes (12 videos), 2214 already done
+[R0/1] Processing 2 animodes
+[R0] VAE:   0%|          | 0/2 [00:00<?, ?it/s][R0] VAE:  50%|█████     | 1/2 [00:02<00:02,  2.97s/it][R0] VAE: 100%|██████████| 2/2 [00:06<00:00,  3.32s/it]                                                       [R0] JEPA:   0%|          | 0/2 [00:00<?, ?it/s][R0] JEPA:  50%|█████     | 1/2 [00:12<00:12, 12.59s/it][R0] JEPA: 100%|██████████| 2/2 [00:18<00:00,  8.94s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 46] Found 7 new animodes (51 videos), 2216 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:03<00:19,  3.28s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:14,  2.89s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.77s/it][R0] VAE:  57%|█████▋    | 4/7 [00:11<00:08,  2.75s/it][R0] VAE:  71%|███████▏  | 5/7 [00:14<00:05,  2.79s/it][R0] VAE:  86%|████████▌ | 6/7 [00:16<00:02,  2.78s/it][R0] VAE: 100%|██████████| 7/7 [00:19<00:00,  2.76s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:13<01:22, 13.73s/it][R0] JEPA:  29%|██▊       | 2/7 [00:27<01:07, 13.54s/it][R0] JEPA:  43%|████▎     | 3/7 [00:40<00:54, 13.66s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:54<00:41, 13.69s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:03<00:23, 11.96s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:17<00:12, 12.59s/it][R0] JEPA: 100%|██████████| 7/7 [01:27<00:00, 11.85s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 47] Found 7 new animodes (55 videos), 2223 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:03<00:18,  3.03s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:14,  2.83s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.86s/it][R0] VAE:  57%|█████▋    | 4/7 [00:11<00:08,  2.88s/it][R0] VAE:  71%|███████▏  | 5/7 [00:14<00:05,  2.87s/it][R0] VAE:  86%|████████▌ | 6/7 [00:17<00:02,  2.93s/it][R0] VAE: 100%|██████████| 7/7 [00:20<00:00,  2.88s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:12<01:17, 12.90s/it][R0] JEPA:  29%|██▊       | 2/7 [00:26<01:06, 13.32s/it][R0] JEPA:  43%|████▎     | 3/7 [00:40<00:53, 13.47s/it][R0] JEPA:  57%|█████▋    | 4/7 [00:52<00:38, 12.85s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:05<00:26, 13.07s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:18<00:13, 13.16s/it][R0] JEPA: 100%|██████████| 7/7 [01:32<00:00, 13.24s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 48] Found 8 new animodes (63 videos), 2230 already done
+[R0/1] Processing 8 animodes
+[R0] VAE:   0%|          | 0/8 [00:00<?, ?it/s][R0] VAE:  12%|█▎        | 1/8 [00:02<00:15,  2.20s/it][R0] VAE:  25%|██▌       | 2/8 [00:04<00:13,  2.21s/it][R0] VAE:  38%|███▊      | 3/8 [00:06<00:11,  2.32s/it][R0] VAE:  50%|█████     | 4/8 [00:09<00:09,  2.29s/it][R0] VAE:  62%|██████▎   | 5/8 [00:11<00:06,  2.26s/it][R0] VAE:  75%|███████▌  | 6/8 [00:13<00:04,  2.25s/it][R0] VAE:  88%|████████▊ | 7/8 [00:15<00:02,  2.22s/it][R0] VAE: 100%|██████████| 8/8 [00:17<00:00,  2.20s/it]                                                       [R0] JEPA:   0%|          | 0/8 [00:00<?, ?it/s][R0] JEPA:  12%|█▎        | 1/8 [00:11<01:22, 11.74s/it][R0] JEPA:  25%|██▌       | 2/8 [00:28<01:29, 14.93s/it][R0] JEPA:  38%|███▊      | 3/8 [00:46<01:20, 16.04s/it][R0] JEPA:  50%|█████     | 4/8 [01:02<01:03, 15.95s/it][R0] JEPA:  62%|██████▎   | 5/8 [01:18<00:48, 16.07s/it][R0] JEPA:  75%|███████▌  | 6/8 [01:35<00:32, 16.44s/it][R0] JEPA:  88%|████████▊ | 7/8 [01:53<00:16, 16.81s/it][R0] JEPA: 100%|██████████| 8/8 [02:10<00:00, 17.03s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 49] Found 1 new animodes (8 videos), 2238 already done
+[R0/1] Processing 1 animodes
+[R0] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R0] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.94s/it]                                                       [R0] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R0] JEPA: 100%|██████████| 1/1 [00:13<00:00, 13.67s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 50] Found 5 new animodes (33 videos), 2239 already done
+[R0/1] Processing 5 animodes
+[R0] VAE:   0%|          | 0/5 [00:00<?, ?it/s][R0] VAE:  20%|██        | 1/5 [00:03<00:12,  3.00s/it][R0] VAE:  40%|████      | 2/5 [00:06<00:09,  3.07s/it][R0] VAE:  60%|██████    | 3/5 [00:08<00:05,  2.95s/it][R0] VAE:  80%|████████  | 4/5 [00:12<00:03,  3.05s/it][R0] VAE: 100%|██████████| 5/5 [00:15<00:00,  3.22s/it]                                                       [R0] JEPA:   0%|          | 0/5 [00:00<?, ?it/s][R0] JEPA:  20%|██        | 1/5 [00:14<00:56, 14.21s/it][R0] JEPA:  40%|████      | 2/5 [00:27<00:41, 13.96s/it][R0] JEPA:  60%|██████    | 3/5 [00:41<00:27, 13.81s/it][R0] JEPA:  80%|████████  | 4/5 [00:55<00:13, 13.79s/it][R0] JEPA: 100%|██████████| 5/5 [00:57<00:00,  9.43s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 51] Found 7 new animodes (52 videos), 2244 already done
+[R0/1] Processing 7 animodes
+[R0] VAE:   0%|          | 0/7 [00:00<?, ?it/s][R0] VAE:  14%|█▍        | 1/7 [00:03<00:19,  3.30s/it][R0] VAE:  29%|██▊       | 2/7 [00:05<00:14,  2.93s/it][R0] VAE:  43%|████▎     | 3/7 [00:08<00:11,  2.79s/it][R0] VAE:  57%|█████▋    | 4/7 [00:11<00:08,  2.91s/it][R0] VAE:  71%|███████▏  | 5/7 [00:14<00:05,  2.86s/it][R0] VAE:  86%|████████▌ | 6/7 [00:17<00:02,  2.86s/it][R0] VAE: 100%|██████████| 7/7 [00:21<00:00,  3.14s/it]                                                       [R0] JEPA:   0%|          | 0/7 [00:00<?, ?it/s][R0] JEPA:  14%|█▍        | 1/7 [00:17<01:42, 17.08s/it][R0] JEPA:  29%|██▊       | 2/7 [00:34<01:25, 17.14s/it][R0] JEPA:  43%|████▎     | 3/7 [00:51<01:08, 17.01s/it][R0] JEPA:  57%|█████▋    | 4/7 [01:07<00:50, 16.92s/it][R0] JEPA:  71%|███████▏  | 5/7 [01:25<00:34, 17.03s/it][R0] JEPA:  86%|████████▌ | 6/7 [01:42<00:17, 17.13s/it][R0] JEPA: 100%|██████████| 7/7 [01:51<00:00, 14.36s/it]                                                        [Watch] Scan complete. Waiting 300s...
+
+[Iter 52] Found 21 new animodes (135 videos), 2251 already done
+[R0/1] Processing 21 animodes
+[R0] VAE:   0%|          | 0/21 [00:00<?, ?it/s][R0] VAE:   5%|▍         | 1/21 [00:03<01:18,  3.92s/it][R0] VAE:  10%|▉         | 2/21 [00:07<01:07,  3.54s/it][R0] VAE:  14%|█▍        | 3/21 [00:10<01:01,  3.39s/it][R0] VAE:  19%|█▉        | 4/21 [00:13<00:57,  3.41s/it][R0] VAE:  24%|██▍       | 5/21 [00:17<00:55,  3.44s/it][R0] VAE:  29%|██▊       | 6/21 [00:20<00:51,  3.42s/it][R0] VAE:  33%|███▎      | 7/21 [00:23<00:47,  3.36s/it][R0] VAE:  38%|███▊      | 8/21 [00:26<00:41,  3.22s/it][R0] VAE:  43%|████▎     | 9/21 [00:30<00:41,  3.46s/it][R0] VAE:  48%|████▊     | 10/21 [00:33<00:35,  3.27s/it][R0] VAE:  52%|█████▏    | 11/21 [00:37<00:33,  3.34s/it][R0] VAE:  57%|█████▋    | 12/21 [00:40<00:30,  3.40s/it][R0] VAE:  62%|██████▏   | 13/21 [00:44<00:29,  3.63s/it][R0] VAE:  67%|██████▋   | 14/21 [00:49<00:26,  3.85s/it][R0] VAE:  71%|███████▏  | 15/21 [00:53<00:23,  3.95s/it][R0] VAE:  76%|███████▌  | 16/21 [00:57<00:19,  3.92s/it][R0] VAE:  81%|████████  | 17/21 [01:02<00:17,  4.27s/it][R0] VAE:  86%|████████▌ | 18/21 [01:06<00:12,  4.30s/it][R0] VAE:  90%|█████████ | 19/21 [01:10<00:08,  4.08s/it][R0] VAE:  95%|█████████▌| 20/21 [01:13<00:03,  3.88s/it][R0] VAE: 100%|██████████| 21/21 [01:18<00:00,  4.09s/it]                                                         [R0] JEPA:   0%|          | 0/21 [00:00<?, ?it/s][R0] JEPA:   5%|▍         | 1/21 [00:16<05:37, 16.87s/it][R0] JEPA:  10%|▉         | 2/21 [00:34<05:33, 17.53s/it][R0] JEPA:  14%|█▍        | 3/21 [00:51<05:09, 17.20s/it][R0] JEPA:  19%|█▉        | 4/21 [01:10<05:02, 17.79s/it][R0] JEPA:  24%|██▍       | 5/21 [01:12<03:15, 12.20s/it][R0] JEPA:  29%|██▊       | 6/21 [01:29<03:29, 13.93s/it][R0] JEPA:  33%|███▎      | 7/21 [01:47<03:30, 15.03s/it][R0] JEPA:  38%|███▊      | 8/21 [01:49<02:22, 10.95s/it][R0] JEPA:  43%|████▎     | 9/21 [02:06<02:35, 12.97s/it][R0] JEPA:  48%|████▊     | 10/21 [02:23<02:34, 14.05s/it][R0] JEPA:  52%|█████▏    | 11/21 [02:39<02:27, 14.79s/it][R0] JEPA:  57%|█████▋    | 12/21 [02:57<02:19, 15.55s/it][R0] JEPA:  62%|██████▏   | 13/21 [03:03<01:42, 12.86s/it][R0] JEPA:  67%|██████▋   | 14/21 [03:20<01:37, 13.92s/it][R0] JEPA:  71%|███████▏  | 15/21 [03:36<01:28, 14.72s/it][R0] JEPA:  76%|███████▌  | 16/21 [03:43<01:00, 12.19s/it][R0] JEPA:  81%|████████  | 17/21 [03:59<00:54, 13.59s/it][R0] JEPA:  86%|████████▌ | 18/21 [04:16<00:43, 14.40s/it][R0] JEPA:  90%|█████████ | 19/21 [04:32<00:30, 15.01s/it][R0] JEPA:  95%|█████████▌| 20/21 [04:34<00:11, 11.13s/it][R0] JEPA: 100%|██████████| 21/21 [04:47<00:00, 11.49s/it]                                                          [Watch] Scan complete. Waiting 300s...
+
+[Iter 53] Found 29 new animodes (226 videos), 2272 already done
+[R0/1] Processing 29 animodes
+[R0] VAE:   0%|          | 0/29 [00:00<?, ?it/s][R0] VAE:   3%|▎         | 1/29 [00:04<02:06,  4.53s/it][R0] VAE:   7%|▋         | 2/29 [00:09<02:03,  4.58s/it][R0] VAE:  10%|█         | 3/29 [00:13<01:59,  4.58s/it][R0] VAE:  14%|█▍        | 4/29 [00:18<01:51,  4.47s/it][R0] VAE:  17%|█▋        | 5/29 [00:22<01:46,  4.44s/it][R0] VAE:  21%|██        | 6/29 [00:25<01:31,  3.98s/it][R0] VAE:  24%|██▍       | 7/29 [00:29<01:24,  3.84s/it][R0] VAE:  28%|██▊       | 8/29 [00:32<01:18,  3.73s/it][R0] VAE:  31%|███       | 9/29 [00:36<01:13,  3.65s/it][R0] VAE:  34%|███▍      | 10/29 [00:40<01:11,  3.77s/it][R0] VAE:  38%|███▊      | 11/29 [00:44<01:09,  3.88s/it][R0] VAE:  41%|████▏     | 12/29 [00:48<01:06,  3.91s/it][R0] VAE:  45%|████▍     | 13/29 [00:51<01:00,  3.79s/it][R0] VAE:  48%|████▊     | 14/29 [00:55<00:57,  3.82s/it][R0] VAE:  52%|█████▏    | 15/29 [00:58<00:51,  3.66s/it][R0] VAE:  55%|█████▌    | 16/29 [01:02<00:45,  3.51s/it][R0] VAE:  59%|█████▊    | 17/29 [01:05<00:40,  3.41s/it][R0] VAE:  62%|██████▏   | 18/29 [01:07<00:35,  3.19s/it][R0] VAE:  66%|██████▌   | 19/29 [01:11<00:33,  3.33s/it][R0] VAE:  69%|██████▉   | 20/29 [01:15<00:30,  3.40s/it][R0] VAE:  72%|███████▏  | 21/29 [01:19<00:30,  3.81s/it][R0] VAE:  76%|███████▌  | 22/29 [01:23<00:25,  3.70s/it][R0] VAE:  79%|███████▉  | 23/29 [01:24<00:18,  3.01s/it][R0] VAE:  83%|████████▎ | 24/29 [01:27<00:14,  2.88s/it][R0] VAE:  86%|████████▌ | 25/29 [01:30<00:12,  3.02s/it][R0] VAE:  90%|████████▉ | 26/29 [01:33<00:09,  3.03s/it][R0] VAE:  93%|█████████▎| 27/29 [01:37<00:06,  3.25s/it][R0] VAE:  97%|█████████▋| 28/29 [01:40<00:03,  3.26s/it][R0] VAE: 100%|██████████| 29/29 [01:44<00:00,  3.53s/it]                                                           [VAE ERROR] PhysXNet_PhysXnet/10909_basic_2: 
+  [VAE ERROR] PhysXNet_PhysXnet/10928_senior_0: 
+[R0] JEPA:   0%|          | 0/29 [00:00<?, ?it/s][R0] JEPA:   3%|▎         | 1/29 [00:23<10:47, 23.11s/it][R0] JEPA:   7%|▋         | 2/29 [00:43<09:39, 21.47s/it][R0] JEPA:  10%|█         | 3/29 [01:04<09:13, 21.30s/it][R0] JEPA:  14%|█▍        | 4/29 [01:24<08:39, 20.78s/it][R0] JEPA:  17%|█▋        | 5/29 [01:36<07:01, 17.58s/it][R0] JEPA:  21%|██        | 6/29 [01:54<06:51, 17.89s/it][R0] JEPA:  24%|██▍       | 7/29 [02:12<06:33, 17.89s/it][R0] JEPA:  28%|██▊       | 8/29 [02:31<06:20, 18.10s/it][R0] JEPA:  31%|███       | 9/29 [02:48<05:57, 17.87s/it][R0] JEPA:  34%|███▍      | 10/29 [03:06<05:36, 17.71s/it][R0] JEPA:  38%|███▊      | 11/29 [03:23<05:18, 17.69s/it][R0] JEPA:  41%|████▏     | 12/29 [03:43<05:10, 18.28s/it][R0] JEPA:  45%|████▍     | 13/29 [04:02<04:55, 18.47s/it][R0] JEPA:  48%|████▊     | 14/29 [04:22<04:44, 18.97s/it][R0] JEPA:  52%|█████▏    | 15/29 [04:41<04:26, 19.04s/it][R0] JEPA:  55%|█████▌    | 16/29 [05:01<04:09, 19.19s/it][R0] JEPA:  59%|█████▊    | 17/29 [05:19<03:48, 19.06s/it][R0] JEPA:  62%|██████▏   | 18/29 [05:38<03:27, 18.89s/it][R0] JEPA:  66%|██████▌   | 19/29 [05:58<03:11, 19.13s/it][R0] JEPA:  69%|██████▉   | 20/29 [06:16<02:49, 18.85s/it][R0] JEPA:  72%|███████▏  | 21/29 [06:33<02:28, 18.50s/it][R0] JEPA:  76%|███████▌  | 22/29 [06:51<02:08, 18.31s/it][R0] JEPA:  79%|███████▉  | 23/29 [07:09<01:48, 18.11s/it][R0] JEPA:  83%|████████▎ | 24/29 [07:27<01:30, 18.11s/it][R0] JEPA:  86%|████████▌ | 25/29 [07:45<01:11, 17.98s/it][R0] JEPA:  90%|████████▉ | 26/29 [08:03<00:54, 18.03s/it][R0] JEPA:  93%|█████████▎| 27/29 [08:20<00:35, 17.76s/it][R0] JEPA:  97%|█████████▋| 28/29 [08:37<00:17, 17.62s/it][R0] JEPA: 100%|██████████| 29/29 [08:48<00:00, 15.49s/it]                                                          [Watch] Scan complete. Waiting 300s...
+
+[Iter 54] Found 47 new animodes (347 videos), 2301 already done
+[R0/1] Processing 47 animodes
+[R0] VAE:   0%|          | 0/47 [00:00<?, ?it/s][R0] VAE:   2%|▏         | 1/47 [00:03<02:18,  3.02s/it][R0] VAE:   4%|▍         | 2/47 [00:06<02:29,  3.33s/it][R0] VAE:   6%|▋         | 3/47 [00:09<02:25,  3.31s/it][R0] VAE:   9%|▊         | 4/47 [00:12<02:09,  3.01s/it][R0] VAE:  11%|█         | 5/47 [00:15<02:01,  2.89s/it][R0] VAE:  13%|█▎        | 6/47 [00:18<01:59,  2.90s/it][R0] VAE:  15%|█▍        | 7/47 [00:20<01:52,  2.81s/it][R0] VAE:  17%|█▋        | 8/47 [00:23<01:50,  2.84s/it][R0] VAE:  19%|█▉        | 9/47 [00:26<01:46,  2.81s/it][R0] VAE:  21%|██▏       | 10/47 [00:29<01:45,  2.85s/it][R0] VAE:  23%|██▎       | 11/47 [00:42<03:38,  6.06s/it][R0] VAE:  26%|██▌       | 12/47 [00:46<03:06,  5.32s/it][R0] VAE:  28%|██▊       | 13/47 [00:49<02:38,  4.66s/it][R0] VAE:  30%|██▉       | 14/47 [00:52<02:17,  4.17s/it][R0] VAE:  32%|███▏      | 15/47 [00:55<02:05,  3.93s/it][R0] VAE:  34%|███▍      | 16/47 [00:58<01:53,  3.65s/it][R0] VAE:  36%|███▌      | 17/47 [01:01<01:41,  3.38s/it][R0] VAE:  38%|███▊      | 18/47 [01:04<01:30,  3.13s/it][R0] VAE:  40%|████      | 19/47 [01:06<01:23,  3.00s/it][R0] VAE:  43%|████▎     | 20/47 [01:11<01:33,  3.45s/it][R0] VAE:  45%|████▍     | 21/47 [01:15<01:39,  3.84s/it][R0] VAE:  47%|████▋     | 22/47 [01:20<01:40,  4.00s/it][R0] VAE:  49%|████▉     | 23/47 [01:23<01:26,  3.61s/it][R0] VAE:  51%|█████     | 24/47 [01:25<01:16,  3.33s/it][R0] VAE:  53%|█████▎    | 25/47 [01:28<01:08,  3.10s/it][R0] VAE:  55%|█████▌    | 26/47 [01:30<01:02,  2.97s/it][R0] VAE:  57%|█████▋    | 27/47 [01:33<00:57,  2.88s/it][R0] VAE:  60%|█████▉    | 28/47 [01:36<00:52,  2.76s/it][R0] VAE:  62%|██████▏   | 29/47 [01:39<00:50,  2.82s/it][R0] VAE:  64%|██████▍   | 30/47 [01:41<00:48,  2.83s/it][R0] VAE:  66%|██████▌   | 31/47 [01:44<00:45,  2.87s/it][R0] VAE:  68%|██████▊   | 32/47 [01:47<00:43,  2.90s/it][R0] VAE:  70%|███████   | 33/47 [01:51<00:41,  2.98s/it][R0] VAE:  72%|███████▏  | 34/47 [01:54<00:39,  3.05s/it][R0] VAE:  74%|███████▍  | 35/47 [01:57<00:37,  3.15s/it][R0] VAE:  77%|███████▋  | 36/47 [02:00<00:32,  2.99s/it][R0] VAE:  79%|███████▊  | 37/47 [02:02<00:29,  2.91s/it][R0] VAE:  81%|████████  | 38/47 [02:05<00:25,  2.85s/it][R0] VAE:  83%|████████▎ | 39/47 [02:08<00:22,  2.79s/it][R0] VAE:  85%|████████▌ | 40/47 [02:11<00:19,  2.76s/it][R0] VAE:  87%|████████▋ | 41/47 [02:13<00:16,  2.79s/it][R0] VAE:  89%|████████▉ | 42/47 [02:16<00:13,  2.70s/it][R0] VAE:  91%|█████████▏| 43/47 [02:18<00:10,  2.65s/it][R0] VAE:  94%|█████████▎| 44/47 [02:21<00:08,  2.71s/it][R0] VAE:  96%|█████████▌| 45/47 [02:25<00:06,  3.02s/it][R0] VAE:  98%|█████████▊| 46/47 [02:29<00:03,  3.31s/it][R0] VAE: 100%|██████████| 47/47 [02:32<00:00,  3.19s/it]                                                           [VAE ERROR] PhysXNet_PhysXnet/10951_basic_2: 
+[R0] JEPA:   0%|          | 0/47 [00:00<?, ?it/s][R0] JEPA:   2%|▏         | 1/47 [00:15<12:14, 15.97s/it][R0] JEPA:   4%|▍         | 2/47 [00:32<12:02, 16.05s/it][R0] JEPA:   6%|▋         | 3/47 [00:43<10:20, 14.11s/it][R0] JEPA:   9%|▊         | 4/47 [00:59<10:34, 14.76s/it][R0] JEPA:  11%|█         | 5/47 [01:15<10:34, 15.11s/it][R0] JEPA:  13%|█▎        | 6/47 [01:31<10:31, 15.41s/it][R0] JEPA:  15%|█▍        | 7/47 [01:47<10:23, 15.58s/it][R0] JEPA:  17%|█▋        | 8/47 [02:03<10:10, 15.65s/it][R0] JEPA:  19%|█▉        | 9/47 [02:19<09:58, 15.75s/it][R0] JEPA:  21%|██▏       | 10/47 [02:34<09:44, 15.80s/it][R0] JEPA:  23%|██▎       | 11/47 [02:51<09:32, 15.90s/it]

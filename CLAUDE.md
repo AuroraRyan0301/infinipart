@@ -134,8 +134,29 @@ Each animode defines ONE active joint (basic) or a set of active joints (senior)
 
 ## Environment
 - Conda env: `infinigen-sim` (has infinigen installed from this repo)
-- Blender: `/mnt/data/yurh/blender-4.2.18-linux-x64/blender`
-- GPU: 4x L20X (143GB each)
+- Conda env: `trellis2` (for SLat model training/inference, on `/mnt/cpfs/yurh/miniconda3/envs/trellis2/`)
+- Conda env: `partpacker_wan` (for PartPacker VAE encoding)
+- Blender: `/mnt/cpfs/yurh/blender-4.2.18-linux-x64/blender`
+- GPU: 4x L20X (H200, 143GB each)
+- TRELLIS 2 weights: `/mnt/cpfs/yurh/TRELLIS.2-4B/` (**NOT** `/mnt/data/yurh/`)
+
+## Data Paths (unified)
+All pipeline data is under `/mnt/data_ssd/infinigen-sim-data/`:
+- `precompute/{cat}/{seed}/{animode}/` — part0/1.obj + verify.png + mp4 videos + metadata.json
+- `encoded/{cat}/{seed}_{animode}/` — gt_latent.pt (PartPacker VAE) + views/*_jepa.pt (VJEPA2)
+- `slat_gt/{cat}/{seed}_{animode}.pt` — SLat encoder cache (p0_lr/p0_hr/p1_lr/p1_hr)
+- `vae_coords/{cat}/{seed}_{animode}.pt` — VAE occupancy grid coords
+- `checkpoints/` — training checkpoints
+- `manifest.json` — dataset manifest
+
+**DO NOT** put data files in the repo directory. Use `/mnt/data_ssd/infinigen-sim-data/` for all data.
+
+## Logs
+All logs go to `logs/` subdirectory in the repo root. Do not create loose .txt/.log/.json files in repo root.
+- Training logs: `logs/train_*.txt`
+- Eval results: `logs/eval_*.json`
+- Render logs: `logs/render_*.txt`
+- Encode logs: `logs/encode_*.txt`
 
 ---
 

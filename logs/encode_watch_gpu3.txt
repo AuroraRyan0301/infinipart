@@ -1,0 +1,2164 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+
+============================================================
+Loading VAE model...
+============================================================
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+[VAE] Loaded from /mnt/data/yurh/PartPacker/pretrained/vae.pt
+
+============================================================
+Loading V-JEPA2 model...
+============================================================
+[VJEPA2] Loaded ViT-g: 1012M params, 81 frames -> 10240 tokens
+
+[Iter 1] Found 2 new animodes (5 videos), 381 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.50s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s]/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+[R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.32s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 4] Found 1 new animodes (5 videos), 383 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 5] Found 1 new animodes (5 videos), 384 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 6] Found 1 new animodes (4 videos), 385 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 7] Found 1 new animodes (4 videos), 386 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 8] Found 1 new animodes (4 videos), 387 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 388 completed. Waiting 120s...
+
+[Iter 11] Found 1 new animodes (3 videos), 388 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 13] Found 1 new animodes (4 videos), 389 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 14] Found 1 new animodes (6 videos), 390 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 15] Found 2 new animodes (4 videos), 391 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.72s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 17] Found 1 new animodes (3 videos), 393 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 18] Found 1 new animodes (6 videos), 394 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 19] Found 1 new animodes (3 videos), 395 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 396 completed. Waiting 120s...
+
+[Iter 24] Found 1 new animodes (6 videos), 396 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 25] Found 1 new animodes (5 videos), 397 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 26] Found 1 new animodes (8 videos), 398 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 27] Found 1 new animodes (4 videos), 399 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 28] Found 1 new animodes (7 videos), 400 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 29] Found 1 new animodes (4 videos), 401 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 30] Found 1 new animodes (4 videos), 402 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 31] Found 1 new animodes (3 videos), 403 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 32] Found 1 new animodes (3 videos), 404 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 33] Found 1 new animodes (2 videos), 405 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 37] Found 1 new animodes (3 videos), 406 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 39] Found 2 new animodes (9 videos), 407 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.91s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 40] Found 1 new animodes (1 videos), 409 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 41] Found 1 new animodes (2 videos), 410 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 43] Found 2 new animodes (8 videos), 411 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:01<00:00,  1.89s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.72s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 44] Found 1 new animodes (1 videos), 413 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 45] Found 1 new animodes (2 videos), 414 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 47] Found 1 new animodes (7 videos), 415 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 416 completed. Waiting 120s...
+
+[Iter 51] Found 1 new animodes (6 videos), 416 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 53] Found 1 new animodes (5 videos), 417 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 55] Found 1 new animodes (4 videos), 418 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 59] Found 1 new animodes (3 videos), 419 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 60] Found 1 new animodes (3 videos), 420 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 61] Found 2 new animodes (6 videos), 421 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.40s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.81s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 62] Found 1 new animodes (3 videos), 423 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 63] Found 1 new animodes (4 videos), 424 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 64] Found 1 new animodes (3 videos), 425 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 65] Found 2 new animodes (4 videos), 426 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.50s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.58s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 67] Found 2 new animodes (3 videos), 428 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.31s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.61s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 69] Found 1 new animodes (1 videos), 430 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 431 completed. Waiting 120s...
+
+[Iter 71] Found 1 new animodes (2 videos), 431 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 72] Found 1 new animodes (4 videos), 432 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 73] Found 2 new animodes (8 videos), 433 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.36s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.64s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 74] Found 1 new animodes (3 videos), 435 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 75] Found 1 new animodes (3 videos), 436 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 76] Found 2 new animodes (4 videos), 437 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.36s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.22s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 77] Found 1 new animodes (2 videos), 439 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 78] Found 1 new animodes (1 videos), 440 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 79] Found 2 new animodes (6 videos), 441 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.33s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.68s/it]                                                        [Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 443 completed. Waiting 120s...
+
+[Iter 81] Found 2 new animodes (10 videos), 443 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.50s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 84] Found 1 new animodes (6 videos), 445 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 85] Found 1 new animodes (5 videos), 446 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 86] Found 1 new animodes (5 videos), 447 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 88] Found 2 new animodes (8 videos), 448 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.70s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 90] Found 1 new animodes (7 videos), 450 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 96] Found 1 new animodes (6 videos), 451 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 97] Found 1 new animodes (2 videos), 452 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 98] Found 2 new animodes (10 videos), 453 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.32s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 99] Found 2 new animodes (4 videos), 455 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:01<00:00,  1.91s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.35s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 100] Found 1 new animodes (2 videos), 457 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 101] Found 1 new animodes (1 videos), 458 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 102] Found 2 new animodes (2 videos), 459 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 103] Found 1 new animodes (1 videos), 461 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 104] Found 1 new animodes (1 videos), 462 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 106] Found 2 new animodes (4 videos), 463 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.17s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 107] Found 1 new animodes (3 videos), 465 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 108] Found 2 new animodes (5 videos), 466 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 109] Found 1 new animodes (2 videos), 468 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 110] Found 2 new animodes (4 videos), 469 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.26s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 111] Found 1 new animodes (2 videos), 471 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 112] Found 2 new animodes (5 videos), 472 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:01<00:00,  1.88s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 114] Found 1 new animodes (4 videos), 474 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 116] Found 2 new animodes (11 videos), 475 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 117] Found 1 new animodes (7 videos), 477 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 118] Found 2 new animodes (12 videos), 478 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.85s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 119] Found 1 new animodes (6 videos), 480 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 120] Found 2 new animodes (13 videos), 481 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.61s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 121] Found 2 new animodes (7 videos), 483 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.26s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:10<00:00, 10.03s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 122] Found 1 new animodes (6 videos), 485 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 123] Found 2 new animodes (7 videos), 486 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.03s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.07s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 124] Found 1 new animodes (5 videos), 488 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 125] Found 2 new animodes (8 videos), 489 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.61s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 126] Found 1 new animodes (4 videos), 491 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 127] Found 2 new animodes (10 videos), 492 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.91s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 128] Found 2 new animodes (4 videos), 494 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.44s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 129] Found 2 new animodes (10 videos), 496 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.75s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 130] Found 2 new animodes (5 videos), 498 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.04s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.91s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 131] Found 1 new animodes (3 videos), 500 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 132] Found 2 new animodes (6 videos), 501 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.01s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 134] Found 1 new animodes (5 videos), 503 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 135] Found 1 new animodes (5 videos), 504 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 136] Found 1 new animodes (6 videos), 505 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 137] Found 2 new animodes (8 videos), 506 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.48s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 139] Found 2 new animodes (7 videos), 508 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.91s/it]                                                        [Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 510 completed. Waiting 120s...
+
+[Iter 141] Found 2 new animodes (10 videos), 510 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.05s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.81s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 143] Found 2 new animodes (12 videos), 512 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.81s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 144] Found 2 new animodes (7 videos), 514 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.27s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 145] Found 1 new animodes (5 videos), 516 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 146] Found 2 new animodes (6 videos), 517 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.17s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.55s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 147] Found 1 new animodes (4 videos), 519 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 148] Found 2 new animodes (6 videos), 520 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:05<00:00,  5.05s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 149] Found 2 new animodes (5 videos), 522 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.94s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 150] Found 2 new animodes (5 videos), 524 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.04s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:05<00:00,  5.02s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 151] Found 2 new animodes (4 videos), 526 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.84s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 152] Found 2 new animodes (3 videos), 528 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s]                                                [Watch] Scan complete. Waiting 120s...
+
+[Iter 153] Found 1 new animodes (2 videos), 530 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 154] Found 2 new animodes (8 videos), 531 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.27s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.67s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 155] Found 1 new animodes (6 videos), 533 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 156] Found 1 new animodes (5 videos), 534 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 157] Found 1 new animodes (7 videos), 535 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 158] Found 1 new animodes (7 videos), 536 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 159] Found 2 new animodes (12 videos), 537 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:01<00:00,  1.96s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.68s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 160] Found 1 new animodes (6 videos), 539 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 161] Found 2 new animodes (7 videos), 540 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.27s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 162] Found 1 new animodes (5 videos), 542 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 163] Found 2 new animodes (9 videos), 543 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.08s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 164] Found 1 new animodes (4 videos), 545 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 165] Found 2 new animodes (10 videos), 546 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.20s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 166] Found 1 new animodes (3 videos), 548 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 168] Found 1 new animodes (6 videos), 549 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 169] Found 1 new animodes (5 videos), 550 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 170] Found 2 new animodes (8 videos), 551 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.03s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.67s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 171] Found 1 new animodes (4 videos), 553 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 172] Found 2 new animodes (8 videos), 554 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.34s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 173] Found 1 new animodes (3 videos), 556 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 174] Found 2 new animodes (9 videos), 557 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.17s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 175] Found 1 new animodes (3 videos), 559 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 177] Found 2 new animodes (4 videos), 560 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.34s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 178] Found 1 new animodes (2 videos), 562 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 179] Found 1 new animodes (1 videos), 563 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 180] Found 1 new animodes (1 videos), 564 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 181] Found 1 new animodes (3 videos), 565 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 182] Found 1 new animodes (7 videos), 566 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 183] Found 2 new animodes (11 videos), 567 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.34s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.56s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 184] Found 1 new animodes (6 videos), 569 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 185] Found 1 new animodes (5 videos), 570 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 187] Found 1 new animodes (6 videos), 571 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 188] Found 2 new animodes (7 videos), 572 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.62s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 189] Found 1 new animodes (5 videos), 574 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 190] Found 2 new animodes (8 videos), 575 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.79s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 191] Found 1 new animodes (4 videos), 577 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 192] Found 2 new animodes (7 videos), 578 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.27s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.86s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 193] Found 1 new animodes (3 videos), 580 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 194] Found 1 new animodes (5 videos), 581 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 196] Found 1 new animodes (3 videos), 582 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 197] Found 1 new animodes (5 videos), 583 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 198] Found 2 new animodes (7 videos), 584 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.31s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 199] Found 1 new animodes (5 videos), 586 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 200] Found 1 new animodes (4 videos), 587 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 201] Found 2 new animodes (8 videos), 588 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.26s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.16s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 202] Found 1 new animodes (3 videos), 590 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 203] Found 2 new animodes (8 videos), 591 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.79s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 205] Found 1 new animodes (5 videos), 593 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 206] Found 1 new animodes (3 videos), 594 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 207] Found 2 new animodes (9 videos), 595 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.29s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 208] Found 1 new animodes (2 videos), 597 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 209] Found 1 new animodes (7 videos), 598 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 599 completed. Waiting 120s...
+
+[Iter 211] Found 1 new animodes (2 videos), 599 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 212] Found 2 new animodes (5 videos), 600 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.93s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 213] Found 1 new animodes (2 videos), 602 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 214] Found 1 new animodes (1 videos), 603 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 215] Found 1 new animodes (2 videos), 604 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 216] Found 2 new animodes (2 videos), 605 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.65s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 217] Found 1 new animodes (1 videos), 607 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 219] Found 2 new animodes (13 videos), 608 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.31s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 220] Found 1 new animodes (7 videos), 610 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 221] Found 2 new animodes (11 videos), 611 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.15s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.93s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 222] Found 1 new animodes (6 videos), 613 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 223] Found 1 new animodes (5 videos), 614 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 224] Found 1 new animodes (4 videos), 615 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 225] Found 2 new animodes (6 videos), 616 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.93s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 228] Found 1 new animodes (7 videos), 618 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 229] Found 1 new animodes (6 videos), 619 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 230] Found 1 new animodes (6 videos), 620 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 232] Found 1 new animodes (3 videos), 621 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 233] Found 1 new animodes (6 videos), 622 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 235] Found 2 new animodes (7 videos), 623 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.23s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 236] Found 1 new animodes (2 videos), 625 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 238] Found 1 new animodes (3 videos), 626 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 240] Found 1 new animodes (3 videos), 627 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 242] Found 1 new animodes (2 videos), 628 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 244] Found 1 new animodes (2 videos), 629 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 246] Found 1 new animodes (1 videos), 630 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 247] Found 1 new animodes (6 videos), 631 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 248] Found 1 new animodes (4 videos), 632 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 249] Found 1 new animodes (6 videos), 633 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 250] Found 2 new animodes (7 videos), 634 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.44s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 252] Found 2 new animodes (9 videos), 636 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:10<00:00, 10.07s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 253] Found 1 new animodes (1 videos), 638 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 254] Found 1 new animodes (5 videos), 639 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 255] Found 1 new animodes (2 videos), 640 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 256] Found 1 new animodes (4 videos), 641 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 258] Found 2 new animodes (10 videos), 642 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:05<00:00,  5.13s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 259] Found 1 new animodes (1 videos), 644 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 645 completed. Waiting 120s...
+
+[Iter 261] Found 2 new animodes (4 videos), 645 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.74s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 263] Found 1 new animodes (3 videos), 647 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 265] Found 1 new animodes (3 videos), 648 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 267] Found 1 new animodes (3 videos), 649 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 269] Found 2 new animodes (5 videos), 650 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.37s/it]                                                        [Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 652 completed. Waiting 120s...
+
+[Iter 271] Found 1 new animodes (3 videos), 652 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 273] Found 2 new animodes (6 videos), 653 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:05<00:00,  5.05s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 275] Found 2 new animodes (3 videos), 655 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.74s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 277] Found 2 new animodes (3 videos), 657 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.60s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 279] Found 2 new animodes (3 videos), 659 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.15s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 661 completed. Waiting 120s...
+
+[Iter 281] Found 1 new animodes (3 videos), 661 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 282] Found 1 new animodes (7 videos), 662 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 283] Found 2 new animodes (4 videos), 663 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.84s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 285] Found 1 new animodes (6 videos), 665 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 286] Found 1 new animodes (7 videos), 666 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 287] Found 1 new animodes (4 videos), 667 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 288] Found 1 new animodes (6 videos), 668 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 289] Found 2 new animodes (7 videos), 669 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.05s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.24s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 290] Found 1 new animodes (7 videos), 671 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 291] Found 1 new animodes (5 videos), 672 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 292] Found 1 new animodes (5 videos), 673 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 293] Found 1 new animodes (4 videos), 674 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 295] Found 2 new animodes (9 videos), 675 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:01<00:00,  1.80s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.88s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 297] Found 2 new animodes (9 videos), 677 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.27s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.32s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 299] Found 2 new animodes (3 videos), 679 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.67s/it]                                                        [Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 681 completed. Waiting 120s...
+
+[Iter 301] Found 2 new animodes (7 videos), 681 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.03s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:05<00:00,  5.12s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 303] Found 2 new animodes (6 videos), 683 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.23s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 305] Found 1 new animodes (1 videos), 685 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 306] Found 1 new animodes (2 videos), 686 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 307] Found 1 new animodes (5 videos), 687 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 308] Found 1 new animodes (7 videos), 688 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 309] Found 2 new animodes (12 videos), 689 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.72s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 310] Found 1 new animodes (6 videos), 691 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 311] Found 2 new animodes (13 videos), 692 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.65s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 312] Found 2 new animodes (8 videos), 694 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 313] Found 1 new animodes (6 videos), 696 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 314] Found 2 new animodes (8 videos), 697 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.34s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 315] Found 1 new animodes (5 videos), 699 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 316] Found 2 new animodes (8 videos), 700 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.57s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 317] Found 1 new animodes (4 videos), 702 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 318] Found 2 new animodes (5 videos), 703 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.93s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 319] Found 1 new animodes (3 videos), 705 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 320] Found 2 new animodes (4 videos), 706 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.30s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 321] Found 2 new animodes (3 videos), 708 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.57s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 322] Found 1 new animodes (1 videos), 710 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 323] Found 1 new animodes (3 videos), 711 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 324] Found 1 new animodes (7 videos), 712 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 325] Found 2 new animodes (10 videos), 713 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.77s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 326] Found 1 new animodes (7 videos), 715 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 327] Found 2 new animodes (12 videos), 716 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.65s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 328] Found 1 new animodes (6 videos), 718 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 329] Found 1 new animodes (5 videos), 719 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 330] Found 1 new animodes (5 videos), 720 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 331] Found 2 new animodes (10 videos), 721 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.38s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.94s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 332] Found 2 new animodes (5 videos), 723 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.62s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 333] Found 1 new animodes (4 videos), 725 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 334] Found 2 new animodes (4 videos), 726 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.10s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.60s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 335] Found 1 new animodes (2 videos), 728 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 336] Found 1 new animodes (1 videos), 729 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 337] Found 1 new animodes (7 videos), 730 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 338] Found 1 new animodes (8 videos), 731 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 339] Found 2 new animodes (14 videos), 732 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.49s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 340] Found 2 new animodes (10 videos), 734 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.14s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 341] Found 1 new animodes (7 videos), 736 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 342] Found 2 new animodes (11 videos), 737 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.11s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.59s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 343] Found 1 new animodes (7 videos), 739 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 344] Found 2 new animodes (10 videos), 740 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.56s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 345] Found 2 new animodes (9 videos), 742 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.15s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.91s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 346] Found 1 new animodes (6 videos), 744 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 347] Found 2 new animodes (8 videos), 745 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.23s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.93s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 348] Found 1 new animodes (5 videos), 747 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 349] Found 3 new animodes (8 videos), 748 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.59s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 350] Found 1 new animodes (3 videos), 751 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 351] Found 2 new animodes (5 videos), 752 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.10s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.97s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 352] Found 1 new animodes (3 videos), 754 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 353] Found 2 new animodes (4 videos), 755 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.60s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 354] Found 1 new animodes (2 videos), 757 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 355] Found 1 new animodes (1 videos), 758 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 357] Found 1 new animodes (8 videos), 759 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 358] Found 2 new animodes (12 videos), 760 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.43s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 360] Found 1 new animodes (5 videos), 762 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 361] Found 1 new animodes (4 videos), 763 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 362] Found 2 new animodes (10 videos), 764 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.94s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 363] Found 1 new animodes (3 videos), 766 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 364] Found 2 new animodes (10 videos), 767 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.94s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 365] Found 1 new animodes (2 videos), 769 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 366] Found 2 new animodes (10 videos), 770 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.47s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.30s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 367] Found 1 new animodes (2 videos), 772 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 368] Found 1 new animodes (1 videos), 773 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 370] Found 1 new animodes (8 videos), 774 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 371] Found 2 new animodes (13 videos), 775 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.42s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 372] Found 2 new animodes (14 videos), 777 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.17s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 373] Found 2 new animodes (15 videos), 779 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.73s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 374] Found 2 new animodes (15 videos), 781 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.26s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.42s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 375] Found 3 new animodes (15 videos), 783 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.61s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 377] Found 1 new animodes (8 videos), 786 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 378] Found 2 new animodes (6 videos), 787 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.02s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.22s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 379] Found 1 new animodes (5 videos), 789 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 380] Found 1 new animodes (4 videos), 790 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 381] Found 1 new animodes (3 videos), 791 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 382] Found 2 new animodes (9 videos), 792 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.04s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.45s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 383] Found 2 new animodes (4 videos), 794 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.27s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.60s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 385] Found 1 new animodes (4 videos), 796 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 386] Found 1 new animodes (4 videos), 797 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 387] Found 2 new animodes (10 videos), 798 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.32s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.92s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 388] Found 2 new animodes (6 videos), 800 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.26s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.33s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 389] Found 1 new animodes (4 videos), 802 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 390] Found 2 new animodes (7 videos), 803 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.61s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 391] Found 1 new animodes (3 videos), 805 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 394] Found 2 new animodes (13 videos), 806 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.07s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.29s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 395] Found 1 new animodes (8 videos), 808 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 396] Found 2 new animodes (14 videos), 809 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.30s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.29s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 397] Found 2 new animodes (8 videos), 811 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.69s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 398] Found 1 new animodes (7 videos), 813 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 399] Found 1 new animodes (6 videos), 814 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 400] Found 1 new animodes (3 videos), 815 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 401] Found 1 new animodes (2 videos), 816 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 402] Found 2 new animodes (4 videos), 817 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.10s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.30s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 403] Found 1 new animodes (2 videos), 819 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 404] Found 2 new animodes (9 videos), 820 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.30s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 405] Found 2 new animodes (7 videos), 822 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.23s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.18s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 406] Found 1 new animodes (2 videos), 824 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 407] Found 1 new animodes (3 videos), 825 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 409] Found 2 new animodes (11 videos), 826 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.15s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.96s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 410] Found 2 new animodes (2 videos), 828 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 412] Found 2 new animodes (8 videos), 830 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.02s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.76s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 413] Found 1 new animodes (6 videos), 832 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 414] Found 2 new animodes (9 videos), 833 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.10s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.71s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 415] Found 1 new animodes (6 videos), 835 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 416] Found 2 new animodes (11 videos), 836 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.26s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 417] Found 1 new animodes (5 videos), 838 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 418] Found 2 new animodes (12 videos), 839 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.03s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 419] Found 1 new animodes (5 videos), 841 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 420] Found 1 new animodes (4 videos), 842 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 421] Found 2 new animodes (5 videos), 843 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.01s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.67s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 422] Found 1 new animodes (3 videos), 845 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 423] Found 1 new animodes (3 videos), 846 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 424] Found 2 new animodes (6 videos), 847 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.26s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.51s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 425] Found 2 new animodes (4 videos), 849 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.90s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 426] Found 2 new animodes (11 videos), 851 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.59s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 427] Found 1 new animodes (2 videos), 853 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 428] Found 1 new animodes (8 videos), 854 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 429] Found 1 new animodes (7 videos), 855 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 430] Found 2 new animodes (13 videos), 856 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.07s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.40s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 431] Found 1 new animodes (6 videos), 858 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 432] Found 2 new animodes (12 videos), 859 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.69s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 433] Found 2 new animodes (7 videos), 861 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.27s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 434] Found 1 new animodes (4 videos), 863 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 435] Found 2 new animodes (6 videos), 864 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.92s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 436] Found 1 new animodes (3 videos), 866 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 437] Found 2 new animodes (7 videos), 867 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.27s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 438] Found 1 new animodes (6 videos), 869 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 439] Found 2 new animodes (10 videos), 870 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.37s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 440] Found 2 new animodes (10 videos), 872 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.03s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 441] Found 1 new animodes (5 videos), 874 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 442] Found 2 new animodes (7 videos), 875 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.17s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.79s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 443] Found 2 new animodes (7 videos), 877 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.15s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.77s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 444] Found 2 new animodes (6 videos), 879 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.87s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 445] Found 2 new animodes (6 videos), 881 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.95s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 446] Found 2 new animodes (6 videos), 883 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.84s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 447] Found 2 new animodes (5 videos), 885 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:01<00:00,  1.91s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.89s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 448] Found 2 new animodes (5 videos), 887 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.17s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.89s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 449] Found 2 new animodes (4 videos), 889 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.95s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 450] Found 2 new animodes (4 videos), 891 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.80s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 451] Found 1 new animodes (2 videos), 893 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 453] Found 2 new animodes (4 videos), 894 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.68s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 454] Found 1 new animodes (1 videos), 896 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 455] Found 1 new animodes (5 videos), 897 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 456] Found 1 new animodes (8 videos), 898 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 457] Found 2 new animodes (12 videos), 899 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.86s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 458] Found 1 new animodes (7 videos), 901 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 459] Found 2 new animodes (13 videos), 902 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.00s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.13s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 460] Found 1 new animodes (7 videos), 904 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 461] Found 2 new animodes (12 videos), 905 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.07s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.76s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 462] Found 2 new animodes (8 videos), 907 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.70s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 463] Found 1 new animodes (7 videos), 909 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 464] Found 2 new animodes (7 videos), 910 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:10<00:00, 10.13s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 465] Found 2 new animodes (9 videos), 912 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.07s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:10<00:00, 10.11s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 466] Found 2 new animodes (7 videos), 914 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.35s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.66s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 468] Found 2 new animodes (11 videos), 916 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.29s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.39s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 469] Found 1 new animodes (4 videos), 918 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 470] Found 2 new animodes (2 videos), 919 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.11s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.72s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 472] Found 1 new animodes (6 videos), 921 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 473] Found 2 new animodes (10 videos), 922 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.07s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.70s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 474] Found 1 new animodes (6 videos), 924 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 475] Found 2 new animodes (10 videos), 925 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.05s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.28s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 477] Found 1 new animodes (7 videos), 927 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 478] Found 2 new animodes (12 videos), 928 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.29s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.81s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 479] Found 1 new animodes (6 videos), 930 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 480] Found 1 new animodes (2 videos), 931 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 481] Found 1 new animodes (7 videos), 932 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 482] Found 1 new animodes (5 videos), 933 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 483] Found 1 new animodes (2 videos), 934 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 484] Found 1 new animodes (6 videos), 935 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 485] Found 1 new animodes (7 videos), 936 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 486] Found 2 new animodes (13 videos), 937 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.18s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.18s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 487] Found 2 new animodes (8 videos), 939 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.58s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 488] Found 1 new animodes (1 videos), 941 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 489] Found 1 new animodes (7 videos), 942 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 490] Found 2 new animodes (8 videos), 943 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 492] Found 1 new animodes (8 videos), 945 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 493] Found 2 new animodes (12 videos), 946 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.85s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 494] Found 2 new animodes (10 videos), 948 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.23s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.56s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 495] Found 2 new animodes (9 videos), 950 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.93s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 496] Found 1 new animodes (2 videos), 952 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 497] Found 1 new animodes (7 videos), 953 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 498] Found 2 new animodes (13 videos), 954 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.43s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:10<00:00, 10.18s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 499] Found 2 new animodes (12 videos), 956 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.45s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 500] Found 2 new animodes (11 videos), 958 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.30s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 501] Found 2 new animodes (9 videos), 960 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 502] Found 2 new animodes (7 videos), 962 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.85s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 503] Found 2 new animodes (5 videos), 964 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.26s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.35s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 504] Found 2 new animodes (3 videos), 966 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.62s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 505] Found 1 new animodes (1 videos), 968 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 506] Found 1 new animodes (7 videos), 969 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 507] Found 2 new animodes (13 videos), 970 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.11s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.90s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 508] Found 2 new animodes (6 videos), 972 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.04s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.70s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 509] Found 1 new animodes (4 videos), 974 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 510] Found 2 new animodes (4 videos), 975 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.86s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 511] Found 1 new animodes (3 videos), 977 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 512] Found 2 new animodes (3 videos), 978 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.32s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 513] Found 1 new animodes (2 videos), 980 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 514] Found 2 new animodes (3 videos), 981 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.60s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 515] Found 1 new animodes (1 videos), 983 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 516] Found 1 new animodes (1 videos), 984 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 517] Found 1 new animodes (7 videos), 985 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 518] Found 1 new animodes (7 videos), 986 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 519] Found 1 new animodes (6 videos), 987 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 520] Found 1 new animodes (5 videos), 988 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 521] Found 1 new animodes (4 videos), 989 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 522] Found 2 new animodes (9 videos), 990 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.40s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 523] Found 1 new animodes (5 videos), 992 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 524] Found 2 new animodes (5 videos), 993 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.27s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 525] Found 2 new animodes (4 videos), 995 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.31s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.31s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 526] Found 2 new animodes (3 videos), 997 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.30s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 527] Found 1 new animodes (1 videos), 999 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 528] Found 2 new animodes (8 videos), 1000 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.69s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 529] Found 1 new animodes (6 videos), 1002 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 530] Found 2 new animodes (13 videos), 1003 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:13<00:00, 13.12s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 531] Found 2 new animodes (13 videos), 1005 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:10<00:00, 10.04s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 532] Found 2 new animodes (12 videos), 1007 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:12<00:00, 13.00s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 533] Found 2 new animodes (11 videos), 1009 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.25s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:12<00:00, 12.88s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 534] Found 2 new animodes (11 videos), 1011 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.33s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:13<00:00, 13.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 535] Found 1 new animodes (3 videos), 1013 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 537] Found 2 new animodes (5 videos), 1014 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.65s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 539] Found 2 new animodes (9 videos), 1016 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.29s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 540] Found 1 new animodes (6 videos), 1018 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 541] Found 2 new animodes (8 videos), 1019 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.23s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.44s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 542] Found 1 new animodes (4 videos), 1021 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 543] Found 2 new animodes (6 videos), 1022 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.06s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.81s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 544] Found 1 new animodes (2 videos), 1024 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 546] Found 1 new animodes (7 videos), 1025 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 547] Found 2 new animodes (6 videos), 1026 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 548] Found 1 new animodes (4 videos), 1028 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 549] Found 2 new animodes (10 videos), 1029 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.31s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.48s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 550] Found 2 new animodes (9 videos), 1031 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.34s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 551] Found 2 new animodes (8 videos), 1033 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.11s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.27s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 552] Found 2 new animodes (6 videos), 1035 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.21s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 553] Found 1 new animodes (4 videos), 1037 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 554] Found 2 new animodes (10 videos), 1038 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.61s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 555] Found 2 new animodes (9 videos), 1040 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.40s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:10<00:00, 10.05s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 556] Found 2 new animodes (8 videos), 1042 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.08s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.17s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 557] Found 2 new animodes (7 videos), 1044 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.40s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 558] Found 1 new animodes (4 videos), 1046 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 559] Found 1 new animodes (2 videos), 1047 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 560] Found 1 new animodes (1 videos), 1048 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 561] Found 1 new animodes (4 videos), 1049 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 562] Found 1 new animodes (7 videos), 1050 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 563] Found 2 new animodes (7 videos), 1051 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.37s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 565] Found 1 new animodes (3 videos), 1053 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 566] Found 2 new animodes (5 videos), 1054 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.38s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.86s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 567] Found 2 new animodes (4 videos), 1056 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.30s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 568] Found 2 new animodes (4 videos), 1058 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.38s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 569] Found 1 new animodes (2 videos), 1060 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 570] Found 1 new animodes (1 videos), 1061 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 571] Found 2 new animodes (2 videos), 1062 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.34s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.64s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 573] Found 2 new animodes (9 videos), 1064 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.38s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.60s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 574] Found 1 new animodes (7 videos), 1066 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 576] Found 2 new animodes (8 videos), 1067 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.35s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.45s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 577] Found 2 new animodes (8 videos), 1069 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.28s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.25s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 578] Found 2 new animodes (7 videos), 1071 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.29s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.66s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 579] Found 2 new animodes (6 videos), 1073 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.36s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.67s/it]                                                        [Watch] Scan complete. Waiting 120s...
+[Watch] No new tasks. 1075 completed. Waiting 120s...
+
+[Iter 581] Found 1 new animodes (5 videos), 1075 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 582] Found 2 new animodes (11 videos), 1076 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.10s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.40s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 583] Found 2 new animodes (9 videos), 1078 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.12s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.29s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 584] Found 2 new animodes (9 videos), 1080 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.33s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:08<00:00,  8.32s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 585] Found 1 new animodes (4 videos), 1082 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 586] Found 1 new animodes (3 videos), 1083 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 587] Found 1 new animodes (6 videos), 1084 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 588] Found 1 new animodes (2 videos), 1085 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 589] Found 2 new animodes (4 videos), 1086 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s]                                               [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 590] Found 1 new animodes (3 videos), 1088 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 591] Found 2 new animodes (9 videos), 1089 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.31s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.22s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 592] Found 2 new animodes (9 videos), 1091 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.33s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.29s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 593] Found 2 new animodes (8 videos), 1093 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.16s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 594] Found 2 new animodes (6 videos), 1095 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.41s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.64s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 595] Found 2 new animodes (5 videos), 1097 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:01<00:00,  2.00s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 596] Found 1 new animodes (1 videos), 1099 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 598] Found 2 new animodes (13 videos), 1100 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.19s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.72s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 599] Found 2 new animodes (13 videos), 1102 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.06s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:09<00:00,  9.60s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 600] Found 1 new animodes (6 videos), 1104 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 601] Found 1 new animodes (6 videos), 1105 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 602] Found 2 new animodes (6 videos), 1106 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.56s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 603] Found 1 new animodes (4 videos), 1108 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 604] Found 2 new animodes (5 videos), 1109 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.28s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.24s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 605] Found 1 new animodes (2 videos), 1111 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 606] Found 2 new animodes (3 videos), 1112 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.38s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.25s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 608] Found 2 new animodes (8 videos), 1114 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.13s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.63s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 609] Found 1 new animodes (7 videos), 1116 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 610] Found 1 new animodes (3 videos), 1117 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 612] Found 1 new animodes (6 videos), 1118 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 613] Found 2 new animodes (8 videos), 1119 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.20s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.89s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 614] Found 2 new animodes (7 videos), 1121 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.09s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:04<00:00,  4.92s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 615] Found 2 new animodes (6 videos), 1123 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.24s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.17s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 616] Found 2 new animodes (5 videos), 1125 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.02s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.29s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 617] Found 2 new animodes (5 videos), 1127 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.22s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:03<00:00,  3.21s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 618] Found 2 new animodes (3 videos), 1129 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.42s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.62s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 619] Found 2 new animodes (2 videos), 1131 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.23s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.69s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 620] Found 1 new animodes (1 videos), 1133 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 621] Found 1 new animodes (8 videos), 1134 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 622] Found 1 new animodes (7 videos), 1135 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 623] Found 1 new animodes (6 videos), 1136 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 624] Found 1 new animodes (3 videos), 1137 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 625] Found 1 new animodes (2 videos), 1138 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 626] Found 1 new animodes (1 videos), 1139 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 628] Found 2 new animodes (14 videos), 1140 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:11<00:00, 11.25s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 629] Found 2 new animodes (8 videos), 1142 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.14s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:01<00:00,  1.62s/it]                                                        [Watch] Scan complete. Waiting 120s...
+
+[Iter 630] Found 1 new animodes (7 videos), 1144 already done
+[R1/2] Processing 0 animodes
+[Watch] Scan complete. Waiting 120s...
+
+[Iter 631] Found 2 new animodes (10 videos), 1145 already done
+[R1/2] Processing 1 animodes
+[R1] VAE:   0%|          | 0/1 [00:00<?, ?it/s][R1] VAE: 100%|██████████| 1/1 [00:02<00:00,  2.16s/it]                                                       [R1] JEPA:   0%|          | 0/1 [00:00<?, ?it/s][R1] JEPA: 100%|██████████| 1/1 [00:06<00:00,  6.45s/it]                                                        

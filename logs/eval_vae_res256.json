@@ -1,0 +1,18 @@
+{
+  "n_total": 0,
+  "n_valid": 0,
+  "elapsed_min": 11.649498915672302,
+  "part0_chamfer_mean": NaN,
+  "part1_chamfer_mean": NaN,
+  "part0_obj_cc_mean": NaN,
+  "part1_obj_cc_mean": NaN,
+  "part0_vae_cc_mean": NaN,
+  "part1_vae_cc_mean": NaN,
+  "part0_cc_error_mean": NaN,
+  "part1_cc_error_mean": NaN,
+  "part0_cc_exact": NaN,
+  "part1_cc_exact": NaN,
+  "both_cc_exact": NaN,
+  "results": [],
+  "per_category": {}
+}

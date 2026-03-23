@@ -1,0 +1,91 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Sampled 201 inference tasks (67 animodes, 41 objects)
+Total inference tasks: 201
+
+Loading models on cuda:0...
+Our model loaded: step=22000, loss=0.539760
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+VAE loaded
+  [1/201] mse_best=2.0438 topo=0% topo_l=0% p0cc=11.0 p1cc=3.0 | 0.1 it/s, ETA 42m | skip=0
+  [10/201] mse_best=1.9876 topo=40% topo_l=40% p0cc=2.5 p1cc=1.6 | 0.1 it/s, ETA 39m | skip=0
+  [20/201] mse_best=2.0020 topo=10% topo_l=10% p0cc=3.1 p1cc=1.3 | 0.1 it/s, ETA 37m | skip=0
+  [30/201] mse_best=1.9746 topo=40% topo_l=40% p0cc=1.6 p1cc=2.1 | 0.1 it/s, ETA 35m | skip=0
+  [40/201] mse_best=2.0512 topo=50% topo_l=50% p0cc=1.5 p1cc=1.3 | 0.1 it/s, ETA 33m | skip=0
+  [50/201] mse_best=2.0330 topo=60% topo_l=60% p0cc=3.7 p1cc=2.7 | 0.1 it/s, ETA 31m | skip=0
+  [60/201] mse_best=2.0216 topo=30% topo_l=30% p0cc=1.4 p1cc=4.4 | 0.1 it/s, ETA 29m | skip=0
+  [70/201] mse_best=1.9948 topo=50% topo_l=50% p0cc=1.6 p1cc=1.4 | 0.1 it/s, ETA 27m | skip=0
+  [80/201] mse_best=2.0051 topo=40% topo_l=40% p0cc=1.8 p1cc=1.4 | 0.1 it/s, ETA 25m | skip=0
+  [90/201] mse_best=2.1283 topo=20% topo_l=20% p0cc=1.7 p1cc=3.0 | 0.1 it/s, ETA 23m | skip=0
+  [100/201] mse_best=2.0539 topo=60% topo_l=70% p0cc=1.3 p1cc=1.0 | 0.1 it/s, ETA 21m | skip=0
+  [110/201] mse_best=2.0517 topo=40% topo_l=50% p0cc=3.4 p1cc=1.6 | 0.1 it/s, ETA 19m | skip=0
+  [120/201] mse_best=2.0122 topo=10% topo_l=10% p0cc=2.6 p1cc=3.6 | 0.1 it/s, ETA 17m | skip=0
+  [130/201] mse_best=2.1002 topo=30% topo_l=30% p0cc=1.6 p1cc=2.1 | 0.1 it/s, ETA 15m | skip=0
+  [133] ERROR PhysXNet_PhysXnet/10296_senior_1: Ran out of input
+  [134] ERROR PhysXNet_PhysXnet/10296_senior_1: Ran out of input
+  [135] ERROR PhysXNet_PhysXnet/10296_senior_1: Ran out of input
+  [140/201] mse_best=2.0311 topo=40% topo_l=40% p0cc=1.7 p1cc=1.8 | 0.1 it/s, ETA 12m | skip=3
+  [150/201] mse_best=2.0094 topo=30% topo_l=40% p0cc=1.3 p1cc=1.9 | 0.1 it/s, ETA 10m | skip=3
+  [160/201] mse_best=2.1031 topo=40% topo_l=40% p0cc=2.9 p1cc=5.5 | 0.1 it/s, ETA 8m | skip=3
+  [170/201] mse_best=2.0294 topo=40% topo_l=40% p0cc=1.6 p1cc=2.2 | 0.1 it/s, ETA 6m | skip=3
+  [180/201] mse_best=2.0111 topo=20% topo_l=30% p0cc=1.6 p1cc=1.6 | 0.1 it/s, ETA 4m | skip=3
+  [190/201] mse_best=2.0748 topo=30% topo_l=30% p0cc=1.6 p1cc=2.8 | 0.1 it/s, ETA 2m | skip=3
+  [200/201] mse_best=1.9941 topo=40% topo_l=50% p0cc=1.0 p1cc=2.1 | 0.1 it/s, ETA 0m | skip=3
+
+Done in 40.9m (198 results, 3 skipped)
+
+======================================================================
+  Mode: ours
+  Samples: 198 (66 animodes, 11 categories)
+  MSE (orig/swap/best): 2.0511 / 2.0600 / 2.0335
+  Topo correct: 35.4% (lenient: 38.4%)
+  Pred CC (p0/p1): 1.98 / 2.28
+  GT CC (p0/p1): 1.68 / 1.88
+
+  Per-category:
+  Category                      N      MSE   Topo%   p0cc   p1cc
+  PhysXMobility                 3   1.9816    33%   2.33   1.67
+  PhysXNet                      3   1.9425    67%   1.00   1.33
+  PhysXNet_PhysXnet           135   2.0476    30%   2.21   2.68
+  box                          12   1.9664    83%   1.33   0.83
+  cabinet                      12   1.9087    50%   1.25   1.42
+  dishwasher                   12   2.1516    25%   1.50   2.00
+  door                          3   1.8666    67%   1.33   1.00
+  door_handle                   3   1.9933    33%   1.67   2.00
+  drawer                        6   2.1183     0%   1.83   1.67
+  microwave                     6   2.0143    33%   1.83   1.33
+  refrigerator                  3   1.9127    67%   1.00   0.67
+======================================================================
+
+Results saved to: eval_topo_ours.json

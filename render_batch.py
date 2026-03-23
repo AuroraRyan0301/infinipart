@@ -118,23 +118,43 @@ def main():
         print("Nothing to render.")
         return
 
-    # Assign GPUs round-robin
-    job_args = []
-    for i, (meta_path, animode_name) in enumerate(jobs):
-        gpu_id = gpu_ids[i % len(gpu_ids)]
-        job_args.append((meta_path, animode_name, gpu_id,
-                         args.views, args.duration, args.resolution,
-                         args.fps, args.samples))
+    # Dynamic scheduling: shared job queue, each worker grabs next job
+    # GPU assigned round-robin per worker invocation (not pre-assigned)
+    import multiprocessing as mp
 
-    # Run with process pool
-    if n_workers == 1:
-        results = [run_render_job(a) for a in job_args]
-    else:
-        with Pool(n_workers) as pool:
-            results = pool.map(run_render_job, job_args)
+    job_queue = mp.Queue()
+    for meta_path, animode_name in jobs:
+        job_queue.put((meta_path, animode_name))
 
-    ok = sum(1 for r in results if r)
-    fail = sum(1 for r in results if not r)
+    results_list = mp.Manager().list()
+
+    def gpu_worker(worker_id, gpu_id):
+        while True:
+            try:
+                meta_path, animode_name = job_queue.get_nowait()
+            except Exception:
+                break
+            result = run_render_job((meta_path, animode_name, gpu_id,
+                                     args.views, args.duration, args.resolution,
+                                     args.fps, args.samples))
+            results_list.append(result)
+
+    # Launch workers_per_gpu workers per GPU
+    workers_per_gpu = max(1, n_workers // len(gpu_ids))
+    procs = []
+    wid = 0
+    for gpu_id in gpu_ids:
+        for _ in range(workers_per_gpu):
+            p = mp.Process(target=gpu_worker, args=(wid, gpu_id))
+            p.start()
+            procs.append(p)
+            wid += 1
+
+    for p in procs:
+        p.join()
+
+    ok = sum(1 for r in results_list if r)
+    fail = sum(1 for r in results_list if not r)
     print(f"\nBatch complete: {ok} success, {fail} failed out of {len(jobs)} jobs")
 
 

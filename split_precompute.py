@@ -68,7 +68,7 @@ BVH_COLLISION_THRESHOLD = 0.015   # collision distance in normalized space
 BVH_COLLISION_MIN_FRAC = 0.05     # minimum fraction of samples that must collide
 BVH_SURFACE_SAMPLES = 8000
 BVH_TRAJECTORY_STEPS = 10  # number of steps along trajectory for collision detection
-MIN_NORMALIZED_MOTION = 0.05  # minimum visible motion in normalized space
+MIN_NORMALIZED_MOTION = 0.001  # minimum visible motion in normalized space (permissive for PhysXMobility)
 
 # new_v3: axis-exclusion filter for revolute joints
 # Vertices within this radius of the joint axis are excluded from collision checks.
@@ -2335,6 +2335,11 @@ def process_object(factory_name, seed, base_dir, output_dir, force=False,
     movable_joints = [j for j in joints if j.is_movable]
     if not movable_joints:
         print(f"  SKIP: no movable joints")
+        return False
+
+    MAX_MOVABLE_JOINTS = 10
+    if len(movable_joints) > MAX_MOVABLE_JOINTS:
+        print(f"  SKIP: too many movable joints ({len(movable_joints)} > {MAX_MOVABLE_JOINTS})")
         return False
 
     print(f"  Links: {len(links)}, Joints: {len(joints)}, Movable: {len(movable_joints)}")

@@ -50,16 +50,14 @@ from tqdm import tqdm
 # Path config
 # ================================================================
 
-PARTPACKER_ROOT = "/mnt/data/yurh/PartPacker"
-VJEPA2_ROOT = "/mnt/data/yurh/vjepa2"
+PARTPACKER_ROOT = "/mnt/cpfs/yurh/PartPacker"
+VJEPA2_ROOT = "/mnt/cpfs/yurh/vjepa2"
 VJEPA2_CKPT = os.path.join(VJEPA2_ROOT, "checkpoints", "vitg.pt")
 VAE_CKPT = os.path.join(PARTPACKER_ROOT, "pretrained", "vae.pt")
 VAE_CONFIG = "vae.configs.part_woenc"
 
-PRECOMPUTE_ROOT = os.path.join(
-    os.path.dirname(os.path.abspath(__file__)), "precompute_output"
-)
-DEFAULT_OUTPUT_DIR = "/mnt/data_ssd/infinigen-sim"
+PRECOMPUTE_ROOT = "/mnt/data_ssd/infinigen-sim-data/precompute"
+DEFAULT_OUTPUT_DIR = "/mnt/data_ssd/infinigen-sim-data/encoded"
 
 IMAGENET_MEAN = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1, 1)
 IMAGENET_STD = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1, 1)
