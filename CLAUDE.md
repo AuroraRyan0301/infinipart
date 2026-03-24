@@ -61,6 +61,18 @@ Train a network to predict **dual-volume topological partition** of articulated 
 ## Architecture
 - PartPacker VAE: part0 + part1 each -> [B, 4096, 64] -> concat -> [B, 8192, 64]
 - PartPacker Flow DiT: 1249.5M params, 1536 hidden_dim, 24 layers, 16 heads
+- SLat Refiner: TRELLIS 2 Shape SLat Flow Model (~1.3B frozen) + VJEPA proj + Part cross-attn (~160M trainable)
+
+### Mesh Post-Processing (MANDATORY for SLat decoder output)
+SLat decoder produces fragmented meshes (thousands of disconnected bodies). **MUST** use cumesh DC remeshing to rebuild topology:
+1. `fill_holes(max_hole_perimeter=3e-2)` — initial hole filling on raw decoder output
+2. Build BVH on cleaned mesh
+3. `cumesh.remeshing.remesh_narrow_band_dc(band=1.0, project_back=0.9, resolution=512)` — **Dual Contouring remeshing rebuilds face connectivity from vertex positions**
+4. `simplify(decimation_target=100000)` — per-part meshes are small, use 100K not 1M
+5. Final cleanup: `remove_duplicate_faces` → `repair_non_manifold_edges` → `remove_small_connected_components(1e-5)` → `fill_holes(3e-2)` → `unify_face_orientations`
+
+This is the TRELLIS 2 `remesh=True` branch from `o-voxel/o_voxel/postprocess.py`. Without remeshing, fragmented parts (e.g., lamp base p1) have 22K+ bodies; with remeshing, reduced to ~28 bodies.
+Requires `cumesh` compiled for H200: `NVCC_APPEND_FLAGS="--extended-lambda" TORCH_CUDA_ARCH_LIST="9.0"`. Source at `/mnt/cpfs/yurh/CuMesh/`.
 
 ## Key Principles
 - **Dual volume is per-animode**: same object, different active joints = different part0/part1 split

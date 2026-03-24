@@ -30,13 +30,8 @@ sys.path.insert(0, TRELLIS_ROOT)
 sys.path.insert(0, os.path.join(TRELLIS_ROOT, "o-voxel"))
 sys.path.insert(0, "/mnt/cpfs/yurh/Infinigen-Sim")
 
-# Monkey-patch: defer cumesh import (only needed at mesh extraction time, not model loading)
-import types
-_fake_cumesh = types.ModuleType("cumesh")
-_fake_cumesh.remeshing = types.ModuleType("cumesh.remeshing")
-sys.modules["cumesh"] = _fake_cumesh
-sys.modules["cumesh.remeshing"] = _fake_cumesh.remeshing
 
+import cumesh
 from trellis2.modules.sparse import SparseTensor
 
 SLAT_NORM_MEAN = torch.tensor([
@@ -80,16 +75,62 @@ def flow_sampling(model, x0_st, x1_st, vjepa_feats, num_steps=50, rescale_t=3.0)
     return x0, x1
 
 
+def postprocess_mesh_cumesh(vertices, faces, grid_size=512, decimation_target=100000,
+                            max_hole_perimeter=3e-2, min_component_size=1e-5,
+                            remesh_band=1.0, remesh_project=0.9):
+    """TRELLIS 2 exact post-processing pipeline (postprocess.py).
+    Uses remesh branch: DC remeshing to rebuild topology from fragmented mesh."""
+    vertices = vertices.cuda()
+    faces = faces.cuda()
+
+    mesh = cumesh.CuMesh()
+    mesh.init(vertices, faces)
+
+    # Step 0: Initial fill holes
+    mesh.fill_holes(max_hole_perimeter=max_hole_perimeter)
+    vertices_clean, faces_clean = mesh.read()
+
+    # Build BVH on cleaned mesh
+    bvh = cumesh.cuBVH(vertices_clean, faces_clean)
+
+    # Remesh: Dual Contouring to rebuild topology (TRELLIS 2 remesh branch)
+    aabb = torch.tensor([[-0.5, -0.5, -0.5], [0.5, 0.5, 0.5]], device='cuda', dtype=torch.float32)
+    center = aabb.mean(dim=0)
+    scale = (aabb[1] - aabb[0]).max().item()
+    resolution = grid_size
+
+    mesh.init(*cumesh.remeshing.remesh_narrow_band_dc(
+        vertices_clean, faces_clean,
+        center=center,
+        scale=(resolution + 3 * remesh_band) / resolution * scale,
+        resolution=resolution,
+        band=remesh_band,
+        project_back=remesh_project,
+        verbose=False,
+        bvh=bvh,
+    ))
+
+    # Simplify
+    mesh.simplify(decimation_target)
+
+    # Final cleanup
+    mesh.remove_duplicate_faces()
+    mesh.repair_non_manifold_edges()
+    mesh.remove_small_connected_components(min_component_size)
+    mesh.fill_holes(max_hole_perimeter=max_hole_perimeter)
+    mesh.unify_face_orientations()
+    return mesh.read()
+
+
 def decode_slat_to_mesh(decoder, slat_st, resolution=512):
-    """Decode SLat SparseTensor → trimesh."""
+    """Decode SLat SparseTensor → trimesh, with cumesh post-processing."""
     decoder.set_resolution(resolution)
     with torch.inference_mode():
         results = decoder(slat_st)
     if isinstance(results, list) and len(results) > 0:
         mesh_obj = results[0]
-        v = mesh_obj.vertices.cpu().numpy()
-        f = mesh_obj.faces.cpu().numpy()
-        return trimesh.Trimesh(v, f, process=False)
+        v, f = postprocess_mesh_cumesh(mesh_obj.vertices, mesh_obj.faces)
+        return trimesh.Trimesh(v.cpu().numpy(), f.cpu().numpy(), process=False)
     return None
 
 
@@ -192,7 +233,7 @@ bpy.ops.render.render(write_still=True)
 
 def render_blender(p0_obj, p1_obj, output_png, title=""):
     """Render part0 (blue) + part1 (orange) via Blender."""
-    blender = "/mnt/data/yurh/blender-4.2.18-linux-x64/blender"
+    blender = "/mnt/cpfs/yurh/blender-4.2.18-linux-x64/blender"
     script_path = "/tmp/slat_render_tmp.py"
     with open(script_path, 'w') as f:
         f.write(BLENDER_RENDER_SCRIPT)
@@ -286,9 +327,9 @@ def discover_samples(data_root, slat_gt_root, precompute_root, max_samples=10,
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--ckpt", required=True)
-    parser.add_argument("--data_root", default="/mnt/data_ssd/infinigen-sim")
-    parser.add_argument("--slat_gt_root", default="/mnt/data_ssd/infinigen-sim/slat_gt")
-    parser.add_argument("--precompute_root", default="/mnt/cpfs/yurh/Infinigen-Sim/precompute_output")
+    parser.add_argument("--data_root", default="/mnt/data_ssd/infinigen-sim-data/encoded")
+    parser.add_argument("--slat_gt_root", default="/mnt/data_ssd/infinigen-sim-data/slat_gt")
+    parser.add_argument("--precompute_root", default="/mnt/data_ssd/infinigen-sim-data/precompute")
     parser.add_argument("--output_dir", default="./output/slat_progressive_infer")
     parser.add_argument("--max_samples", type=int, default=10)
     parser.add_argument("--num_steps", type=int, default=50)
