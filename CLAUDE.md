@@ -59,20 +59,39 @@ Train a network to predict **dual-volume topological partition** of articulated 
 5. **Train**: Network learns: V-JEPA2 video features -> dual volume latent
 
 ## Architecture
-- PartPacker VAE: part0 + part1 each -> [B, 4096, 64] -> concat -> [B, 8192, 64]
-- PartPacker Flow DiT: 1249.5M params, 1536 hidden_dim, 24 layers, 16 heads
-- SLat Refiner: TRELLIS 2 Shape SLat Flow Model (~1.3B frozen) + VJEPA proj + Part cross-attn (~160M trainable)
 
-### Mesh Post-Processing (MANDATORY for SLat decoder output)
-SLat decoder produces fragmented meshes (thousands of disconnected bodies). **MUST** use cumesh DC remeshing to rebuild topology:
-1. `fill_holes(max_hole_perimeter=3e-2)` — initial hole filling on raw decoder output
-2. Build BVH on cleaned mesh
-3. `cumesh.remeshing.remesh_narrow_band_dc(band=1.0, project_back=0.9, resolution=512)` — **Dual Contouring remeshing rebuilds face connectivity from vertex positions**
-4. `simplify(decimation_target=100000)` — per-part meshes are small, use 100K not 1M
-5. Final cleanup: `remove_duplicate_faces` → `repair_non_manifold_edges` → `remove_small_connected_components(1e-5)` → `fill_holes(3e-2)` → `unify_face_orientations`
+### Current Direction: Finetune PartPacker Flow Model with VJEPA
+- **PartPacker VAE is sufficient** — previous thin-structure loss was due to decode resolution=32, not VAE quality. At resolution=384 roundtrip is good.
+- **SLat refiner path abandoned** — unnecessary complexity. Directly finetune PartPacker Flow DiT with VJEPA video features.
+- **Pipeline**: Video → VJEPA2 → Finetune PartPacker Flow DiT → PartPacker VAE decode → dual volume mesh
 
-This is the TRELLIS 2 `remesh=True` branch from `o-voxel/o_voxel/postprocess.py`. Without remeshing, fragmented parts (e.g., lamp base p1) have 22K+ bodies; with remeshing, reduced to ~28 bodies.
+### PartPacker Models
+- PartPacker VAE: OBJ → encode → latent `[1, 4096, 64]` per part → concat → `[1, 8192, 64]`. Decode: latent → hidden_states → hierarchical query 384³ grid → marching cubes → mesh. **Resolution must be ≥384, NOT 32.**
+- PartPacker Flow DiT: 1249.5M params, 1536 hidden_dim, 24 layers, 16 heads. Pretrained on PartNet. Needs finetuning with VJEPA2 condition for our video→shape task.
+
+### SLat Refiner (DEPRECATED, kept for reference)
+- Was: TRELLIS 2 Shape SLat Flow Model (~1.3B frozen) + VJEPA proj + Part cross-attn (~160M trainable)
+- Why abandoned: PartPacker VAE works fine at proper resolution, SLat adds unnecessary complexity
+
+### Mesh Post-Processing (for SLat decoder output, if ever needed)
+SLat decoder produces fragmented meshes. Use cumesh DC remeshing to rebuild topology:
+1. `fill_holes(3e-2)` → Build BVH → `cumesh.remeshing.remesh_narrow_band_dc(band=1.0, project_back=0.9, resolution=512)` → `simplify(100000)` → cleanup
 Requires `cumesh` compiled for H200: `NVCC_APPEND_FLAGS="--extended-lambda" TORCH_CUDA_ARCH_LIST="9.0"`. Source at `/mnt/cpfs/yurh/CuMesh/`.
+
+## Available Data (IS + PhysXMobility only, as of 2026-03-24)
+
+| Stage | IS Factories | PhysXMobility | Total |
+|---|---|---|---|
+| Precomputed (part0/1.obj) | 5,873 animodes (11 cats) | 5,917 animodes (1,888 obj) | **11,790** |
+| Rendered (mp4) | 634 animodes | 1,892 animodes | **2,526** |
+| Encoded (gt_latent + jepa) | 1,145 animodes (18 cats) | **0** | **1,145** |
+| JEPA views total | 11,532 | 0 | **11,532** |
+
+### Bottlenecks
+- **PhysXMobility NOT encoded yet** — 1,892 rendered but 0 encoded. Needs encode pass.
+- **IS render gap** — 5,873 precomputed but only 634 rendered (10.8%). Many categories unrendered: door, door_handle, microwave, pepper_grinder, refrigerator, stovetop, toaster have precompute from old runs but need re-render.
+- **PhysXMobility render ongoing** — 12 Blender processes running, ~640/1888 done (~34%)
+- **PhysXNet excluded** — not using PhysXNet data
 
 ## Key Principles
 - **Dual volume is per-animode**: same object, different active joints = different part0/part1 split

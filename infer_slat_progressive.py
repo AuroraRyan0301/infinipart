@@ -76,7 +76,7 @@ def flow_sampling(model, x0_st, x1_st, vjepa_feats, num_steps=50, rescale_t=3.0)
 
 
 def postprocess_mesh_cumesh(vertices, faces, grid_size=512, decimation_target=100000,
-                            max_hole_perimeter=3e-2, min_component_size=1e-5,
+                            max_hole_perimeter=3e-2, min_component_size=1e-4,
                             remesh_band=1.0, remesh_project=0.9):
     """TRELLIS 2 exact post-processing pipeline (postprocess.py).
     Uses remesh branch: DC remeshing to rebuild topology from fragmented mesh."""

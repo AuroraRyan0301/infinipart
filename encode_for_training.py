@@ -263,50 +263,136 @@ def load_video_frames(video_path, num_frames=81, img_size=256):
     return frames
 
 
-def encode_videos(task, vjepa2_model, device, output_dir,
-                  num_frames=81, img_size=256):
-    """Encode all nobg videos for one animode -> v{XX}_nobg_jepa.pt."""
-    views_dir = os.path.join(output_dir, task["output_name"], "views")
-    os.makedirs(views_dir, exist_ok=True)
+MIN_VIDEO_BYTES = 4096
+MIN_VIDEO_FRAMES = 10
 
-    encoded = 0
-    for vid_name in task["nobg_videos"]:
-        # Map video name to view index: hemi_00_nobg.mp4 -> v00
-        # Pattern: {type}_{idx}_nobg.mp4
-        parts = vid_name.replace("_nobg.mp4", "").split("_")
-        # hemi_00, orbit_03, sweep_05 etc
-        view_type = parts[0]
-        view_idx_str = parts[1]
 
-        # Global view numbering: hemi 0-15, orbit 16-23, sweep 24-31
-        view_num = int(view_idx_str)
-        if view_type == "orbit":
-            view_num += 16
-        elif view_type == "sweep":
-            view_num += 24
+def vid_to_view_num(vid_name):
+    """Map video name to global view number: hemi_00_nobg.mp4 -> 0, orbit_03 -> 19, sweep_05 -> 29."""
+    parts = vid_name.replace("_nobg.mp4", "").split("_")
+    view_type, view_idx_str = parts[0], parts[1]
+    view_num = int(view_idx_str)
+    if view_type == "orbit":
+        view_num += 16
+    elif view_type == "sweep":
+        view_num += 24
+    return view_num
 
-        out_path = os.path.join(views_dir, f"v{view_num:02d}_nobg_jepa.pt")
-        if os.path.exists(out_path):
-            encoded += 1
-            continue
 
-        video_path = os.path.join(task["animode_dir"], vid_name)
-        try:
-            frames = load_video_frames(video_path, num_frames, img_size)
-            frames = frames.to(device)
+def load_single_video(video_path, num_frames=81, img_size=256):
+    """Load and preprocess a single video. Returns None on failure."""
+    try:
+        fsize = os.path.getsize(video_path)
+        if fsize < MIN_VIDEO_BYTES:
+            return None, f"too_small | {video_path} | {fsize} bytes"
+        from decord import VideoReader
+        vr = VideoReader(video_path)
+        total = len(vr)
+        if total < MIN_VIDEO_FRAMES:
+            return None, f"too_few_frames | {video_path} | {total} frames"
+        indices = np.linspace(0, total - 1, num_frames, dtype=int)
+        frames = vr.get_batch(indices).asnumpy()
+        frames = torch.from_numpy(frames).permute(0, 3, 1, 2).float() / 255.0
+        frames = F.interpolate(frames, size=(img_size, img_size),
+                               mode="bilinear", align_corners=False)
+        frames = frames.unsqueeze(0).permute(0, 2, 1, 3, 4)  # [1, 3, T, H, W]
+        frames = (frames - IMAGENET_MEAN) / IMAGENET_STD
+        return frames.squeeze(0), None  # [3, T, H, W]
+    except Exception as e:
+        return None, f"load_failed | {video_path} | {e}"
 
-            with torch.inference_mode():
-                features = vjepa2_model(frames)  # [1, N, 1408]
 
-            # Save as bf16, drop batch dim
-            torch.save(features[0].cpu().to(torch.bfloat16), out_path)
-            del frames, features
-            encoded += 1
-        except Exception as e:
-            print(f"  [JEPA ERROR] {task['output_name']}/{vid_name}: {e}")
-            continue
+def collect_jepa_jobs(tasks, output_dir):
+    """Collect all individual video encode jobs from a list of animode tasks."""
+    jobs = []
+    for task in tasks:
+        views_dir = os.path.join(output_dir, task["output_name"], "views")
+        for vid_name in task["nobg_videos"]:
+            view_num = vid_to_view_num(vid_name)
+            out_path = os.path.join(views_dir, f"v{view_num:02d}_nobg_jepa.pt")
+            if os.path.exists(out_path):
+                continue
+            jobs.append({
+                "video_path": os.path.join(task["animode_dir"], vid_name),
+                "out_path": out_path,
+            })
+    return jobs
 
-    return encoded
+
+def encode_videos_batched(jobs, vjepa2_model, device, num_frames=81, img_size=256,
+                          batch_size=16, num_workers=8, bad_log_path=None):
+    """Batch-encode JEPA features with parallel video loading. Returns (encoded, skipped, failed)."""
+    from concurrent.futures import ThreadPoolExecutor
+
+    bad_log = None
+    if bad_log_path:
+        os.makedirs(os.path.dirname(bad_log_path), exist_ok=True)
+        bad_log = open(bad_log_path, "a")
+
+    def load_fn(job):
+        frames, bad_reason = load_single_video(job["video_path"], num_frames, img_size)
+        return job, frames, bad_reason
+
+    encoded, skipped, failed = 0, 0, 0
+    t0 = time.time()
+    batch_jobs, batch_frames = [], []
+
+    with ThreadPoolExecutor(max_workers=num_workers) as executor:
+        for job, frames, bad_reason in executor.map(load_fn, jobs):
+            if frames is None:
+                if bad_log and bad_reason:
+                    bad_log.write(f"{bad_reason}\n")
+                    bad_log.flush()
+                skipped += 1
+                continue
+
+            batch_jobs.append(job)
+            batch_frames.append(frames)
+
+            if len(batch_frames) >= batch_size:
+                try:
+                    batch_tensor = torch.stack(batch_frames).to(device)
+                    with torch.inference_mode():
+                        features = vjepa2_model(batch_tensor)
+                    for i, j in enumerate(batch_jobs):
+                        os.makedirs(os.path.dirname(j["out_path"]), exist_ok=True)
+                        torch.save(features[i].cpu().to(torch.bfloat16), j["out_path"])
+                        encoded += 1
+                    del batch_tensor, features
+                except Exception as e:
+                    print(f"  [BATCH ERROR] {e}")
+                    failed += len(batch_jobs)
+                batch_jobs, batch_frames = [], []
+
+                if encoded % 200 == 0 and encoded > 0:
+                    elapsed = time.time() - t0
+                    rate = encoded / elapsed
+                    remaining = (len(jobs) - encoded - skipped - failed) / max(rate, 0.01)
+                    print(f"  [JEPA] {encoded}/{len(jobs)} | {rate:.1f} vid/s | "
+                          f"skip={skipped} fail={failed} | ETA={remaining/60:.0f}min", flush=True)
+
+        # Remaining partial batch
+        if batch_frames:
+            try:
+                batch_tensor = torch.stack(batch_frames).to(device)
+                with torch.inference_mode():
+                    features = vjepa2_model(batch_tensor)
+                for i, j in enumerate(batch_jobs):
+                    os.makedirs(os.path.dirname(j["out_path"]), exist_ok=True)
+                    torch.save(features[i].cpu().to(torch.bfloat16), j["out_path"])
+                    encoded += 1
+                del batch_tensor, features
+            except Exception as e:
+                print(f"  [BATCH ERROR] {e}")
+                failed += len(batch_jobs)
+
+    if bad_log:
+        bad_log.close()
+
+    elapsed = time.time() - t0
+    print(f"  [JEPA] Done: {encoded} encoded, {skipped} skipped, {failed} failed "
+          f"| {elapsed/60:.1f}min | {encoded/max(elapsed,1):.1f} vid/s")
+    return encoded, skipped, failed
 
 
 # ================================================================
@@ -315,7 +401,7 @@ def encode_videos(task, vjepa2_model, device, output_dir,
 
 def process_tasks(tasks, vae_model, vjepa2_model, device, args):
     """Run VAE + JEPA encoding on a batch of tasks."""
-    vae_ok, vae_fail, jepa_total = 0, 0, 0
+    vae_ok, vae_fail = 0, 0
 
     if not args.skip_vae and vae_model is not None:
         for task in tqdm(tasks, desc=f"[R{args.rank}] VAE", leave=False):
@@ -327,14 +413,16 @@ def process_tasks(tasks, vae_model, vjepa2_model, device, args):
         print(f"[R{args.rank}] VAE: {vae_ok} ok, {vae_fail} fail")
 
     if not args.skip_jepa and vjepa2_model is not None:
-        for task in tqdm(tasks, desc=f"[R{args.rank}] JEPA", leave=False):
-            n = encode_videos(task, vjepa2_model, device, args.output_dir,
-                              args.num_frames, args.img_size)
-            jepa_total += n
-            torch.cuda.empty_cache()
-        print(f"[R{args.rank}] JEPA: {jepa_total} videos encoded")
+        jobs = collect_jepa_jobs(tasks, args.output_dir)
+        if jobs:
+            bad_log_path = f"logs/encode_jepa_bad_videos_r{args.rank}.txt"
+            encode_videos_batched(jobs, vjepa2_model, device,
+                                  args.num_frames, args.img_size,
+                                  batch_size=args.batch_size,
+                                  num_workers=args.num_workers,
+                                  bad_log_path=bad_log_path)
 
-    return vae_ok, vae_fail, jepa_total
+    return vae_ok, vae_fail, 0
 
 
 # ================================================================
@@ -356,6 +444,10 @@ def main():
                         help="Skip VAE encoding (only do JEPA)")
     parser.add_argument("--skip_jepa", action="store_true",
                         help="Skip JEPA encoding (only do VAE)")
+    parser.add_argument("--batch_size", type=int, default=16,
+                        help="Batch size for JEPA encoding (default: 16)")
+    parser.add_argument("--num_workers", type=int, default=8,
+                        help="CPU workers for parallel video loading (default: 8)")
     # Watch mode
     parser.add_argument("--watch", action="store_true",
                         help="Daemon mode: continuously scan for new data")
@@ -441,15 +533,19 @@ def main():
                     encode_gt_latent(task, vae_model, device, args.output_dir)
                     torch.cuda.empty_cache()
 
-                # Phase 2: JEPA on GPU
+                # Phase 2: JEPA on GPU (batched)
                 vae_model = vae_model.cpu()
                 torch.cuda.empty_cache()
                 vjepa2_model = vjepa2_model.to(device)
 
-                for task in tqdm(my_tasks, desc=f"[R{args.rank}] JEPA", leave=False):
-                    encode_videos(task, vjepa2_model, device, args.output_dir,
-                                  args.num_frames, args.img_size)
-                    torch.cuda.empty_cache()
+                jobs = collect_jepa_jobs(my_tasks, args.output_dir)
+                if jobs:
+                    bad_log_path = f"logs/encode_jepa_bad_videos_r{args.rank}.txt"
+                    encode_videos_batched(jobs, vjepa2_model, device,
+                                          args.num_frames, args.img_size,
+                                          batch_size=args.batch_size,
+                                          num_workers=args.num_workers,
+                                          bad_log_path=bad_log_path)
             else:
                 # Only one model needed
                 if vae_model is not None:
