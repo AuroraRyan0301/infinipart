@@ -385,15 +385,17 @@ def load_slat_encoder(ckpt_dir="/mnt/cpfs/yurh/TRELLIS.2-4B", device="cuda:0"):
 
 def build_dual_part_model(ckpt_dir="/mnt/cpfs/yurh/TRELLIS.2-4B", device="cuda:0",
                           detach_cross_feats=False, per_block_exchange=True,
-                          resolution="512", cross_attn_start_block=0):
+                          resolution="512", cross_attn_start_block=0, vjepa_dim=1408):
     """Build DualPartSLatModel with pretrained backbone.
 
     Args:
         resolution: "512" or "1024" — which pretrained flow model to wrap.
         cross_attn_start_block: only add part cross-attn from this block onward (0=all, 20=last 10).
+        vjepa_dim: conditioning feature dimension (1408=JEPA, 1536=DINOv2).
     """
     slat = load_pretrained_slat(ckpt_dir, device, resolution=resolution)
-    model = DualPartSLatModel(slat, detach_cross_feats=detach_cross_feats,
+    model = DualPartSLatModel(slat, vjepa_dim=vjepa_dim,
+                              detach_cross_feats=detach_cross_feats,
                               per_block_exchange=per_block_exchange,
                               cross_attn_start_block=cross_attn_start_block).to(device)
     print(f"DualPartSLatModel ({resolution}, cross_attn from block {cross_attn_start_block}): "
