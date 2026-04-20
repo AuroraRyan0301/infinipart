@@ -1,0 +1,170 @@
+[SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
+[ATTENTION] Using backend: flash_attn
+Loading DualPartSLatModel (512, cross_attn from block 15)...
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+  Loaded checkpoint: step=21000
+Loading SLat Decoder...
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+
+Inference on 31 samples (coords: GT SLat)
+
+  [1/31] lamp/1_senior_0 [GT] (p0=198, p1=56 tokens)
+    Flow sampling: 28.4s
+    Meshes: pred_p0=37445v, pred_p1=8590v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_1_senior_0_compare.png
+  [2/31] lamp/4_senior_1 [GT] (p0=104, p1=184 tokens)
+    Flow sampling: 26.4s
+    Meshes: pred_p0=18141v, pred_p1=46892v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_senior_1_compare.png
+  [3/31] lamp/7_senior_1 [GT] (p0=660, p1=96 tokens)
+    Flow sampling: 26.5s
+    Meshes: pred_p0=190985v, pred_p1=14263v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_senior_1_compare.png
+  [4/31] lamp/7_custom_1_flip [GT] (p0=112, p1=640 tokens)
+    Flow sampling: 27.4s
+    Meshes: pred_p0=22746v, pred_p1=160316v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_custom_1_flip_compare.png
+  [5/31] lamp/4_basic_1 [GT] (p0=84, p1=214 tokens)
+    Flow sampling: 26.3s
+    Meshes: pred_p0=15035v, pred_p1=43170v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_basic_1_compare.png
+  [6/31] lamp/0_basic_0 [GT] (p0=88, p1=598 tokens)
+    Flow sampling: 27.2s
+    Meshes: pred_p0=20183v, pred_p1=178255v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_0_basic_0_compare.png
+  [7/31] lamp/4_custom_0_separation [GT] (p0=84, p1=214 tokens)
+    Flow sampling: 26.2s
+    Meshes: pred_p0=15178v, pred_p1=52598v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_custom_0_separation_compare.png
+  [8/31] lamp/9_basic_0 [GT] (p0=126, p1=244 tokens)
+    Flow sampling: 25.9s
+    Meshes: pred_p0=22869v, pred_p1=54400v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_9_basic_0_compare.png
+  [9/31] lamp/99_custom_0_separation [GT] (p0=108, p1=518 tokens)
+    Flow sampling: 25.9s
+    Meshes: pred_p0=21651v, pred_p1=123857v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_99_custom_0_separation_compare.png
+  [10/31] lamp/7_basic_1 [GT] (p0=112, p1=640 tokens)
+    Flow sampling: 25.7s
+    Meshes: pred_p0=22807v, pred_p1=150456v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_basic_1_compare.png
+  [11/31] lamp/7_senior_3 [GT] (p0=656, p1=96 tokens)
+    Flow sampling: 25.1s
+    Meshes: pred_p0=188782v, pred_p1=14467v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_senior_3_compare.png
+  [12/31] lamp/99_custom_1_flip [GT] (p0=108, p1=518 tokens)
+    Flow sampling: 24.7s
+    Meshes: pred_p0=23261v, pred_p1=125106v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_99_custom_1_flip_compare.png
+  [13/31] lamp/99_basic_0 [GT] (p0=108, p1=518 tokens)
+    Flow sampling: 25.1s
+    Meshes: pred_p0=23359v, pred_p1=129256v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_99_basic_0_compare.png
+  [14/31] lamp/1_basic_1 [GT] (p0=126, p1=118 tokens)
+    Flow sampling: 25.4s
+    Meshes: pred_p0=26277v, pred_p1=26857v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_1_basic_1_compare.png
+  [15/31] lamp/7_senior_2 [GT] (p0=174, p1=556 tokens)
+    Flow sampling: 25.5s
+    Meshes: pred_p0=35657v, pred_p1=139922v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_senior_2_compare.png
+  [16/31] lamp/4_basic_0 [GT] (p0=84, p1=214 tokens)
+    Flow sampling: 25.0s
+    Meshes: pred_p0=15134v, pred_p1=53568v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_basic_0_compare.png
+  [17/31] lamp/99_senior_1 [GT] (p0=590, p1=40 tokens)
+    Flow sampling: 24.8s
+    Meshes: pred_p0=161899v, pred_p1=5743v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_99_senior_1_compare.png
+  [18/31] lamp/4_basic_2 [GT] (p0=104, p1=180 tokens)
+    Flow sampling: 25.2s
+    Meshes: pred_p0=18083v, pred_p1=46119v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_basic_2_compare.png
+  [19/31] lamp/7_senior_0 [GT] (p0=718, p1=8 tokens)
+    Flow sampling: 23.6s
+    Meshes: pred_p0=168707v, pred_p1=1276v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_senior_0_compare.png
+  [20/31] lamp/4_senior_2 [GT] (p0=264, p1=36 tokens)
+    Flow sampling: 25.9s
+    Meshes: pred_p0=84197v, pred_p1=5916v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_senior_2_compare.png
+  [21/31] lamp/99_basic_1 [GT] (p0=108, p1=518 tokens)
+    Flow sampling: 26.2s
+    Meshes: pred_p0=23047v, pred_p1=128535v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_99_basic_1_compare.png
+  [22/31] lamp/4_senior_0 [GT] (p0=282, p1=4 tokens)
+    Flow sampling: 25.6s
+    Meshes: pred_p0=44396v, pred_p1=697v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_senior_0_compare.png
+  [23/31] lamp/99_senior_2 [GT] (p0=608, p1=2 tokens)
+    Flow sampling: 25.1s
+  [23] ERROR lamp/99_senior_2: max(): Expected reduction dim 0 to have non-zero size.
+Traceback (most recent call last):
+  File "/mnt/cpfs/yurh/Infinigen-Sim/infer_slat_progressive.py", line 379, in main
+    mesh1 = decode_slat_to_mesh(decoder, pred1, resolution=512)
+  File "/mnt/cpfs/yurh/Infinigen-Sim/infer_slat_progressive.py", line 87, in decode_slat_to_mesh
+    results = decoder(slat_st)
+  File "/mnt/cpfs/yurh/miniconda3/envs/trellis2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/cpfs/yurh/miniconda3/envs/trellis2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/models/sc_vaes/fdg_vae.py", line 84, in forward
+    decoded = super().forward(x, **kwargs)
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/models/sc_vaes/sparse_unet_vae.py", line 492, in forward
+    h, sub = block(h)
+  File "/mnt/cpfs/yurh/miniconda3/envs/trellis2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/cpfs/yurh/miniconda3/envs/trellis2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/models/sc_vaes/sparse_unet_vae.py", line 262, in forward
+    return self._forward(x, subdiv)
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/models/sc_vaes/sparse_unet_vae.py", line 251, in _forward
+    h = self.conv2(h)
+  File "/mnt/cpfs/yurh/miniconda3/envs/trellis2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/mnt/cpfs/yurh/miniconda3/envs/trellis2/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/modules/sparse/conv/conv.py", line 19, in forward
+    return _backends[config.CONV].sparse_conv3d_forward(self, x)
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/modules/sparse/conv/conv_flex_gemm.py", line 49, in sparse_conv3d_forward
+    torch.Size([*x.shape, *x.spatial_shape]),
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/modules/sparse/basic.py", line 494, in spatial_shape
+    spatial_shape = self.__cal_spatial_shape(self.coords)
+  File "/mnt/cpfs/yurh/TRELLIS.2/trellis2/modules/sparse/basic.py", line 474, in __cal_spatial_shape
+    return torch.Size((coords[:, 1:].max(0)[0] + 1).tolist())
+IndexError: max(): Expected reduction dim 0 to have non-zero size.
+  [24/31] lamp/7_basic_2 [GT] (p0=174, p1=548 tokens)
+    Flow sampling: 27.3s
+    Meshes: pred_p0=35731v, pred_p1=131049v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_basic_2_compare.png
+  [25/31] lamp/7_custom_0_separation [GT] (p0=112, p1=640 tokens)
+    Flow sampling: 27.6s
+    Meshes: pred_p0=20695v, pred_p1=162509v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_custom_0_separation_compare.png
+  [26/31] lamp/4_custom_1_flip [GT] (p0=84, p1=214 tokens)
+    Flow sampling: 26.5s
+    Meshes: pred_p0=15813v, pred_p1=53573v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_custom_1_flip_compare.png
+  [27/31] lamp/1_basic_0 [GT] (p0=80, p1=158 tokens)
+    Flow sampling: 26.2s
+    Meshes: pred_p0=16599v, pred_p1=35957v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_1_basic_0_compare.png
+  [28/31] lamp/7_basic_0 [GT] (p0=108, p1=640 tokens)
+    Flow sampling: 26.4s
+    Meshes: pred_p0=23271v, pred_p1=149753v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_7_basic_0_compare.png
+  [29/31] lamp/99_basic_2 [GT] (p0=130, p1=482 tokens)
+    Flow sampling: 26.5s
+    Meshes: pred_p0=24673v, pred_p1=117385v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_99_basic_2_compare.png
+  [30/31] lamp/4_senior_3 [GT] (p0=264, p1=36 tokens)
+    Flow sampling: 25.5s
+    Meshes: pred_p0=54519v, pred_p1=6882v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_4_senior_3_compare.png
+  [31/31] lamp/99_senior_0 [GT] (p0=590, p1=40 tokens)
+    Flow sampling: 25.8s
+    Meshes: pred_p0=133295v, pred_p1=5900v
+    Comparison: ./output/slat_overfit_long_infer_lamp/lamp_99_senior_0_compare.png
+
+Done! Results in ./output/slat_overfit_long_infer_lamp

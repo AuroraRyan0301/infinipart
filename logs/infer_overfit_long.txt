@@ -1,0 +1,85 @@
+[SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
+[ATTENTION] Using backend: flash_attn
+Loading DualPartSLatModel (512, cross_attn from block 15)...
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+  Loaded checkpoint: step=21000
+Loading SLat Decoder...
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+
+Inference on 18 samples (coords: GT SLat)
+
+  [1/18] pepper_grinder/9_basic_0 [GT] (p0=1068, p1=644 tokens)
+    Flow sampling: 29.6s
+    Meshes: pred_p0=277141v, pred_p1=160214v
+    Comparison: ./output/slat_overfit_long_infer/pepper_grinder_9_basic_0_compare.png
+  [2/18] soap_dispenser/0_basic_1 [GT] (p0=1234, p1=44 tokens)
+    Flow sampling: 24.5s
+    Meshes: pred_p0=319933v, pred_p1=6870v
+    Comparison: ./output/slat_overfit_long_infer/soap_dispenser_0_basic_1_compare.png
+  [3/18] oven/2_basic_1 [GT] (p0=7393, p1=864 tokens)
+    Flow sampling: 33.4s
+    Meshes: pred_p0=1891511v, pred_p1=207667v
+    Comparison: ./output/slat_overfit_long_infer/oven_2_basic_1_compare.png
+  [4/18] lamp/1_senior_0 [GT] (p0=198, p1=56 tokens)
+    Flow sampling: 26.2s
+    Meshes: pred_p0=38877v, pred_p1=8520v
+    Comparison: ./output/slat_overfit_long_infer/lamp_1_senior_0_compare.png
+  [5/18] stovetop/0_senior_3 [GT] (p0=2718, p1=109 tokens)
+    Flow sampling: 27.3s
+    Meshes: pred_p0=692646v, pred_p1=26030v
+    Comparison: ./output/slat_overfit_long_infer/stovetop_0_senior_3_compare.png
+  [6/18] box/0_senior_1 [GT] (p0=6316, p1=3120 tokens)
+    Flow sampling: 34.0s
+    Meshes: pred_p0=1660371v, pred_p1=692297v
+    Comparison: ./output/slat_overfit_long_infer/box_0_senior_1_compare.png
+  [7/18] plier/6_basic_0 [GT] (p0=219, p1=219 tokens)
+    Flow sampling: 26.7s
+    Meshes: pred_p0=39654v, pred_p1=48233v
+    Comparison: ./output/slat_overfit_long_infer/plier_6_basic_0_compare.png
+  [8/18] door_handle/3_senior_0 [GT] (p0=606, p1=424 tokens)
+    Flow sampling: 26.3s
+    Meshes: pred_p0=150864v, pred_p1=99703v
+    Comparison: ./output/slat_overfit_long_infer/door_handle_3_senior_0_compare.png
+  [9/18] toaster/1_custom_3_flip [GT] (p0=3842, p1=41 tokens)
+    Flow sampling: 28.6s
+    Meshes: pred_p0=968449v, pred_p1=7337v
+    Comparison: ./output/slat_overfit_long_infer/toaster_1_custom_3_flip_compare.png
+  [10/18] cabinet/8_basic_1 [GT] (p0=3924, p1=608 tokens)
+    Flow sampling: 28.4s
+    Meshes: pred_p0=1323015v, pred_p1=180299v
+    Comparison: ./output/slat_overfit_long_infer/cabinet_8_basic_1_compare.png
+  [11/18] window/5_basic_7 [GT] (p0=940, p1=280 tokens)
+    Flow sampling: 25.4s
+    Meshes: pred_p0=255729v, pred_p1=58132v
+    Comparison: ./output/slat_overfit_long_infer/window_5_basic_7_compare.png
+  [12/18] door/3_senior_0 [GT] (p0=228, p1=720 tokens)
+    Flow sampling: 25.5s
+    Meshes: pred_p0=44904v, pred_p1=195220v
+    Comparison: ./output/slat_overfit_long_infer/door_3_senior_0_compare.png
+  [13/18] microwave/8_basic_1 [GT] (p0=5326, p1=1363 tokens)
+    Flow sampling: 32.6s
+    Meshes: pred_p0=1537397v, pred_p1=331296v
+    Comparison: ./output/slat_overfit_long_infer/microwave_8_basic_1_compare.png
+  [14/18] faucet/8_basic_1 [GT] (p0=1478, p1=196 tokens)
+    Flow sampling: 28.1s
+    Meshes: pred_p0=352352v, pred_p1=49990v
+    Comparison: ./output/slat_overfit_long_infer/faucet_8_basic_1_compare.png
+  [15/18] dishwasher/3_basic_0 [GT] (p0=8729, p1=320 tokens)
+    Flow sampling: 37.4s
+    Meshes: pred_p0=2247339v, pred_p1=50587v
+    Comparison: ./output/slat_overfit_long_infer/dishwasher_3_basic_0_compare.png
+  [16/18] refrigerator/0_senior_0 [GT] (p0=5132, p1=2732 tokens)
+    Flow sampling: 30.6s
+    Meshes: pred_p0=1394867v, pred_p1=864853v
+    Comparison: ./output/slat_overfit_long_infer/refrigerator_0_senior_0_compare.png
+  [17/18] drawer/2_basic_3 [GT] (p0=7720, p1=903 tokens)
+    Flow sampling: 34.9s
+    Meshes: pred_p0=2179866v, pred_p1=212157v
+    Comparison: ./output/slat_overfit_long_infer/drawer_2_basic_3_compare.png
+  [18/18] trash/3_basic_0 [GT] (p0=4720, p1=30 tokens)
+    Flow sampling: 29.4s
+    Meshes: pred_p0=1212940v, pred_p1=5446v
+    Comparison: ./output/slat_overfit_long_infer/trash_3_basic_0_compare.png
+
+Done! Results in ./output/slat_overfit_long_infer

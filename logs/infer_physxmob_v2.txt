@@ -1,0 +1,104 @@
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loaded DiT+proj from /mnt/data_ssd/infinigen-sim-data/checkpoints/overfit_physxmob_v2/step_15000.pt (step 15000)
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+VAE loaded
+
+=== train (5 samples) ===
+  [1/5] trashcan_103634_basic_0 (trashcan)
+    Flow: 12.0s
+    Decode: 7.5s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/train/trashcan_103634_basic_0_compare.png
+  [2/5] cabinet_46549_senior_1 (storage cabinet with drawers)
+    Flow: 11.8s
+    Decode: 10.1s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/train/cabinet_46549_senior_1_compare.png
+  [3/5] table_32601_senior_2 (table)
+    Flow: 11.8s
+    Decode: 11.7s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/train/table_32601_senior_2_compare.png
+  [4/5] table_32601_basic_0 (table)
+    Flow: 11.8s
+    Decode: 12.3s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/train/table_32601_basic_0_compare.png
+  [5/5] storage_46641_basic_1 (storage cabinet with drawers)
+    Flow: 11.8s
+    Decode: 9.4s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/train/storage_46641_basic_1_compare.png
+
+=== test_view (5 samples) ===
+  [1/5] cabinet_48381_senior_0 (wall cabinet)
+    Flow: 11.8s
+    Decode: 8.9s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_view/cabinet_48381_senior_0_compare.png
+  [2/5] cabinet_46380_senior_0 (drawer cabinet)
+    Flow: 11.8s
+    Decode: 9.4s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_view/cabinet_46380_senior_0_compare.png
+  [3/5] table_29133_senior_0 (table)
+    Flow: 11.8s
+    Decode: 7.3s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_view/table_29133_senior_0_compare.png
+  [4/5] table_23807_basic_3 (table)
+    Flow: 11.8s
+    Decode: 8.5s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_view/table_23807_basic_3_compare.png
+  [5/5] table_25913_senior_2 (table)
+    Flow: 11.8s
+    Decode: 7.8s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_view/table_25913_senior_2_compare.png
+
+=== test_obj (5 samples) ===
+  [1/5] trashcan_102227_basic_0 (trashcan)
+    Flow: 11.8s
+    Decode: 8.3s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_obj/trashcan_102227_basic_0_compare.png
+  [2/5] cabinet_46537_senior_1 (cabinet with drawers)
+    Flow: 11.8s
+    Decode: 10.6s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_obj/cabinet_46537_senior_1_compare.png
+  [3/5] table_32932_senior_0 (table)
+    Flow: 11.8s
+    Decode: 7.9s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_obj/table_32932_senior_0_compare.png
+  [4/5] oven_101773_basic_6 (oven)
+    Flow: 11.9s
+    Decode: 9.4s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_obj/oven_101773_basic_6_compare.png
+  [5/5] oven_101773_basic_5 (oven)
+    Flow: 11.8s
+    Decode: 11.1s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k/test_obj/oven_101773_basic_5_compare.png
+
+Done! Results: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_physxmob_v2_step15k

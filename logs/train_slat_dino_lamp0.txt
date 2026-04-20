@@ -1,0 +1,74 @@
+[SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
+[ATTENTION] Using backend: flash_attn
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: auroraryan0301 to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run zxrs87cp
+wandb: Tracking run with wandb version 0.25.1
+wandb: Run data is saved locally in /mnt/cpfs/yurh/Infinigen-Sim/wandb/run-20260330_144033-zxrs87cp
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run slat_dino_lamp0_basic0
+wandb: ⭐️ View project at https://wandb.ai/auroraryan0301/infinipart
+wandb: 🚀 View run at https://wandb.ai/auroraryan0301/infinipart/runs/zxrs87cp
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1604M total, 311M trainable
+SLat model built (vjepa_dim=1536 for DINOv2)
+  basic_0: p0=88, p1=598, dino=torch.Size([1, 5480, 1536])
+
+SLat + DINOv2 overfit: basic_0 vs basic_5, 5000 steps
+
+  [100/5000] loss=2.258710 | 1.84 it/s
+  [200/5000] loss=1.900942 | 1.84 it/s
+  [300/5000] loss=1.898620 | 1.84 it/s
+  [400/5000] loss=1.887723 | 1.83 it/s
+  [500/5000] loss=1.884559 | 1.84 it/s
+  [600/5000] loss=1.886927 | 1.84 it/s
+  [700/5000] loss=1.890294 | 1.84 it/s
+  [800/5000] loss=1.885519 | 1.84 it/s
+  [900/5000] loss=1.885935 | 1.84 it/s
+  [1000/5000] loss=1.885687 | 1.84 it/s
+  [1100/5000] loss=1.881860 | 1.84 it/s
+  [1200/5000] loss=1.902588 | 1.84 it/s
+  [1300/5000] loss=1.884129 | 1.84 it/s
+  [1400/5000] loss=1.882293 | 1.84 it/s
+  [1500/5000] loss=1.884098 | 1.84 it/s
+  [1600/5000] loss=1.890048 | 1.84 it/s
+  [1700/5000] loss=1.885451 | 1.84 it/s
+  [1800/5000] loss=1.883142 | 1.84 it/s
+  [1900/5000] loss=1.882588 | 1.84 it/s
+  [2000/5000] loss=1.886449 | 1.85 it/s
+  [2100/5000] loss=1.885929 | 1.85 it/s
+  [2200/5000] loss=1.885944 | 1.85 it/s
+  [2300/5000] loss=1.883761 | 1.85 it/s
+  [2400/5000] loss=1.883423 | 1.85 it/s
+  [2500/5000] loss=1.881425 | 1.85 it/s
+  [2600/5000] loss=1.886041 | 1.85 it/s
+  [2700/5000] loss=1.880950 | 1.85 it/s
+  [2800/5000] loss=1.885779 | 1.85 it/s
+  [2900/5000] loss=1.882102 | 1.85 it/s
+  [3000/5000] loss=1.882187 | 1.83 it/s
+  [3100/5000] loss=1.884083 | 1.82 it/s
+  [3200/5000] loss=1.883011 | 1.80 it/s
+  [3300/5000] loss=1.882030 | 1.79 it/s
+  [3400/5000] loss=1.886185 | 1.78 it/s
+  [3500/5000] loss=1.884085 | 1.77 it/s
+  [3600/5000] loss=1.882282 | 1.76 it/s
+  [3700/5000] loss=1.882568 | 1.74 it/s
+  [3800/5000] loss=1.881182 | 1.74 it/s
+  [3900/5000] loss=1.882544 | 1.73 it/s
+  [4000/5000] loss=1.886030 | 1.72 it/s
+  [4100/5000] loss=1.884674 | 1.71 it/s
+  [4200/5000] loss=1.884734 | 1.70 it/s
+  [4300/5000] loss=1.882240 | 1.70 it/s
+  [4400/5000] loss=1.883587 | 1.69 it/s
+  [4500/5000] loss=1.883463 | 1.69 it/s
+  [4600/5000] loss=1.879308 | 1.68 it/s
+  [4700/5000] loss=1.886308 | 1.67 it/s
+  [4800/5000] loss=1.885275 | 1.67 it/s
+  [4900/5000] loss=1.885908 | 1.66 it/s
+  [5000/5000] loss=1.885846 | 1.66 it/s
+  Saved: /mnt/data_ssd/infinigen-sim-data/checkpoints/slat_dino_lamp0/step_5000.pt
+
+Done in 50.2m
+[1;34mwandb[0m: 
+[1;34mwandb[0m: 🚀 View run [33mslat_dino_lamp0_basic0[0m at: [34mhttps://wandb.ai/auroraryan0301/infinipart/runs/zxrs87cp[0m
+[1;34mwandb[0m: Find logs at: [1;35mwandb/run-20260330_144033-zxrs87cp/logs[0m

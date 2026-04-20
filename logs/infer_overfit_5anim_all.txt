@@ -1,0 +1,76 @@
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+Models loaded
+[1/40] 22367_basic_2_v01 (train)
+[2/40] 22367_basic_2_v02 (train)
+[3/40] 22367_basic_2_v09 (train)
+[4/40] 22367_basic_2_v18 (train)
+[5/40] 22367_basic_2_v22 (train)
+[6/40] 22367_basic_2_v25 (train)
+[7/40] 22367_basic_2_v30 (train)
+[8/40] 22367_basic_5_v00 (train)
+[9/40] 22367_basic_5_v02 (train)
+[10/40] 22367_basic_5_v12 (train)
+[11/40] 22367_basic_5_v17 (train)
+[12/40] 22367_basic_5_v24 (train)
+[13/40] 100188_basic_0_v09 (train)
+[14/40] 100188_basic_0_v14 (train)
+[15/40] 100188_basic_0_v16 (train)
+[16/40] 100188_basic_0_v22 (train)
+[17/40] 100188_basic_0_v25 (train)
+[18/40] 100188_basic_0_v30 (train)
+[19/40] 100038_basic_0_v01 (train)
+[20/40] 100038_basic_0_v08 (train)
+[21/40] 100038_basic_0_v12 (train)
+[22/40] 100038_basic_0_v13 (train)
+[23/40] 100038_basic_0_v16 (train)
+[24/40] 100038_basic_0_v21 (train)
+[25/40] 100038_basic_0_v29 (train)
+[26/40] 101402_basic_0_v01 (train)
+[27/40] 101402_basic_0_v05 (train)
+[28/40] 101402_basic_0_v12 (train)
+[29/40] 101402_basic_0_v13 (train)
+[30/40] 101402_basic_0_v17 (train)
+[31/40] 101402_basic_0_v20 (train)
+[32/40] 101402_basic_0_v25 (train)
+[33/40] 22367_basic_2_v15 (test_view)
+[34/40] 22367_basic_5_v11 (test_view)
+[35/40] 22367_basic_5_v23 (test_view)
+[36/40] 22367_basic_5_v27 (test_view)
+[37/40] 100188_basic_0_v11 (test_view)
+[38/40] 100188_basic_0_v15 (test_view)
+[39/40] 100038_basic_0_v27 (test_view)
+[40/40] 101402_basic_0_v31 (test_view)
+All infer done

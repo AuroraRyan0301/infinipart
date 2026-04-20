@@ -1,0 +1,23 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Filtered animodes (0.2 <= ratio <= 3.0): 1038
+Total tasks (before sharding): 8966
+Shard 0/4: 2242 tasks
+[VJEPA2] Loaded ViT-g on cuda:0 (bf16)
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+  [200/2242] 1.2 vid/s | ETA=29min
+  [400/2242] 1.8 vid/s | ETA=17min
+  [600/2242] 2.2 vid/s | ETA=13min
+  [800/2242] 2.4 vid/s | ETA=10min
+  [1000/2242] 2.7 vid/s | ETA=8min
+  [1200/2242] 2.8 vid/s | ETA=6min
+  [1400/2242] 2.9 vid/s | ETA=5min
+  [1600/2242] 3.0 vid/s | ETA=4min
+  [1800/2242] 3.1 vid/s | ETA=2min
+  [2000/2242] 3.2 vid/s | ETA=1min
+  [2200/2242] 3.2 vid/s | ETA=0min
+
+Done! Encoded 2242 videos in 12.2min (3.1 vid/s)

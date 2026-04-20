@@ -1,0 +1,42 @@
+[SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
+[ATTENTION] Using backend: flash_attn
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: auroraryan0301 to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run jjflzjah
+wandb: Tracking run with wandb version 0.25.1
+wandb: Run data is saved locally in /mnt/cpfs/yurh/Infinigen-Sim/wandb/run-20260330_150726-jjflzjah
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prog_dino_table
+wandb: ⭐️ View project at https://wandb.ai/auroraryan0301/infinipart
+wandb: 🚀 View run at https://wandb.ai/auroraryan0301/infinipart/runs/jjflzjah
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 29): 1604M total, 311M trainable
+Sample: PhysXMobility/22367_basic_2, p0=7421, p1=310, cond=torch.Size([1, 5480, 1536]) (dino)
+Progressive: block 29→15, unlock every 200 steps
+  [50/8000] loss=2.033745 block=29 | 0.64 it/s
+  [100/8000] loss=2.037051 block=29 | 0.64 it/s
+  [150/8000] loss=2.068000 block=29 | 0.65 it/s
+  [Step 200] Unlocked → cross_attn from block 28
+  [200/8000] loss=2.064262 block=28 | 0.65 it/s
+  [250/8000] loss=2.077432 block=28 | 0.65 it/s
+  [300/8000] loss=2.045913 block=28 | 0.65 it/s
+  [350/8000] loss=2.104439 block=28 | 0.65 it/s
+  [Step 400] Unlocked → cross_attn from block 27
+  [400/8000] loss=1.797198 block=27 | 0.65 it/s
+  [450/8000] loss=0.384580 block=27 | 0.64 it/s
+  [500/8000] loss=0.306237 block=27 | 0.64 it/s
+  [550/8000] loss=0.275468 block=27 | 0.64 it/s
+  [Step 600] Unlocked → cross_attn from block 26
+  [600/8000] loss=0.253291 block=26 | 0.64 it/s
+  [650/8000] loss=0.227909 block=26 | 0.64 it/s
+  [700/8000] loss=0.245270 block=26 | 0.64 it/s
+  [750/8000] loss=0.239591 block=26 | 0.64 it/s
+  [Step 800] Unlocked → cross_attn from block 25
+  [800/8000] loss=0.175026 block=25 | 0.64 it/s
+  [850/8000] loss=0.190999 block=25 | 0.64 it/s
+  [900/8000] loss=0.149316 block=25 | 0.64 it/s
+  [950/8000] loss=0.149124 block=25 | 0.64 it/s
+  [Step 1000] Unlocked → cross_attn from block 24
+  [1000/8000] loss=0.207252 block=24 | 0.64 it/s
+  [1050/8000] loss=0.191222 block=24 | 0.64 it/s
+  [1100/8000] loss=0.199957 block=24 | 0.64 it/s

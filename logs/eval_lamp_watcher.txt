@@ -1,0 +1,28 @@
+[SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
+[ATTENTION] Using backend: flash_attn
+  GT render → /mnt/data_ssd/infinigen-sim-data/eval_lamp_overfit/gt_orig.png
+Watching /mnt/data_ssd/infinigen-sim-data/checkpoints/slat_overfit_long for new checkpoints...
+
+Eval checkpoint: step_15000.pt
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+  Eval step 15000 → /mnt/data_ssd/infinigen-sim-data/eval_lamp_overfit/step_15000_pred.png
+
+Eval checkpoint: step_18000.pt
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+  Eval step 18000 → /mnt/data_ssd/infinigen-sim-data/eval_lamp_overfit/step_18000_pred.png
+
+Eval checkpoint: step_21000.pt
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+  Eval step 21000 → /mnt/data_ssd/infinigen-sim-data/eval_lamp_overfit/step_21000_pred.png
+
+Eval checkpoint: step_24000.pt
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 15): 1603M total, 311M trainable
+Loaded SLat Decoder from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/shape_dec_next_dc_f16c32_fp16.safetensors
+  Eval step 24000 → /mnt/data_ssd/infinigen-sim-data/eval_lamp_overfit/step_24000_pred.png

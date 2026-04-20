@@ -1,0 +1,84 @@
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+Loaded DiT+proj from /mnt/data_ssd/infinigen-sim-data/checkpoints/overfit_5anim_diff/step_30000.pt (step 30000)
+Warning:
+Unable to load the following plugins:
+
+	libfilter_ao.so: libfilter_ao.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ao.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_meshing.so: libfilter_meshing.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_meshing.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_plymc.so: libfilter_plymc.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_plymc.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sample_gpu.so: libfilter_sample_gpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sample_gpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_sdfgpu.so: libfilter_sdfgpu.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_sdfgpu.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_ssynth.so: libfilter_ssynth.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_ssynth.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libfilter_texture_defragmentation.so: libfilter_texture_defragmentation.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libfilter_texture_defragmentation.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_base.so: libio_base.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_base.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+	libio_x3d.so: libio_x3d.so does not seem to be a Qt Plugin.
+
+Cannot load library /mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/pymeshlab/lib/plugins/libio_x3d.so: (libOpenGL.so.0: cannot open shared object file: No such file or directory)
+
+Number of parameters in VAE: 340.30M
+VAE loaded
+
+=== train (5 samples) ===
+  [1/5] PhysXMobility_100038_basic_0 (?)
+    Flow: 14.4s
+    Decode: 8.3s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/train/PhysXMobility_100038_basic_0_compare.png
+  [2/5] PhysXMobility_22367_basic_5 (?)
+    Flow: 13.9s
+    Decode: 16.1s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/train/PhysXMobility_22367_basic_5_compare.png
+  [3/5] PhysXMobility_100188_basic_0 (?)
+    Flow: 14.0s
+    Decode: 7.5s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/train/PhysXMobility_100188_basic_0_compare.png
+  [4/5] PhysXMobility_101402_basic_0 (?)
+    Flow: 13.9s
+    Decode: 7.5s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/train/PhysXMobility_101402_basic_0_compare.png
+  [5/5] PhysXMobility_22367_basic_2 (?)
+    Flow: 14.0s
+    Decode: 15.6s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/train/PhysXMobility_22367_basic_2_compare.png
+
+=== test_view (5 samples) ===
+  [1/5] PhysXMobility_100038_basic_0 (?)
+    Flow: 13.9s
+    Decode: 8.3s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/test_view/PhysXMobility_100038_basic_0_compare.png
+  [2/5] PhysXMobility_100188_basic_0 (?)
+    Flow: 13.9s
+    Decode: 7.8s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/test_view/PhysXMobility_100188_basic_0_compare.png
+  [3/5] PhysXMobility_22367_basic_2 (?)
+    Flow: 13.9s
+    Decode: 12.4s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/test_view/PhysXMobility_22367_basic_2_compare.png
+  [4/5] PhysXMobility_101402_basic_0 (?)
+    Flow: 13.9s
+    Decode: 7.7s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/test_view/PhysXMobility_101402_basic_0_compare.png
+  [5/5] PhysXMobility_22367_basic_5 (?)
+    Flow: 13.9s
+    Decode: 13.7s
+    Render: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k/test_view/PhysXMobility_22367_basic_5_compare.png
+
+=== test_obj (0 samples) ===
+
+Done! Results: /mnt/cpfs/yurh/Infinigen-Sim/output/infer_diff_30k

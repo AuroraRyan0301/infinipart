@@ -1,0 +1,11 @@
+PhysXNet_PhysXnet/45239/basic_7/part0.obj | empty mesh (0 faces) | {'verts': 0, 'faces': 0}
+PhysXNet_PhysXnet/39713/basic_4/part0.obj | empty mesh (0 faces) | {'verts': 0, 'faces': 0}
+trash/92/basic_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/60/basic_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/87/basic_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/77/basic_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/15/basic_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/59/basic_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/23/senior_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/22/senior_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}
+trash/63/basic_0/part0.obj | load_error: shapes (4,4) and (1,1) not aligned: 4 (dim 1) != 1 (dim 0) | {}

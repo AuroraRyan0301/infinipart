@@ -1,0 +1,49 @@
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+
+*****************************************
+Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+*****************************************
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[Manifest] Loaded from /mnt/data_ssd/infinigen-sim-data/checkpoints/overfit_table22367_2anim_jepa/manifest.json
+
+======================================================================
+Multi-Category DDP: VJEPA2 Only
+  Conditioning: [1408] -> proj -> [1536]
+  Categories: []
+  GPUs: 2, batch_size/GPU: 4
+  Grad accum: 1
+  Effective batch size: 8
+  Training samples: 12
+  Test samples: 4 (every 4th view)
+  Steps: 30000, LR: 0.0001
+  Data root: /mnt/data_ssd/infinigen-sim-data/encoded
+  Output dir: /mnt/data_ssd/infinigen-sim-data/checkpoints/packer_jepa_fixcoord_2anim
+  Manifest: /mnt/data_ssd/infinigen-sim-data/checkpoints/overfit_table22367_2anim_jepa/manifest.json (fixed dataset)
+======================================================================
+
+
+  Eval subset: 12 train, 4 test
+Preloading all features into CPU RAM...
+Preload:   0%|          | 0/16 [00:00<?, ?it/s]Preload:  38%|███▊      | 6/16 [00:00<00:00, 53.60it/s]Preload:  75%|███████▌  | 12/16 [00:00<00:00, 54.34it/s]Preload: 100%|██████████| 16/16 [00:00<00:00, 55.13it/s]
+  Cached: 2 GT (4MB), 16 JEPA (461MB)
+[Init] Pretrained DiT: loaded 537, skipped 0
+DiT: 1249.5M | proj: 2164224 | Total: 1251.7M
+  Phase 1: freeze DiT, train proj only for 3000 steps
+/mnt/cpfs/yurh/PartPacker/train_partnet_vjepa_ddp.py:1131: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: auroraryan0301 to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run n96ww36p
+wandb: Tracking run with wandb version 0.24.2
+wandb: Run data is saved locally in /mnt/cpfs/yurh/Infinigen-Sim/wandb/run-20260331_083142-n96ww36p
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run packer_jepa_fixcoord_2anim
+wandb: ⭐️ View project at https://wandb.ai/auroraryan0301/infinipart
+wandb: 🚀 View run at https://wandb.ai/auroraryan0301/infinipart/runs/n96ww36p
+Training:   0%|          | 0/30000 [00:00<?, ?it/s]/mnt/cpfs/yurh/PartPacker/train_partnet_vjepa_ddp.py:1131: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  with torch.cuda.amp.autocast(dtype=torch.bfloat16):
+Training:   0%|          | 0/30000 [00:02<?, ?it/s, loss=0.3919, lr=1.00e-04]Training:   0%|          | 1/30000 [00:02<22:44:04,  2.73s/it, loss=0.3919, lr=1.00e-04]Training:   0%|          | 1/30000 [00:05<22:44:04,  2.73s/it, loss=0.8383, lr=1.00e-04]Training:   0%|          | 2/30000 [00:05<21:30:30,  2.58s/it, loss=0.8383, lr=1.00e-04]Training:   0%|          | 2/30000 [00:07<21:30:30,  2.58s/it, loss=0.8873, lr=1.00e-04]Training:   0%|          | 3/30000 [00:07<21:12:47,  2.55s/it, loss=0.8873, lr=1.00e-04]Training:   0%|          | 3/30000 [00:10<21:12:47,  2.55s/it, loss=0.5521, lr=1.00e-04]Training:   0%|          | 4/30000 [00:10<21:02:33,  2.53s/it, loss=0.5521, lr=1.00e-04]Training:   0%|          | 4/30000 [00:12<21:02:33,  2.53s/it, loss=0.6466, lr=1.00e-04]Training:   0%|          | 5/30000 [00:12<20:58:11,  2.52s/it, loss=0.6466, lr=1.00e-04]Training:   0%|          | 5/30000 [00:15<20:58:11,  2.52s/it, loss=0.5845, lr=1.00e-04]Training:   0%|          | 6/30000 [00:15<20:55:05,  2.51s/it, loss=0.5845, lr=1.00e-04]Training:   0%|          | 6/30000 [00:17<20:55:05,  2.51s/it, loss=0.7759, lr=1.00e-04]Training:   0%|          | 7/30000 [00:17<20:53:11,  2.51s/it, loss=0.7759, lr=1.00e-04]Training:   0%|          | 7/30000 [00:20<20:53:11,  2.51s/it, loss=0.6697, lr=1.00e-04]Training:   0%|          | 8/30000 [00:20<20:51:47,  2.50s/it, loss=0.6697, lr=1.00e-04]Training:   0%|          | 8/30000 [00:22<20:51:47,  2.50s/it, loss=0.9022, lr=1.00e-04]Training:   0%|          | 9/30000 [00:22<20:50:54,  2.50s/it, loss=0.9022, lr=1.00e-04]Training:   0%|          | 9/30000 [00:25<20:50:54,  2.50s/it, loss=0.5689, lr=1.00e-04]Training:   0%|          | 10/30000 [00:25<20:50:06,  2.50s/it, loss=0.5689, lr=1.00e-04]Training:   0%|          | 10/30000 [00:27<20:50:06,  2.50s/it, loss=0.8511, lr=1.00e-04]Training:   0%|          | 11/30000 [00:27<20:45:48,  2.49s/it, loss=0.8511, lr=1.00e-04]Training:   0%|          | 11/30000 [00:30<20:45:48,  2.49s/it, loss=0.7010, lr=1.00e-04]Training:   0%|          | 12/30000 [00:30<20:46:38,  2.49s/it, loss=0.7010, lr=1.00e-04]Training:   0%|          | 12/30000 [00:32<20:46:38,  2.49s/it, loss=0.5080, lr=1.00e-04]Training:   0%|          | 13/30000 [00:32<20:46:52,  2.49s/it, loss=0.5080, lr=1.00e-04]Training:   0%|          | 13/30000 [00:35<20:46:52,  2.49s/it, loss=0.8853, lr=1.00e-04]Training:   0%|          | 14/30000 [00:35<20:47:44,  2.50s/it, loss=0.8853, lr=1.00e-04]Training:   0%|          | 14/30000 [00:37<20:47:44,  2.50s/it, loss=0.9282, lr=1.00e-04]Training:   0%|          | 15/30000 [00:37<20:47:52,  2.50s/it, loss=0.9282, lr=1.00e-04]Training:   0%|          | 15/30000 [00:40<20:47:52,  2.50s/it, loss=0.5255, lr=1.00e-04]Training:   0%|          | 16/30000 [00:40<20:46:03,  2.49s/it, loss=0.5255, lr=1.00e-04]Training:   0%|          | 16/30000 [00:42<20:46:03,  2.49s/it, loss=0.8140, lr=1.00e-04]Training:   0%|          | 17/30000 [00:42<20:46:50,  2.50s/it, loss=0.8140, lr=1.00e-04]Training:   0%|          | 17/30000 [00:45<20:46:50,  2.50s/it, loss=0.6034, lr=1.00e-04]Training:   0%|          | 18/30000 [00:45<20:47:00,  2.50s/it, loss=0.6034, lr=1.00e-04]Training:   0%|          | 18/30000 [00:47<20:47:00,  2.50s/it, loss=0.5566, lr=1.00e-04]Training:   0%|          | 19/30000 [00:47<20:47:11,  2.50s/it, loss=0.5566, lr=1.00e-04]Training:   0%|          | 19/30000 [00:50<20:47:11,  2.50s/it, loss=0.6249, lr=1.00e-04]Training:   0%|          | 20/30000 [00:50<20:47:15,  2.50s/it, loss=0.6249, lr=1.00e-04]Training:   0%|          | 20/30000 [00:52<20:47:15,  2.50s/it, loss=0.7793, lr=1.00e-04]Training:   0%|          | 21/30000 [00:52<20:47:49,  2.50s/it, loss=0.7793, lr=1.00e-04]Training:   0%|          | 21/30000 [00:55<20:47:49,  2.50s/it, loss=0.8614, lr=1.00e-04]Training:   0%|          | 22/30000 [00:55<20:48:15,  2.50s/it, loss=0.8614, lr=1.00e-04]Training:   0%|          | 22/30000 [00:57<20:48:15,  2.50s/it, loss=0.8627, lr=1.00e-04]Training:   0%|          | 23/30000 [00:57<20:46:32,  2.49s/it, loss=0.8627, lr=1.00e-04]Training:   0%|          | 23/30000 [01:00<20:46:32,  2.49s/it, loss=0.7279, lr=1.00e-04]Training:   0%|          | 24/30000 [01:00<20:47:43,  2.50s/it, loss=0.7279, lr=1.00e-04]Training:   0%|          | 24/30000 [01:02<20:47:43,  2.50s/it, loss=0.8793, lr=1.00e-04]Training:   0%|          | 25/30000 [01:02<20:45:20,  2.49s/it, loss=0.8793, lr=1.00e-04]Training:   0%|          | 25/30000 [01:05<20:45:20,  2.49s/it, loss=0.6013, lr=1.00e-04]Training:   0%|          | 26/30000 [01:05<20:44:02,  2.49s/it, loss=0.6013, lr=1.00e-04]Training:   0%|          | 26/30000 [01:07<20:44:02,  2.49s/it, loss=0.5043, lr=1.00e-04]Training:   0%|          | 27/30000 [01:07<20:43:26,  2.49s/it, loss=0.5043, lr=1.00e-04]Training:   0%|          | 27/30000 [01:10<20:43:26,  2.49s/it, loss=0.6384, lr=1.00e-04]Training:   0%|          | 28/30000 [01:10<20:46:50,  2.50s/it, loss=0.6384, lr=1.00e-04]Training:   0%|          | 28/30000 [01:12<20:46:50,  2.50s/it, loss=0.6686, lr=1.00e-04]Training:   0%|          | 29/30000 [01:12<20:47:48,  2.50s/it, loss=0.6686, lr=1.00e-04]Training:   0%|          | 29/30000 [01:15<20:47:48,  2.50s/it, loss=0.7598, lr=1.00e-04]Training:   0%|          | 30/30000 [01:15<20:54:26,  2.51s/it, loss=0.7598, lr=1.00e-04]Training:   0%|          | 30/30000 [01:17<20:54:26,  2.51s/it, loss=0.7644, lr=1.00e-04]Training:   0%|          | 31/30000 [01:17<20:51:11,  2.50s/it, loss=0.7644, lr=1.00e-04]Training:   0%|          | 31/30000 [01:20<20:51:11,  2.50s/it, loss=0.7104, lr=1.00e-04]Training:   0%|          | 32/30000 [01:20<20:48:06,  2.50s/it, loss=0.7104, lr=1.00e-04]Training:   0%|          | 32/30000 [01:22<20:48:06,  2.50s/it, loss=0.7215, lr=1.00e-04]Training:   0%|          | 33/30000 [01:22<20:46:29,  2.50s/it, loss=0.7215, lr=1.00e-04]

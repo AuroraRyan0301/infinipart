@@ -69,6 +69,37 @@ Train a network to predict **dual-volume topological partition** of articulated 
 - PartPacker VAE: OBJ → encode → latent `[1, 4096, 64]` per part → concat → `[1, 8192, 64]`. Decode: latent → hidden_states → hierarchical query 384³ grid → marching cubes → mesh. **Resolution must be ≥384, NOT 32.**
 - PartPacker Flow DiT: 1249.5M params, 1536 hidden_dim, 24 layers, 16 heads. Pretrained on PartNet. Needs finetuning with VJEPA2 condition for our video→shape task.
 
+### Training Progress (as of 2026-04-11)
+
+**Experiment 1: Linear projector + diff-only JEPA (completed 70k/110k steps)**
+- Feature: [10240, 1408] diff JEPA (5 orig temporal + 35 diff temporal tokens)
+- Projector: nn.Linear(1408, 1536)
+- Data: 1036 animodes, ratio [0.2, 3.0], all views
+- Result: loss plateau ~0.47, topo_correct 38% at step 35k. CFG=11 needed for decent results → **condition signal too weak**
+- Checkpoint: `checkpoints/diff_jepa_filtered_full/step_70000.pt`
+- CFG comparison grid: `output/cfg_grid_seed123/`, `output/cfg_grid_seed777/`
+
+**Experiment 2: Self-Attn projector + orig+diff JEPA (stopped at 35k)**
+- Feature: [9600, 1408] = orig_sub(5120) + diff_sub(4480), stride-2 subsampled
+- Projector: MLP(1408→1536→1536) + 2-layer Self-Attention (8 heads, QK-Norm)
+- Data: 968 animodes, ratio [0.2, 3.0], hemi views only, no box
+- DiT: loaded from Exp1 step_70000
+- Result: loss lower than Exp1 (~0.44 vs 0.47), but visual quality not clearly better. Self-attention had stability issues (attention collapse at step 4k without QK-Norm). MLP-only ablation suggests self-attention may be unnecessary.
+- Checkpoint: `checkpoints/diff_jepa_v2_selfattn/`
+
+**Key Findings:**
+1. **Weak conditioning is the main bottleneck** — CFG=11 needed for decent results, condition IS effective but weak
+2. **V-JEPA 2.0 dense features are poor** — ADE20K mIoU 22.2 vs DINOv2 ~49. This is the ROOT CAUSE of weak conditioning, not projector design
+3. **V-JEPA 2.1 fixes this** — ADE20K 47.9, NYU depth 0.307 (on par with DINOv2). Dense Predictive Loss + Deep Self-Supervision dramatically improve spatial feature quality
+4. **Self-attention projector: marginal benefit over MLP** — QK-Norm needed for stability, visual quality not clearly better
+5. **AdaLN video condition injection designed but not yet tested** (see `claude_docs/ADALN_CONDITION_DESIGN.md`)
+
+**Next Step: Upgrade to V-JEPA 2.1**
+- Checkpoint: `/mnt/cpfs/yurh/vjepa2/checkpoints/vjepa2_1_vitg_384.pt` (downloaded)
+- Resolution: 384×384 → spatial 24×24=576 patches → 40×576=23040 tokens (vs 10240 with v2.0@256)
+- Need: update encode script for 2.1 model loading + 384 resolution
+- Expected: much stronger spatial features → better conditioning → lower optimal CFG
+
 ### SLat Refiner (DEPRECATED, kept for reference)
 - Was: TRELLIS 2 Shape SLat Flow Model (~1.3B frozen) + VJEPA proj + Part cross-attn (~160M trainable)
 - Why abandoned: PartPacker VAE works fine at proper resolution, SLat adds unnecessary complexity

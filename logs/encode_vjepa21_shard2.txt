@@ -1,0 +1,62 @@
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+Filtered animodes: 970 (ratio [0.2, 3.0], excl {'box'})
+Total tasks: 4064
+Shard 2/4: 1016 tasks
+[V-JEPA 2.1] Loaded ViT-g @384 on cuda:0
+/mnt/data/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+  [20/1016] 0.4 vid/s | ETA=37min
+  [40/1016] 0.4 vid/s | ETA=38min
+  [60/1016] 0.4 vid/s | ETA=39min
+  [80/1016] 0.5 vid/s | ETA=33min
+  [100/1016] 0.5 vid/s | ETA=29min
+  [120/1016] 0.6 vid/s | ETA=26min
+  [140/1016] 0.6 vid/s | ETA=24min
+  [160/1016] 0.6 vid/s | ETA=22min
+  [180/1016] 0.7 vid/s | ETA=21min
+  [200/1016] 0.7 vid/s | ETA=20min
+  [220/1016] 0.7 vid/s | ETA=19min
+  [240/1016] 0.7 vid/s | ETA=18min
+  [260/1016] 0.7 vid/s | ETA=17min
+  [280/1016] 0.7 vid/s | ETA=16min
+  [300/1016] 0.8 vid/s | ETA=16min
+  [320/1016] 0.8 vid/s | ETA=15min
+  [340/1016] 0.8 vid/s | ETA=15min
+  [360/1016] 0.8 vid/s | ETA=14min
+  [380/1016] 0.8 vid/s | ETA=13min
+  [400/1016] 0.8 vid/s | ETA=13min
+  [420/1016] 0.8 vid/s | ETA=12min
+  [440/1016] 0.8 vid/s | ETA=12min
+  [460/1016] 0.8 vid/s | ETA=11min
+  [480/1016] 0.8 vid/s | ETA=11min
+  [500/1016] 0.8 vid/s | ETA=10min
+  [520/1016] 0.8 vid/s | ETA=10min
+  [540/1016] 0.8 vid/s | ETA=10min
+  [560/1016] 0.8 vid/s | ETA=9min
+  [580/1016] 0.8 vid/s | ETA=9min
+  [600/1016] 0.8 vid/s | ETA=8min
+  [620/1016] 0.8 vid/s | ETA=8min
+  [640/1016] 0.8 vid/s | ETA=7min
+  [660/1016] 0.9 vid/s | ETA=7min
+  [680/1016] 0.9 vid/s | ETA=7min
+  [700/1016] 0.9 vid/s | ETA=6min
+  [720/1016] 0.9 vid/s | ETA=6min
+  [740/1016] 0.9 vid/s | ETA=5min
+  [760/1016] 0.9 vid/s | ETA=5min
+  [780/1016] 0.9 vid/s | ETA=5min
+  [800/1016] 0.9 vid/s | ETA=4min
+  [820/1016] 0.9 vid/s | ETA=4min
+  [840/1016] 0.9 vid/s | ETA=3min
+  [860/1016] 0.9 vid/s | ETA=3min
+  [880/1016] 0.9 vid/s | ETA=3min
+  [900/1016] 0.9 vid/s | ETA=2min
+  [920/1016] 0.9 vid/s | ETA=2min
+  [940/1016] 0.9 vid/s | ETA=1min
+  [960/1016] 0.9 vid/s | ETA=1min
+  [980/1016] 0.9 vid/s | ETA=1min
+  [1000/1016] 0.9 vid/s | ETA=0min
+
+Done! Encoded 1016 videos in 19.1min (0.9 vid/s)

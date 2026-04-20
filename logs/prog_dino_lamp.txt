@@ -1,0 +1,86 @@
+[SPARSE] Conv backend: flex_gemm; Attention backend: flash_attn
+[ATTENTION] Using backend: flash_attn
+wandb: [wandb.login()] Loaded credentials for https://api.wandb.ai from WANDB_API_KEY.
+wandb: Currently logged in as: auroraryan0301 to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: setting up run e3pktneb
+wandb: Tracking run with wandb version 0.25.1
+wandb: Run data is saved locally in /mnt/cpfs/yurh/Infinigen-Sim/wandb/run-20260330_150727-e3pktneb
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run prog_dino_lamp
+wandb: ⭐️ View project at https://wandb.ai/auroraryan0301/infinipart
+wandb: 🚀 View run at https://wandb.ai/auroraryan0301/infinipart/runs/e3pktneb
+Loaded SLat 512 weights from /mnt/cpfs/yurh/TRELLIS.2-4B/ckpts/slat_flow_img2shape_dit_1_3B_512_bf16.safetensors
+DualPartSLatModel (512, cross_attn from block 29): 1604M total, 311M trainable
+Sample: lamp/0_basic_0, p0=88, p1=598, cond=torch.Size([1, 5480, 1536]) (dino)
+Progressive: block 29→15, unlock every 200 steps
+  [50/8000] loss=0.288268 block=29 | 1.64 it/s
+  [100/8000] loss=0.174855 block=29 | 1.65 it/s
+  [150/8000] loss=0.190085 block=29 | 1.66 it/s
+  [Step 200] Unlocked → cross_attn from block 28
+  [200/8000] loss=0.153329 block=28 | 1.66 it/s
+  [250/8000] loss=0.218989 block=28 | 1.66 it/s
+  [300/8000] loss=0.146038 block=28 | 1.66 it/s
+  [350/8000] loss=0.182216 block=28 | 1.66 it/s
+  [Step 400] Unlocked → cross_attn from block 27
+  [400/8000] loss=0.103793 block=27 | 1.66 it/s
+  [450/8000] loss=0.094385 block=27 | 1.66 it/s
+  [500/8000] loss=0.084971 block=27 | 1.66 it/s
+  [550/8000] loss=0.058451 block=27 | 1.66 it/s
+  [Step 600] Unlocked → cross_attn from block 26
+  [600/8000] loss=0.077625 block=26 | 1.66 it/s
+  [650/8000] loss=0.091061 block=26 | 1.66 it/s
+  [700/8000] loss=0.115665 block=26 | 1.65 it/s
+  [750/8000] loss=0.103095 block=26 | 1.65 it/s
+  [Step 800] Unlocked → cross_attn from block 25
+  [800/8000] loss=0.056185 block=25 | 1.65 it/s
+  [850/8000] loss=0.079016 block=25 | 1.65 it/s
+  [900/8000] loss=0.036432 block=25 | 1.64 it/s
+  [950/8000] loss=0.048948 block=25 | 1.64 it/s
+  [Step 1000] Unlocked → cross_attn from block 24
+  [1000/8000] loss=0.084857 block=24 | 1.64 it/s
+  [1050/8000] loss=0.095785 block=24 | 1.64 it/s
+  [1100/8000] loss=0.112264 block=24 | 1.64 it/s
+  [1150/8000] loss=0.089864 block=24 | 1.64 it/s
+  [Step 1200] Unlocked → cross_attn from block 23
+  [1200/8000] loss=0.043517 block=23 | 1.64 it/s
+  [1250/8000] loss=0.093034 block=23 | 1.64 it/s
+  [1300/8000] loss=0.077174 block=23 | 1.64 it/s
+  [1350/8000] loss=0.083606 block=23 | 1.63 it/s
+  [Step 1400] Unlocked → cross_attn from block 22
+  [1400/8000] loss=0.055196 block=22 | 1.63 it/s
+  [1450/8000] loss=0.082529 block=22 | 1.63 it/s
+  [1500/8000] loss=0.025119 block=22 | 1.63 it/s
+  [1550/8000] loss=0.049646 block=22 | 1.63 it/s
+  [Step 1600] Unlocked → cross_attn from block 21
+  [1600/8000] loss=0.124868 block=21 | 1.63 it/s
+  [1650/8000] loss=0.109175 block=21 | 1.62 it/s
+  [1700/8000] loss=0.107862 block=21 | 1.62 it/s
+  [1750/8000] loss=0.086293 block=21 | 1.62 it/s
+  [Step 1800] Unlocked → cross_attn from block 20
+  [1800/8000] loss=0.097695 block=20 | 1.62 it/s
+  [1850/8000] loss=0.124085 block=20 | 1.62 it/s
+  [1900/8000] loss=0.103232 block=20 | 1.62 it/s
+  [1950/8000] loss=0.089091 block=20 | 1.61 it/s
+  [Step 2000] Unlocked → cross_attn from block 19
+  [2000/8000] loss=0.096972 block=19 | 1.61 it/s
+  [2050/8000] loss=0.061687 block=19 | 1.61 it/s
+  [2100/8000] loss=0.079109 block=19 | 1.61 it/s
+  [2150/8000] loss=0.034485 block=19 | 1.60 it/s
+  [Step 2200] Unlocked → cross_attn from block 18
+  [2200/8000] loss=0.046800 block=18 | 1.60 it/s
+  [2250/8000] loss=0.065991 block=18 | 1.60 it/s
+  [2300/8000] loss=0.100163 block=18 | 1.61 it/s
+  [2350/8000] loss=0.103154 block=18 | 1.61 it/s
+  [Step 2400] Unlocked → cross_attn from block 17
+  [2400/8000] loss=0.091050 block=17 | 1.62 it/s
+  [2450/8000] loss=0.063650 block=17 | 1.62 it/s
+  [2500/8000] loss=0.042927 block=17 | 1.62 it/s
+  [2550/8000] loss=0.056390 block=17 | 1.63 it/s
+  [Step 2600] Unlocked → cross_attn from block 16
+  [2600/8000] loss=0.081537 block=16 | 1.63 it/s
+  [2650/8000] loss=0.059337 block=16 | 1.63 it/s
+  [2700/8000] loss=0.076496 block=16 | 1.64 it/s
+  [2750/8000] loss=0.045339 block=16 | 1.64 it/s
+  [Step 2800] Unlocked → cross_attn from block 15
+  [2800/8000] loss=0.037381 block=15 | 1.64 it/s
+  [2850/8000] loss=0.153033 block=15 | 1.65 it/s

@@ -1,0 +1,7 @@
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+usage: -c [-h] [--verbose] [--force_cc] [--no_smart_group] [--no_stitch]
+          [--no_merge_odd_loops] [--no_dilate] [--dilate_size DILATE_SIZE]
+          [--workspace WORKSPACE]
+          test_path
+-c: error: the following arguments are required: test_path

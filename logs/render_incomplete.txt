@@ -1,0 +1,19 @@
+# PhysXMobility Render Incomplete Animodes (2026-03-25)
+# 5856/5907 complete, 31 incomplete, 0 empty videos
+
+## Partially rendered (中断导致):
+100488/basic_1: 10/16 mp4s
+100488/basic_2: 8/16 mp4s
+100488/basic_3: 8/16 mp4s
+100488/basic_4: 8/16 mp4s
+100488/senior_0: 8/16 mp4s
+100488/senior_1: 8/16 mp4s
+100488/senior_2: 8/16 mp4s
+
+## Fully failed (渲染报错):
+101425: 1 animode (basic_0)
+101994: 1 animode (basic_0)
+103549: 9 animodes
+103968: 1 animode (basic_0)
+103971: 1 animode (basic_0)
+30666: 11 animodes

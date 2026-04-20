@@ -1,0 +1,95 @@
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/torch/cuda/__init__.py:61: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/site-packages/timm/models/layers/__init__.py:49: FutureWarning: Importing from timm.models.layers is deprecated, please import via timm.layers
+  warnings.warn(f"Importing from {__name__} is deprecated, please import via timm.layers", FutureWarning)
+VJEPA2 ViT-g loaded (bf16)
+Found 16334 videos to encode
+/mnt/cpfs/yurh/miniconda3/envs/partpacker_wan/lib/python3.11/contextlib.py:105: FutureWarning: `torch.backends.cuda.sdp_kernel()` is deprecated. In the future, this context manager will be removed. Please see `torch.nn.attention.sdpa_kernel()` for the new context manager, with updated signature.
+  self.gen = func(*args, **kwds)
+  [200/16334] 2.8 vid/s | skip=0 | ETA=94min
+  [400/16334] 3.0 vid/s | skip=0 | ETA=87min
+  [600/16334] 3.1 vid/s | skip=0 | ETA=84min
+  [800/16334] 3.1 vid/s | skip=0 | ETA=82min
+  [1000/16334] 3.2 vid/s | skip=0 | ETA=80min
+  [1200/16334] 3.2 vid/s | skip=0 | ETA=79min
+  [1400/16334] 3.2 vid/s | skip=0 | ETA=77min
+  [1600/16334] 3.2 vid/s | skip=0 | ETA=76min
+  [1800/16334] 3.2 vid/s | skip=0 | ETA=75min
+  [2000/16334] 3.3 vid/s | skip=0 | ETA=74min
+  [2200/16334] 3.3 vid/s | skip=0 | ETA=72min
+  [2400/16334] 3.3 vid/s | skip=0 | ETA=71min
+  [2600/16334] 3.3 vid/s | skip=0 | ETA=70min
+  [2800/16334] 3.3 vid/s | skip=0 | ETA=69min
+  [3000/16334] 3.3 vid/s | skip=0 | ETA=68min
+  [3200/16334] 3.3 vid/s | skip=0 | ETA=67min
+  [3400/16334] 3.3 vid/s | skip=0 | ETA=66min
+  [3600/16334] 3.3 vid/s | skip=0 | ETA=64min
+  [3800/16334] 3.3 vid/s | skip=0 | ETA=63min
+  [4000/16334] 3.3 vid/s | skip=0 | ETA=62min
+  [4200/16334] 3.3 vid/s | skip=0 | ETA=61min
+  [4400/16334] 3.3 vid/s | skip=0 | ETA=60min
+  [4600/16334] 3.3 vid/s | skip=0 | ETA=59min
+  [4800/16334] 3.3 vid/s | skip=0 | ETA=58min
+  [5000/16334] 3.3 vid/s | skip=0 | ETA=57min
+  [5200/16334] 3.3 vid/s | skip=0 | ETA=56min
+  [5400/16334] 3.3 vid/s | skip=0 | ETA=55min
+  [5600/16334] 3.3 vid/s | skip=0 | ETA=54min
+  [5800/16334] 3.3 vid/s | skip=0 | ETA=53min
+  [6000/16334] 3.3 vid/s | skip=0 | ETA=52min
+  [6200/16334] 3.3 vid/s | skip=0 | ETA=51min
+  [6400/16334] 3.3 vid/s | skip=0 | ETA=50min
+  [6600/16334] 3.3 vid/s | skip=0 | ETA=49min
+  [6800/16334] 3.3 vid/s | skip=0 | ETA=48min
+  [7000/16334] 3.3 vid/s | skip=0 | ETA=47min
+  [7200/16334] 3.3 vid/s | skip=0 | ETA=46min
+Truncating packet of size 13516 to 569
+Truncating packet of size 13516 to 569
+  [7400/16334] 3.3 vid/s | skip=0 | ETA=45min
+  [7600/16334] 3.3 vid/s | skip=0 | ETA=44min
+  [7800/16334] 3.3 vid/s | skip=0 | ETA=43min
+  [8000/16334] 3.3 vid/s | skip=0 | ETA=42min
+  [8200/16334] 3.3 vid/s | skip=0 | ETA=41min
+  [8400/16334] 3.3 vid/s | skip=0 | ETA=40min
+  [8600/16334] 3.3 vid/s | skip=0 | ETA=39min
+  [8800/16334] 3.3 vid/s | skip=0 | ETA=38min
+  [9000/16334] 3.3 vid/s | skip=0 | ETA=37min
+  [9200/16334] 3.3 vid/s | skip=0 | ETA=36min
+  [9400/16334] 3.3 vid/s | skip=0 | ETA=35min
+  [9600/16334] 3.3 vid/s | skip=0 | ETA=34min
+  [9800/16334] 3.3 vid/s | skip=0 | ETA=33min
+  [10000/16334] 3.3 vid/s | skip=0 | ETA=32min
+  [10200/16334] 3.3 vid/s | skip=0 | ETA=31min
+  [10400/16334] 3.3 vid/s | skip=0 | ETA=30min
+  [10600/16334] 3.3 vid/s | skip=0 | ETA=29min
+  [10800/16334] 3.3 vid/s | skip=0 | ETA=28min
+  [11000/16334] 3.3 vid/s | skip=0 | ETA=27min
+  [11200/16334] 3.3 vid/s | skip=0 | ETA=26min
+  [11400/16334] 3.3 vid/s | skip=0 | ETA=25min
+  [11600/16334] 3.3 vid/s | skip=0 | ETA=24min
+  [11800/16334] 3.3 vid/s | skip=0 | ETA=23min
+  [12000/16334] 3.3 vid/s | skip=0 | ETA=22min
+  [12200/16334] 3.3 vid/s | skip=0 | ETA=21min
+  [12400/16334] 3.3 vid/s | skip=0 | ETA=20min
+  [12600/16334] 3.3 vid/s | skip=0 | ETA=19min
+  [12800/16334] 3.3 vid/s | skip=0 | ETA=18min
+  [13000/16334] 3.3 vid/s | skip=0 | ETA=17min
+  [13200/16334] 3.3 vid/s | skip=0 | ETA=16min
+  [13400/16334] 3.3 vid/s | skip=0 | ETA=15min
+  [13600/16334] 3.3 vid/s | skip=0 | ETA=14min
+  [13800/16334] 3.3 vid/s | skip=0 | ETA=13min
+  [14000/16334] 3.3 vid/s | skip=0 | ETA=12min
+  [14200/16334] 3.3 vid/s | skip=0 | ETA=11min
+  [14400/16334] 3.3 vid/s | skip=0 | ETA=10min
+  [14600/16334] 3.3 vid/s | skip=0 | ETA=9min
+  [14800/16334] 3.3 vid/s | skip=0 | ETA=8min
+  [15000/16334] 3.3 vid/s | skip=0 | ETA=7min
+  [15200/16334] 3.3 vid/s | skip=0 | ETA=6min
+  [15400/16334] 3.3 vid/s | skip=0 | ETA=5min
+  [15600/16334] 3.3 vid/s | skip=0 | ETA=4min
+  [15800/16334] 3.3 vid/s | skip=0 | ETA=3min
+  [16000/16334] 3.3 vid/s | skip=0 | ETA=2min
+  [16200/16334] 3.3 vid/s | skip=0 | ETA=1min
+
+Done! 16334 encoded, 0 skipped | 81.7min | 3.3 vid/s
+Output: /mnt/data_ssd/infinigen-sim-data/encoded/PhysXMobility/
+Bad log: logs/encode_jepa_bad_videos.txt

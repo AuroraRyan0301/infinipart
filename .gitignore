@@ -95,3 +95,7 @@ MUJOCO_LOG.TXT
 mjcf/
 urdf/
 usd/
+
+checkpoints/
+data_ssd/
+output/
